@@ -6,7 +6,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.feature_login.domain.use_case.LoginUseCases
+import com.myplaygroup.app.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +24,11 @@ class LoginViewModel @Inject constructor(
     private val _password = mutableStateOf<String>("")
     val password: State<String> = _password
 
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    var isLoading = false
+
     fun onEvent(event: LoginEvent){
         when(event){
             is LoginEvent.EnteredUsername -> {
@@ -31,9 +39,19 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.LoginTapped -> {
                 viewModelScope.launch {
-                    loginUseCases.authenticate(_user.value, _password.value)
+                    isLoading = true
+                    val response = loginUseCases.authenticate(_user.value, _password.value)
+
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackbar(response.data!!)
+                    )
+                    isLoading = false
                 }
             }
         }
+    }
+
+    sealed class UiEvent {
+        data class ShowSnackbar(val message: String) : UiEvent()
     }
 }
