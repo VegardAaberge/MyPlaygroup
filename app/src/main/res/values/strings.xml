@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MyPlaygroup</string>
-    <string name="hello_world">Hello world</string>
+    <string name="user_label">User</string>
+    <string name="user_placeholder">Enter user</string>
+    <string name="password_label">Password</string>
+    <string name="password_placeholder">Enter password</string>
+    <string name="button_login">Login</string>
 </resources>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">我的游戏组</string>
-    <string name="hello_world">你好世界</string>
+    <string name="user_label">User</string>
+    <string name="user_placeholder">Enter user</string>
+    <string name="password_label">Password</string>
+    <string name="password_placeholder">Enter password</string>
+    <string name="button_login">Login</string>
 </resources>

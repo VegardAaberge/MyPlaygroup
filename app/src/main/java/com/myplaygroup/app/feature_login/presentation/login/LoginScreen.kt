@@ -1,17 +1,14 @@
 package com.myplaygroup.app.feature_login.presentation.login
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myplaygroup.app.R
+import com.myplaygroup.app.feature_login.presentation.login.components.LoginButton
+import com.myplaygroup.app.feature_login.presentation.login.components.LoginTextFields
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -21,15 +18,27 @@ fun LoginScreen(
     navigator: DestinationsNavigator,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    Box(
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text(
-            text = stringResource(id = R.string.hello_world),
-            fontSize = 40.sp,
+        LoginTextFields(
+            user = viewModel.user.value,
+            password = viewModel.password.value,
+            onUserChange = {
+                viewModel.onEvent(LoginEvent.EnteredUsername(it))
+            },
+            onPasswordChange = {
+                viewModel.onEvent(LoginEvent.EnteredPassword(it))
+            },
             modifier = Modifier
-                .align(Alignment.Center)
         )
+        Spacer(modifier = Modifier.height(18.dp))
+        
+        LoginButton(loginEvent = {
+            viewModel.onEvent(LoginEvent.LoginTapped)
+        })
     }
 }
