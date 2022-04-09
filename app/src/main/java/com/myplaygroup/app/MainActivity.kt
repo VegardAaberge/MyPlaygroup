@@ -13,7 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.myplaygroup.app.feature_login.presentation.login.NavGraphs
 import com.myplaygroup.app.ui.theme.MyPlaygroupTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

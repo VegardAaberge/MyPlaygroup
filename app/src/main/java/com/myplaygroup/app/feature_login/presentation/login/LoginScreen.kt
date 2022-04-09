@@ -9,17 +9,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(start = true)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navigator: DestinationsNavigator,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
         Text(
-            text = "Login Screen",
+            text = viewModel.loginMessage,
             fontSize = 40.sp,
             modifier = Modifier
                 .align(Alignment.Center)
