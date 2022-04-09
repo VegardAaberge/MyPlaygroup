@@ -7,9 +7,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.R
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -24,7 +26,7 @@ fun LoginScreen(
             .fillMaxSize()
     ) {
         Text(
-            text = viewModel.loginMessage,
+            text = stringResource(id = R.string.hello_world),
             fontSize = 40.sp,
             modifier = Modifier
                 .align(Alignment.Center)
