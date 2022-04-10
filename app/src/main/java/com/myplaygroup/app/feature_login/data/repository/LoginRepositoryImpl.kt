@@ -19,6 +19,12 @@ class LoginRepositoryImpl : LoginRepository {
             return Resource.Error(message = "Fail")
         }
     }
+
+    override suspend fun resetPassword(email: String): Resource<String> {
+        delay(3000)
+
+        return  Resource.Success("Sent")
+    }
 }
 
 

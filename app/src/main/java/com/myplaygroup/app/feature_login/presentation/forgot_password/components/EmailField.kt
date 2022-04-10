@@ -17,7 +17,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun EmailField(
     textValue: String,
-    onTextChanged: () -> Unit,
+    isEnabled: Boolean,
+    onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     OutlinedTextField(
@@ -25,7 +26,8 @@ fun EmailField(
         placeholder = { Text(text = stringResource(id = R.string.forgot_password_placeholder)) },
         label = { Text(text = stringResource(id = R.string.forgot_password_label)) },
         singleLine = true,
-        onValueChange = { onTextChanged },
+        enabled = isEnabled,
+        onValueChange = onTextChanged,
         modifier = modifier
     )
 }
