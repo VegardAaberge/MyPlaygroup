@@ -26,9 +26,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import com.myplaygroup.app.core.util.Resource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
-import com.myplaygroup.app.core.components.CustomProgressIndicator
+import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.feature_login.presentation.forgot_password.components.EmailField
 import com.myplaygroup.app.ui.theme.MyPlaygroupTheme
+import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.flow.collectLatest
 
@@ -39,14 +41,14 @@ fun ForgotPasswoordScreen(
     viewModel: ForgotPasswordViewModel = hiltViewModel()
 ) {
     val focusManager = LocalFocusManager.current
-    val scaffoldState = rememberScaffoldState()
+    val scaffoldState = CollectEventFlow(viewModel)
 
     val emailResponse = viewModel.emailResponse.observeAsState().value
 
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
             when(event){
-                is ForgotPasswordViewModel.UiEvent.ShowSnackbar -> {
+                is BaseViewModel.UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
@@ -140,10 +142,8 @@ fun ForgotPasswoordScreen(
             )
         }
 
-        when(emailResponse){
-            is Resource.Loading -> {
-                CustomProgressIndicator()
-            }
+        if(emailResponse is Resource.Loading){
+            CustomProgressIndicator()
         }
     }
 }

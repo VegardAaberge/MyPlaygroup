@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_login.domain.model.User
 import com.myplaygroup.app.feature_login.domain.use_case.LoginUseCases
@@ -17,15 +18,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
     private val loginUseCases: LoginUseCases
-) : ViewModel() {
+) : BaseViewModel() {
 
     var emailResponse: MutableLiveData<Resource<String>> = MutableLiveData()
 
     private val _email = mutableStateOf<String>("")
     val email: State<String> = _email
-
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: ForgotPasswordEvent)
     {
@@ -52,9 +50,5 @@ class ForgotPasswordViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    sealed class UiEvent {
-        data class ShowSnackbar(val message: String) : UiEvent()
     }
 }

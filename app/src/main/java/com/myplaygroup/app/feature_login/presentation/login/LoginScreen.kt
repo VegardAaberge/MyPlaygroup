@@ -14,7 +14,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myplaygroup.app.core.components.CustomProgressIndicator
+import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.myplaygroup.app.core.presentation.components.CollectEventFlow
+import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_login.presentation.destinations.ForgotPasswoordScreenDestination
 import com.myplaygroup.app.feature_login.presentation.login.components.*
@@ -31,25 +33,13 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     val userResponse by viewModel.userResponse.observeAsState()
 
-    val scaffoldState = rememberScaffoldState()
+    val scaffoldState = CollectEventFlow(viewModel)
     var textFieldFocused by remember {
         mutableStateOf(false)
     }
 
     val fieldWidth = 400.dp
     val fieldPadding = 30.dp
-
-    LaunchedEffect(key1 = true){
-        viewModel.eventFlow.collectLatest { event ->
-            when(event){
-                is LoginViewModel.UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message
-                    )
-                }
-            }
-        }
-    }
 
     Scaffold(
         scaffoldState = scaffoldState

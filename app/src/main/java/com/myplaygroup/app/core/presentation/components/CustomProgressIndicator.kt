@@ -1,4 +1,4 @@
-package com.myplaygroup.app.core.components
+package com.myplaygroup.app.core.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
