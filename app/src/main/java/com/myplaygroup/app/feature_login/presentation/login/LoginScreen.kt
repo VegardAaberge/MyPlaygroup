@@ -1,37 +1,26 @@
 package com.myplaygroup.app.feature_login.presentation.login
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myplaygroup.app.R
 import com.myplaygroup.app.core.components.CustomProgressIndicator
-import com.myplaygroup.app.feature_login.presentation.login.components.LoginButton
-import com.myplaygroup.app.feature_login.presentation.login.components.LoginTextFields
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_login.presentation.login.components.LoginImageAndText
+import com.myplaygroup.app.feature_login.presentation.destinations.ForgotPasswoordScreenDestination
+import com.myplaygroup.app.feature_login.presentation.login.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Destination(start = true)
 @Composable
@@ -46,17 +35,9 @@ fun LoginScreen(
     var textFieldFocused by remember {
         mutableStateOf(false)
     }
-    val scope = rememberCoroutineScope()
 
-    val bottomHeight = animateDpAsState(
-        targetValue = if(textFieldFocused){
-            20.dp
-        }else 150.dp,
-        animationSpec = tween(
-            durationMillis = 300,
-            delayMillis = 100
-        )
-    )
+    val fieldWidth = 400.dp
+    val fieldPadding = 30.dp
 
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
@@ -70,7 +51,7 @@ fun LoginScreen(
         }
     }
 
-    val scaffold = Scaffold(
+    Scaffold(
         scaffoldState = scaffoldState
     ) {
         Column(
@@ -117,6 +98,8 @@ fun LoginScreen(
                     textFieldFocused = it.isFocused
                 },
                 enabled = !(userResponse is Resource.Loading),
+                textFieldWidth = fieldWidth,
+                textFieldHorizontalPadding = fieldPadding,
                 modifier = Modifier
             )
 
@@ -124,14 +107,27 @@ fun LoginScreen(
 
             LoginButton(
                 enabled = !(userResponse is Resource.Loading),
+                btnWidth = fieldWidth,
+                btnHorizontalPadding = fieldPadding,
                 loginEvent = {
                     textFieldFocused = false
                     focusManager.clearFocus()
                     viewModel.onEvent(LoginEvent.LoginTapped)
                 }
             )
+            
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(modifier = Modifier.height(bottomHeight.value))
+            LoginForgotPassword(
+                isLoading = userResponse is Resource.Loading,
+                forgotPasswordWidth = fieldWidth,
+                forgotPasswordPadding = fieldPadding,
+                forgotPasswordEvent = {
+                    navigator.navigate(ForgotPasswoordScreenDestination())
+                }
+            )
+
+            Spacer(modifier = Modifier.height(130.dp))
         }
 
         if(userResponse is Resource.Loading){

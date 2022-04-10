@@ -7,4 +7,5 @@
     <string name="password_placeholder">Enter password</string>
     <string name="button_login">Login</string>
     <string name="my_playgroup">My Playgroup</string>
+    <string name="forgot_passeord">Forgot password?</string>
 </resources>
