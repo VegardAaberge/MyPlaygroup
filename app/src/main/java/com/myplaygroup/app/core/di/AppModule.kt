@@ -1,4 +1,4 @@
-package com.myplaygroup.app.di
+package com.myplaygroup.app.core.di
 
 import android.app.Application
 import com.myplaygroup.app.feature_login.data.repository.LoginRepositoryImpl

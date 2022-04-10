@@ -1,4 +1,4 @@
-package com.myplaygroup.app.util
+package com.myplaygroup.app.core.util
 
 sealed class Resource<T>(
     val data: T? = null,
