@@ -2,11 +2,12 @@ package com.myplaygroup.app.feature_login.presentation.login
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myplaygroup.app.feature_login.domain.model.User
 import com.myplaygroup.app.feature_login.domain.use_case.LoginUseCases
-import com.myplaygroup.app.util.Resource
+import com.myplaygroup.app.core.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -27,7 +28,7 @@ class LoginViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    var isLoading = false
+    var userResponse: MutableLiveData<Resource<User?>> = MutableLiveData()
 
     fun onEvent(event: LoginEvent){
         when(event){
@@ -39,13 +40,23 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.LoginTapped -> {
                 viewModelScope.launch {
-                    isLoading = true
+                    userResponse.postValue(Resource.Loading())
                     val response = loginUseCases.authenticate(_user.value, _password.value)
 
-                    _eventFlow.emit(
-                        UiEvent.ShowSnackbar(response.data!!)
-                    )
-                    isLoading = false
+                    when(response){
+                        is Resource.Success -> {
+                            userResponse.postValue(Resource.Success(response.data!!))
+                            _eventFlow.emit(
+                                UiEvent.ShowSnackbar("Success")
+                            )
+                        }
+                        is Resource.Error -> {
+                            userResponse.postValue(Resource.Error("Failed to load"))
+                            _eventFlow.emit(
+                                UiEvent.ShowSnackbar("Fail")
+                            )
+                        }
+                    }
                 }
             }
         }

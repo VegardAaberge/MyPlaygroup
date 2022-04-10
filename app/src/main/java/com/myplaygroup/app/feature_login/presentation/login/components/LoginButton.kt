@@ -16,13 +16,15 @@ import com.myplaygroup.app.R
 @Composable
 fun LoginButton(
     loginEvent: () -> Unit,
+    enabled: Boolean,
     btnHeight: Dp = 50.dp,
     btnWidth: Dp = 400.dp,
     btnHorizontalPadding: Dp = 30.dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = loginEvent,
+        enabled = enabled,
         modifier = modifier
             .width(btnWidth)
             .height(btnHeight)
