@@ -63,6 +63,7 @@ fun ForgotPasswordScreen(
                     viewModel.onEvent(ForgotPasswordEvent.EnteredEmail(it))
                 },
                 isEnabled = !(emailResponse is Resource.Loading),
+                canInputCode = false,
                 modifier = widthModifier
             )
         }

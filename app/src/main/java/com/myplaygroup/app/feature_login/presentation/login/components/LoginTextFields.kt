@@ -2,10 +2,7 @@ package com.myplaygroup.app.feature_login.presentation.login.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,8 +30,6 @@ fun LoginTextFields(
     onUserChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onFocusChange: (FocusState) -> Unit,
-    textFieldWidth: Dp = 400.dp,
-    textFieldHorizontalPadding: Dp = 30.dp,
     modifier: Modifier = Modifier,
 )
 {
@@ -46,6 +42,9 @@ fun LoginTextFields(
         singleLine = true,
         enabled = enabled,
         onValueChange = onUserChange,
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color.White
+        ),
         modifier = modifier
             .onFocusChanged { onFocusChange(it) }
     )
@@ -59,6 +58,9 @@ fun LoginTextFields(
         visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         onValueChange = onPasswordChange,
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color.White
+        ),
         modifier = modifier
             .onFocusChanged { onFocusChange(it) },
         trailingIcon = {
