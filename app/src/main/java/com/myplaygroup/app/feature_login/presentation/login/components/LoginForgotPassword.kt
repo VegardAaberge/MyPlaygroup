@@ -21,14 +21,11 @@ import com.myplaygroup.app.R
 fun LoginForgotPassword(
     isLoading: Boolean,
     forgotPasswordEvent: () -> Unit,
-    forgotPasswordWidth: Dp = 400.dp,
-    forgotPasswordPadding: Dp = 30.dp,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
-            .width(forgotPasswordWidth)
+        modifier = modifier
             .height(50.dp)
-            .padding(horizontal = forgotPasswordPadding)
             .clickable(
                 interactionSource = MutableInteractionSource(),
                 indication = if (!isLoading) {
@@ -37,7 +34,6 @@ fun LoginForgotPassword(
                 onClick = forgotPasswordEvent
             )
     ){
-
         Text(
             text = stringResource(id = R.string.forgot_passeord),
             color = Color.Blue,

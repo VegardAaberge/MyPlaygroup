@@ -18,17 +18,13 @@ fun LoginButton(
     loginEvent: () -> Unit,
     enabled: Boolean,
     btnHeight: Dp = 50.dp,
-    btnWidth: Dp = 400.dp,
-    btnHorizontalPadding: Dp = 30.dp,
     modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = loginEvent,
         enabled = enabled,
         modifier = modifier
-            .width(btnWidth)
             .height(btnHeight)
-            .padding(horizontal = btnHorizontalPadding)
     )
     {
         Text(text = stringResource(id = R.string.button_login))

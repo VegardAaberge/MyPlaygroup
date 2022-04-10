@@ -47,8 +47,6 @@ fun LoginTextFields(
         enabled = enabled,
         onValueChange = onUserChange,
         modifier = modifier
-            .width(textFieldWidth)
-            .padding(horizontal = textFieldHorizontalPadding)
             .onFocusChanged { onFocusChange(it) }
     )
     Spacer(modifier = Modifier.height(10.dp))
@@ -62,8 +60,6 @@ fun LoginTextFields(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         onValueChange = onPasswordChange,
         modifier = modifier
-            .width(textFieldWidth)
-            .padding(horizontal = textFieldHorizontalPadding)
             .onFocusChanged { onFocusChange(it) },
         trailingIcon = {
             val image = if(passwordVisible)
