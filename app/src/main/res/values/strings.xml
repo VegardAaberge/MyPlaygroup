@@ -7,4 +7,9 @@
     <string name="button_login">Login</string>
     <string name="my_playgroup">My Playgroup</string>
     <string name="forgot_passeord">Forgot password?</string>
+    <string name="send_email">Send</string>
+    <string name="forgot_password_placeholder">Email</string>
+    <string name="forgot_password_label">Enter Email</string>
+    <string name="forgot_password_explanation">Write in your email, and go to your email to reset the password</string>
+    <string name="forgot_password_header">Forgot your password?</string>
 </resources>
