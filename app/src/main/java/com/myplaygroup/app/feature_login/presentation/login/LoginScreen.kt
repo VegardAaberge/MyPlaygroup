@@ -2,24 +2,31 @@ package com.myplaygroup.app.feature_login.presentation.login
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.components.CustomProgressIndicator
 import com.myplaygroup.app.feature_login.presentation.login.components.LoginButton
 import com.myplaygroup.app.feature_login.presentation.login.components.LoginTextFields
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_login.presentation.login.components.LoginImageAndText
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.delay
@@ -71,6 +78,15 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFFAAFFFF),
+                            Color(0xFFEEFFFF),
+                        )
+                    )
+                )
                 .clickable(
                     interactionSource = MutableInteractionSource(),
                     indication = null,
@@ -80,6 +96,14 @@ fun LoginScreen(
                     }
                 )
         ) {
+            LoginImageAndText(
+                imageSize = 200.dp,
+                imageTextSpace = 30.dp,
+                fontSize = 30.sp
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
             LoginTextFields(
                 user = viewModel.user.value,
                 password = viewModel.password.value,
@@ -95,6 +119,7 @@ fun LoginScreen(
                 enabled = !(userResponse is Resource.Loading),
                 modifier = Modifier
             )
+
             Spacer(modifier = Modifier.height(18.dp))
 
             LoginButton(
