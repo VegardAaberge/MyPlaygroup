@@ -14,7 +14,7 @@ import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_login.presentation.destinations.ForgotPasswoordScreenDestination
+import com.myplaygroup.app.feature_login.presentation.destinations.ForgotPasswordScreenDestination
 import com.myplaygroup.app.feature_login.presentation.login.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -32,9 +32,6 @@ fun LoginScreen(
     var textFieldFocused by remember {
         mutableStateOf(false)
     }
-
-    val fieldWidth = 400.dp
-    val fieldPadding = 30.dp
 
     Scaffold(
         scaffoldState = scaffoldState
@@ -92,7 +89,7 @@ fun LoginScreen(
             LoginForgotPassword(
                 isLoading = userResponse is Resource.Loading,
                 forgotPasswordEvent = {
-                    navigator.navigate(ForgotPasswoordScreenDestination())
+                    navigator.navigate(ForgotPasswordScreenDestination())
                 },
                 modifier = widthModifier
             )

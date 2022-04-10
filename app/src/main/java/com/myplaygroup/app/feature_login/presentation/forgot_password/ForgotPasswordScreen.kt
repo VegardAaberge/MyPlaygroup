@@ -1,7 +1,7 @@
 package com.myplaygroup.app.feature_login.presentation.forgot_password
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -9,20 +9,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.myplaygroup.app.core.util.Resource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
-import com.myplaygroup.app.feature_login.presentation.forgot_password.components.EmailField
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
+import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
+import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_login.presentation.forgot_password.components.EmailField
 import com.myplaygroup.app.feature_login.presentation.forgot_password.components.ForgotPasswordInfo
 import com.myplaygroup.app.feature_login.presentation.forgot_password.components.SendActionIcon
 import com.ramcosta.composedestinations.annotation.Destination
 
-
 @Destination
 @Composable
-fun ForgotPasswoordScreen(
+fun ForgotPasswordScreen(
     viewModel: ForgotPasswordViewModel = hiltViewModel()
 ) {
     val focusManager = LocalFocusManager.current
