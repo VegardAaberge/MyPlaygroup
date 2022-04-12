@@ -6,5 +6,5 @@ import com.myplaygroup.app.core.util.Resource
 interface LoginRepository {
     suspend fun authenticate(user: String, password: String) : Resource<User>
 
-    suspend fun resetPassword(email: String): Resource<String>
+    suspend fun sendEmailRequestForm(email: String): Resource<String>
 }

@@ -4,8 +4,9 @@ import com.myplaygroup.app.feature_login.domain.model.User
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.core.util.Resource
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
-class LoginRepositoryImpl : LoginRepository {
+class LoginRepositoryImpl @Inject constructor() : LoginRepository {
 
     override suspend fun authenticate(user: String, password: String) : Resource<User> {
         delay(3000)
@@ -20,7 +21,7 @@ class LoginRepositoryImpl : LoginRepository {
         }
     }
 
-    override suspend fun resetPassword(email: String): Resource<String> {
+    override suspend fun sendEmailRequestForm(email: String): Resource<String> {
         delay(3000)
 
         return  Resource.Success("Sent")

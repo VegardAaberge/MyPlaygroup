@@ -15,4 +15,5 @@
     <string name="forgot_password_header">Forgot your password?</string>
     <string name="enter_code_placeholder">Code</string>
     <string name="enter_code_label">Enter code</string>
+    <string name="check_code">Check</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_login.presentation.forgot_password.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -17,6 +18,7 @@ import com.myplaygroup.app.R
 fun InsertCodeField(
     code: String,
     countDown: Int,
+    isEnabled: Boolean,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -31,14 +33,13 @@ fun InsertCodeField(
             placeholder = { Text(text = stringResource(id = R.string.enter_code_placeholder)) },
             label = { Text(text = stringResource(id = R.string.enter_code_label)) },
             singleLine = true,
-            enabled = countDown >= 0,
+            enabled = isEnabled,
             onValueChange = onValueChange,
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.White
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)
                 .weight(2f)
         )
 

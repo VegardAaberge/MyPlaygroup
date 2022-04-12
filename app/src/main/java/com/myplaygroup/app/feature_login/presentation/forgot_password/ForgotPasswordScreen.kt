@@ -30,12 +30,20 @@ fun ForgotPasswordScreen(
     val email = viewModel.state.email
     val code = viewModel.state.code
     val countDown = viewModel.state.countDown
+    val shouldCheckCode = viewModel.state.shouldCheckCode
+
+    val isActionIconEnabled = !isBusy && if(shouldCheckCode){
+        code.isNotBlank()
+    }else email.isNotBlank()
 
     Scaffold(
         scaffoldState = scaffoldState,
         floatingActionButton = {
-            SendActionIcon(){
-                viewModel.onEvent(ForgotPasswordEvent.ResetPassword)
+            SendActionIcon(
+                shouldCheckCode = shouldCheckCode,
+                enabled = isActionIconEnabled,
+            ){
+                viewModel.onEvent(ForgotPasswordEvent.ActionButtonTapped)
                 focusManager.clearFocus()
             }
         }
@@ -64,7 +72,7 @@ fun ForgotPasswordScreen(
                 onTextChanged = {
                     viewModel.onEvent(ForgotPasswordEvent.EnteredEmail(it))
                 },
-                isEnabled = !isBusy,
+                isEnabled = !isBusy && !shouldCheckCode,
                 modifier = widthModifier
             )
 
@@ -73,6 +81,7 @@ fun ForgotPasswordScreen(
             InsertCodeField(
                 code = code,
                 countDown = countDown,
+                isEnabled = !isBusy && shouldCheckCode,
                 onValueChange = {
                     viewModel.onEvent(ForgotPasswordEvent.EnteredCode(it))
                 },
