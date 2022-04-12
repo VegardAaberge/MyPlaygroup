@@ -3,7 +3,6 @@ package com.myplaygroup.app.feature_login.presentation.login
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -26,12 +25,16 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val focusManager = LocalFocusManager.current
-    val userResponse by viewModel.userResponse.observeAsState()
+
 
     val scaffoldState = CollectEventFlow(viewModel)
     var textFieldFocused by remember {
         mutableStateOf(false)
     }
+
+    val isBusy = viewModel.isBusy.value
+    val user = viewModel.state.user
+    val password = viewModel.state.password
 
     Scaffold(
         scaffoldState = scaffoldState
@@ -57,8 +60,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             LoginTextFields(
-                user = viewModel.user.value,
-                password = viewModel.password.value,
+                user = user,
+                password = password,
                 onUserChange = {
                     viewModel.onEvent(LoginEvent.EnteredUsername(it))
                 },
@@ -68,14 +71,14 @@ fun LoginScreen(
                 onFocusChange = {
                     textFieldFocused = it.isFocused
                 },
-                enabled = !(userResponse is Resource.Loading),
+                enabled = !isBusy,
                 modifier = widthModifier
             )
 
             Spacer(modifier = Modifier.height(18.dp))
 
             LoginButton(
-                enabled = !(userResponse is Resource.Loading),
+                enabled = !isBusy,
                 loginEvent = {
                     textFieldFocused = false
                     focusManager.clearFocus()
@@ -87,7 +90,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             LoginForgotPassword(
-                isLoading = userResponse is Resource.Loading,
+                isBusy = isBusy,
                 forgotPasswordEvent = {
                     navigator.navigate(ForgotPasswordScreenDestination())
                 },
@@ -97,7 +100,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(130.dp))
         }
 
-        if(userResponse is Resource.Loading){
+        if(isBusy){
             CustomProgressIndicator()
         }
     }

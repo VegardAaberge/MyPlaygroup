@@ -1,17 +1,13 @@
 package com.myplaygroup.app.feature_login.presentation.login
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.feature_login.domain.model.User
 import com.myplaygroup.app.feature_login.domain.use_case.LoginUseCases
 import com.myplaygroup.app.core.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,36 +16,32 @@ class LoginViewModel @Inject constructor(
     private val loginUseCases: LoginUseCases
 ) : BaseViewModel() {
 
-    private val _user = mutableStateOf<String>("")
-    val user: State<String> = _user
-
-    private val _password = mutableStateOf<String>("")
-    val password: State<String> = _password
-
-    var userResponse: MutableLiveData<Resource<User?>> = MutableLiveData()
+    var state by mutableStateOf(LoginState())
 
     fun onEvent(event: LoginEvent){
         when(event){
             is LoginEvent.EnteredUsername -> {
-                _user.value = event.user
+                state = state.copy(user = event.user)
             }
             is LoginEvent.EnteredPassword -> {
-                _password.value = event.password
+                state = state.copy(password = event.password)
             }
             is LoginEvent.LoginTapped -> {
                 viewModelScope.launch {
-                    userResponse.postValue(Resource.Loading())
-                    val response = loginUseCases.authenticate(_user.value, _password.value)
+                    _isBusy.value = true
+                    val response = loginUseCases.authenticate(state.user, state.password)
 
                     when(response){
                         is Resource.Success -> {
-                            userResponse.postValue(Resource.Success(response.data!!))
+                            _isBusy.value = false
                             _eventFlow.emit(
                                 UiEvent.ShowSnackbar("Success")
                             )
                         }
                         is Resource.Error -> {
-                            userResponse.postValue(Resource.Error("Failed to load"))
+                            _isBusy.value = false
+                            state = state.copy(password = "")
+
                             _eventFlow.emit(
                                 UiEvent.ShowSnackbar("Fail")
                             )

@@ -1,17 +1,13 @@
 package com.myplaygroup.app.feature_login.presentation.forgot_password
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_login.domain.model.User
 import com.myplaygroup.app.feature_login.domain.use_case.LoginUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,33 +16,32 @@ class ForgotPasswordViewModel @Inject constructor(
     private val loginUseCases: LoginUseCases
 ) : BaseViewModel() {
 
-    var emailResponse: MutableLiveData<Resource<String>> = MutableLiveData()
-
-    private val _email = mutableStateOf<String>("")
-    val email: State<String> = _email
+    var state by mutableStateOf(ForgotPasswordState())
 
     fun onEvent(event: ForgotPasswordEvent)
     {
         when(event){
             is ForgotPasswordEvent.EnteredEmail -> {
-                _email.value = event.email
+                state = state.copy(email = event.email)
             }
             is ForgotPasswordEvent.ResetPassword -> {
                 viewModelScope.launch {
-                    emailResponse.postValue(Resource.Loading())
-                    val response = loginUseCases.resetPassword(_email.value)
+                    _isBusy.value = true
+                    val response = loginUseCases.resetPassword(state.email)
 
-                    if(response is Resource.Success){
-                        emailResponse.postValue(Resource.Success("Success"))
-                        _eventFlow.emit(
-                            UiEvent.ShowSnackbar("Sent, please check your email")
-                        )
-                    }else {
-                        emailResponse.postValue(Resource.Error("Fail"))
-                        _eventFlow.emit(
-                            UiEvent.ShowSnackbar("Failed to send")
-                        )
+                    when(response){
+                        is Resource.Success -> {
+                            _eventFlow.emit(
+                                UiEvent.ShowSnackbar("Sent, please check your email")
+                            )
+                        }
+                        is Resource.Error -> {
+                            _eventFlow.emit(
+                                UiEvent.ShowSnackbar("Failed to send")
+                            )
+                        }
                     }
+                    _isBusy.value = false
                 }
             }
         }
