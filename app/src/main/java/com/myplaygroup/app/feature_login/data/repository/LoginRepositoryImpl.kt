@@ -26,6 +26,16 @@ class LoginRepositoryImpl @Inject constructor() : LoginRepository {
 
         return  Resource.Success("Sent")
     }
+
+    override suspend fun checkVerificationCode(code: String): Resource<String> {
+        delay(3000)
+
+        if(code == "12345"){
+            return Resource.Success<String>("")
+        }else{
+            return Resource.Error(message = "Fail")
+        }
+    }
 }
 
 

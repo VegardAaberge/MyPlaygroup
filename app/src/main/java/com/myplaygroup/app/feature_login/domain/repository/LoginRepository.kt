@@ -7,4 +7,6 @@ interface LoginRepository {
     suspend fun authenticate(user: String, password: String) : Resource<User>
 
     suspend fun sendEmailRequestForm(email: String): Resource<String>
+
+    suspend fun checkVerificationCode(code: String): Resource<String>
 }

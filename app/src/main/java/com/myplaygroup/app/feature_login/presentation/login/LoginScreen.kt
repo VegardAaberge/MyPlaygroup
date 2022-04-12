@@ -78,7 +78,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(18.dp))
 
             LoginButton(
-                enabled = !isBusy,
+                enabled = !isBusy && user.isNotBlank() && password.isNotBlank(),
                 loginEvent = {
                     textFieldFocused = false
                     focusManager.clearFocus()

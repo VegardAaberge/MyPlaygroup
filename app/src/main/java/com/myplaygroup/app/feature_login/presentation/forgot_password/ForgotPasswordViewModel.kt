@@ -31,7 +31,7 @@ class ForgotPasswordViewModel @Inject constructor(
             }
             is ForgotPasswordEvent.ActionButtonTapped -> {
                 if(state.shouldCheckCode){
-                    checkCode()
+                    checkVerificationCode()
                 }else{
                     sendEmailRequestForm()
                 }
@@ -39,8 +39,40 @@ class ForgotPasswordViewModel @Inject constructor(
         }
     }
 
-    fun checkCode() {
+    fun checkVerificationCode() {
+        viewModelScope.launch {
+            _isBusy.value = true
+            val response = repository.checkVerificationCode(state.code)
 
+            when(response){
+                is Resource.Success -> {
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackbar("Correct Code")
+                    )
+
+                    state = state.copy(
+                        shouldCheckCode = false,
+                        countDown = -1,
+                        email = ""
+                    )
+                }
+                is Resource.Error -> {
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackbar("Failed to send")
+                    )
+
+                    state = state.copy(
+                        shouldCheckCode = false,
+                        countDown = -1,
+                    )
+                }
+                is Resource.Loading -> {
+
+                }
+            }
+
+            _isBusy.value = false
+        }
     }
 
     fun sendEmailRequestForm(){
@@ -65,6 +97,7 @@ class ForgotPasswordViewModel @Inject constructor(
                         }
                         state = state.copy(
                             shouldCheckCode = false,
+                            code = ""
                         )
                     }
                 }

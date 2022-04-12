@@ -6,6 +6,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
@@ -26,7 +27,7 @@ fun SendActionIcon(
     }
 
     val sendEmailIcon = if(shouldCheckCode)
-        Icons.Default.Favorite else Icons.Default.Send
+        Icons.Default.ArrowForward else Icons.Default.Send
 
     val backgroundColor = if(enabled)
         MaterialTheme.colors.primary else Color.LightGray
