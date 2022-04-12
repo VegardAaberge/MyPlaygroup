@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_login.domain.model.User
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -28,26 +29,30 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.LoginTapped -> {
                 viewModelScope.launch {
-                    _isBusy.value = true
-                    val response = repository.authenticate(state.user, state.password)
-
-                    when(response){
-                        is Resource.Success -> {
-                            _isBusy.value = false
-                            _eventFlow.emit(
-                                UiEvent.ShowSnackbar("Success")
-                            )
-                        }
-                        is Resource.Error -> {
-                            _isBusy.value = false
-                            state = state.copy(password = "")
-
-                            _eventFlow.emit(
-                                UiEvent.ShowSnackbar("Fail")
-                            )
-                        }
-                    }
+                    repository
+                        .authenticate(state.user, state.password)
+                        .collect { collectAuthenticateResponse(it) }
                 }
+            }
+        }
+    }
+
+    private suspend fun collectAuthenticateResponse(result: Resource<User>) {
+        when(result){
+            is Resource.Success -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Success")
+                )
+            }
+            is Resource.Error -> {
+                state = state.copy(password = "")
+
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Fail")
+                )
+            }
+            is Resource.Loading -> {
+                _isBusy.value = result.isLoading
             }
         }
     }

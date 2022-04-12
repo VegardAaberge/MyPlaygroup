@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_login.domain.model.User
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -30,87 +31,80 @@ class ForgotPasswordViewModel @Inject constructor(
                 state = state.copy(code = event.code)
             }
             is ForgotPasswordEvent.ActionButtonTapped -> {
-                if(state.shouldCheckCode){
-                    checkVerificationCode()
-                }else{
-                    sendEmailRequestForm()
-                }
-            }
-        }
-    }
-
-    fun checkVerificationCode() {
-        viewModelScope.launch {
-            _isBusy.value = true
-            val response = repository.checkVerificationCode(state.code)
-
-            when(response){
-                is Resource.Success -> {
-                    _eventFlow.emit(
-                        UiEvent.ShowSnackbar("Correct Code")
-                    )
-
-                    state = state.copy(
-                        shouldCheckCode = false,
-                        countDown = -1,
-                        email = ""
-                    )
-                }
-                is Resource.Error -> {
-                    _eventFlow.emit(
-                        UiEvent.ShowSnackbar("Failed to send")
-                    )
-
-                    state = state.copy(
-                        shouldCheckCode = false,
-                        countDown = -1,
-                    )
-                }
-                is Resource.Loading -> {
-
-                }
-            }
-
-            _isBusy.value = false
-        }
-    }
-
-    fun sendEmailRequestForm(){
-        viewModelScope.launch {
-            _isBusy.value = true
-            val response = repository.sendEmailRequestForm(state.email)
-
-            when(response){
-                is Resource.Success -> {
-                    _eventFlow.emit(
-                        UiEvent.ShowSnackbar("Sent, please check your email")
-                    )
-                    state = state.copy(
-                        shouldCheckCode = true,
-                        countDown = 60,
-                    )
-
-                    launch(Dispatchers.Default) {
-                        while (state.countDown >= 0){
-                            delay(1000)
-                            state = state.copy(countDown = state.countDown - 1)
-                        }
-                        state = state.copy(
-                            shouldCheckCode = false,
-                            code = ""
-                        )
+                viewModelScope.launch {
+                    if(state.shouldCheckCode){
+                        repository
+                            .checkVerificationCode(state.code)
+                            .collect { collectCodeRequest(it) }
+                    }else{
+                        repository
+                            .sendEmailRequestForm(state.email)
+                            .collect { collectEmailRequest(it) }
                     }
                 }
-                is Resource.Error -> {
-                    _eventFlow.emit(
-                        UiEvent.ShowSnackbar("Failed to send")
+            }
+        }
+    }
+
+    private suspend fun collectEmailRequest(result: Resource<String>) {
+        when(result){
+            is Resource.Success -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Sent, please check your email")
+                )
+                state = state.copy(
+                    shouldCheckCode = true,
+                    countDown = 60,
+                )
+
+                viewModelScope.launch (Dispatchers.Default) {
+                    while (state.countDown >= 0){
+                        delay(1000)
+                        state = state.copy(countDown = state.countDown - 1)
+                    }
+                    state = state.copy(
+                        shouldCheckCode = false,
+                        code = ""
                     )
                 }
-                is Resource.Loading -> {
-
-                }
             }
-            _isBusy.value = false
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Failed to send")
+                )
+            }
+            is Resource.Loading -> {
+                _isBusy.value = result.isLoading
+            }
+        }
+    }
+
+    private suspend fun collectCodeRequest(result: Resource<String>) {
+        when(result){
+            is Resource.Success -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Correct Code")
+                )
+
+                state = state.copy(
+                    shouldCheckCode = false,
+                    countDown = -1,
+                    email = ""
+                )
+            }
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Failed to send")
+                )
+
+                state = state.copy(
+                    shouldCheckCode = false,
+                    countDown = -1,
+                )
+            }
+            is Resource.Loading -> {
+                _isBusy.value = result.isLoading
+            }
         }
     }
 }
