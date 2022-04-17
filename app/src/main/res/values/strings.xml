@@ -15,4 +15,5 @@
     <string name="enter_code_placeholder">Enter Code</string>
     <string name="enter_code_label">code</string>
     <string name="check_code">Continue</string>
+    <string name="api_login_exception">Couldn\'t connect to the service, check your internet connection</string>
 </resources>

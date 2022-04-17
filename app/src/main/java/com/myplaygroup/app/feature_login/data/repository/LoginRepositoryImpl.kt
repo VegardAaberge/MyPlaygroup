@@ -1,34 +1,47 @@
 package com.myplaygroup.app.feature_login.data.repository
 
-import com.myplaygroup.app.feature_login.domain.model.User
+import android.content.Context
+import android.util.Log
+import com.myplaygroup.app.R
+import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import no.vegardaaberge.data.requests.AccountRequest
+import java.lang.Exception
 import javax.inject.Inject
 
-class LoginRepositoryImpl @Inject constructor() : LoginRepository {
+class LoginRepositoryImpl @Inject constructor(
+    private val api: MyPlaygroupApi,
+    @ApplicationContext private val context: Context
+) : LoginRepository {
 
     override suspend fun authenticate(
-        user: String,
+        username: String,
         password: String
-    ) : Flow<Resource<User>> {
+    ) : Flow<Resource<String>> {
 
         return flow {
             emit(Resource.Loading(true))
-            delay(3000)
-            emit(Resource.Loading(false))
 
-            if(user == "vegard" && password == "123"){
-                val newUser = User(
-                    id = 1,
-                    token = "12345"
-                )
+            try {
+                val response = api.login(AccountRequest(username, password))
+                val responseMessage = response.body()?.message
 
-                emit(Resource.Success(newUser))
-            }else{
-                emit(Resource.Error(message = "Fail"))
+                if(response.isSuccessful && response.body()!!.successful){
+                    emit(Resource.Success(responseMessage))
+                }else{
+                    emit(Resource.Error(responseMessage ?: response.message()))
+                }
+            }catch (e: Exception){
+                Log.e(DEBUG_KEY, e.stackTraceToString())
+                emit(Resource.Error(context.getString(R.string.api_login_exception)))
+            }finally {
+                emit(Resource.Loading(false))
             }
         }
     }

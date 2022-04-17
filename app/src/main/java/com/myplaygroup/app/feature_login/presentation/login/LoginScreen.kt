@@ -12,7 +12,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
-import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_login.presentation.destinations.ForgotPasswordScreenDestination
 import com.myplaygroup.app.feature_login.presentation.login.components.*
 import com.ramcosta.composedestinations.annotation.Destination
@@ -33,7 +32,7 @@ fun LoginScreen(
     }
 
     val isBusy = viewModel.isBusy.value
-    val user = viewModel.state.user
+    val user = viewModel.state.username
     val password = viewModel.state.password
 
     Scaffold(
