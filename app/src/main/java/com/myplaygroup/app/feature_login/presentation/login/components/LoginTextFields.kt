@@ -29,7 +29,6 @@ fun LoginTextFields(
     enabled: Boolean,
     onUserChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onFocusChange: (FocusState) -> Unit,
     modifier: Modifier = Modifier,
 )
 {
@@ -46,7 +45,6 @@ fun LoginTextFields(
             backgroundColor = Color.White
         ),
         modifier = modifier
-            .onFocusChanged { onFocusChange(it) }
     )
     Spacer(modifier = Modifier.height(10.dp))
     OutlinedTextField(
@@ -61,8 +59,7 @@ fun LoginTextFields(
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.White
         ),
-        modifier = modifier
-            .onFocusChanged { onFocusChange(it) },
+        modifier = modifier,
         trailingIcon = {
             val image = if(passwordVisible)
                 painterResource(id = R.drawable.ic_visibility)

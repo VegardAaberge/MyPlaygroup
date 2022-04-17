@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
+import com.myplaygroup.app.destinations.LoginScreenDestination
+import com.myplaygroup.app.destinations.MainScrenDestination
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -48,7 +50,10 @@ class LoginViewModel @Inject constructor(
         when(result){
             is Resource.Success -> {
                 _eventFlow.emit(
-                    UiEvent.ShowSnackbar("Success")
+                    UiEvent.PopAndNavigateTo(
+                        popRoute = LoginScreenDestination.route,
+                        destination = MainScrenDestination()
+                    )
                 )
             }
             is Resource.Error -> {

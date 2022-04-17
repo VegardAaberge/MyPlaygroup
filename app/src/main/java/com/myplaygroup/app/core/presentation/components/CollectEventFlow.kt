@@ -4,11 +4,16 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavOptions
 import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun CollectEventFlow(viewModel: BaseViewModel) : ScaffoldState {
+fun CollectEventFlow(
+    viewModel: BaseViewModel,
+    navigator: DestinationsNavigator? = null
+) : ScaffoldState {
 
     val scaffoldState = rememberScaffoldState()
 
@@ -19,6 +24,16 @@ fun CollectEventFlow(viewModel: BaseViewModel) : ScaffoldState {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
+                }
+                is BaseViewModel.UiEvent.NavigateTo -> {
+                    navigator?.navigate(event.destination)
+                }
+                is BaseViewModel.UiEvent.PopAndNavigateTo -> {
+                    navigator?.navigate(event.destination) {
+                        popUpTo(event.popRoute){
+                            inclusive =  true
+                        }
+                    }
                 }
             }
         }

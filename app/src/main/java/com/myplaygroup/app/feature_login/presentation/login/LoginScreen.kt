@@ -9,10 +9,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
-import com.myplaygroup.app.feature_login.presentation.destinations.ForgotPasswordScreenDestination
+import com.myplaygroup.app.destinations.ForgotPasswordScreenDestination
 import com.myplaygroup.app.feature_login.presentation.login.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -26,10 +27,7 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
 
 
-    val scaffoldState = CollectEventFlow(viewModel)
-    var textFieldFocused by remember {
-        mutableStateOf(false)
-    }
+    val scaffoldState = CollectEventFlow(viewModel, navigator)
 
     val isBusy = viewModel.isBusy.value
     val user = viewModel.state.username
@@ -42,7 +40,6 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = ScaffoldColumnModifier(){
-                textFieldFocused = false
                 focusManager.clearFocus()
             }
         ) {
@@ -67,9 +64,6 @@ fun LoginScreen(
                 onPasswordChange = {
                     viewModel.onEvent(LoginEvent.EnteredPassword(it))
                 },
-                onFocusChange = {
-                    textFieldFocused = it.isFocused
-                },
                 enabled = !isBusy,
                 modifier = widthModifier
             )
@@ -79,7 +73,6 @@ fun LoginScreen(
             LoginButton(
                 enabled = !isBusy && user.isNotBlank() && password.isNotBlank(),
                 loginEvent = {
-                    textFieldFocused = false
                     focusManager.clearFocus()
                     viewModel.onEvent(LoginEvent.LoginTapped)
                 },
