@@ -1,14 +1,18 @@
 package com.myplaygroup.app.feature_login.presentation.login
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
+import com.myplaygroup.app.core.util.Constants.KEY_PASSWORD
+import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
 import com.myplaygroup.app.destinations.LoginScreenDestination
-import com.myplaygroup.app.destinations.MainScrenDestination
+import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val repository: LoginRepository,
-    private val basicAuthInterceptor: BasicAuthInterceptor
+    private val basicAuthInterceptor: BasicAuthInterceptor,
+    private val sharedPref: SharedPreferences
 ) : BaseViewModel() {
 
     var state by mutableStateOf(LoginState())
@@ -32,6 +37,7 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.LoginTapped -> {
                 authenticateAPI()
+                storeAuthentication()
                 viewModelScope.launch {
                     repository
                         .authenticate(state.username, state.password)
@@ -46,13 +52,21 @@ class LoginViewModel @Inject constructor(
         basicAuthInterceptor.password = state.password
     }
 
+    private fun storeAuthentication(){
+        sharedPref.edit {
+            putString(KEY_USERNAME, state.username)
+            putString(KEY_PASSWORD, state.password)
+            apply()
+        }
+    }
+
     private suspend fun collectAuthenticateResponse(result: Resource<String>) {
         when(result){
             is Resource.Success -> {
                 _eventFlow.emit(
                     UiEvent.PopAndNavigateTo(
                         popRoute = LoginScreenDestination.route,
-                        destination = MainScrenDestination()
+                        destination = MainScreenDestination
                     )
                 )
             }

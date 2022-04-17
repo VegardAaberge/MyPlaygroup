@@ -14,7 +14,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
-fun MainScren(navigator: DestinationsNavigator) {
+fun MainScreen(navigator: DestinationsNavigator) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
