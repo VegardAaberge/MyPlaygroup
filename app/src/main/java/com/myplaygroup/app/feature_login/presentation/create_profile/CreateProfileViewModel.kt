@@ -29,6 +29,12 @@ class CreateProfileViewModel @Inject constructor(
             is CreateProfileScreenEvent.EnteredRepeatedPassword -> {
                 state = state.copy(repeatedPassword = event.repeatedPassword)
             }
+            is CreateProfileScreenEvent.TakePicture -> {
+
+            }
+            is CreateProfileScreenEvent.SaveProfile -> {
+
+            }
         }
     }
 }

@@ -1,33 +1,25 @@
 package com.myplaygroup.app.feature_login.presentation.create_profile.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.myplaygroup.app.R
-import com.myplaygroup.app.feature_login.presentation.create_profile.CreateProfileScreen
 
 @Composable
 fun ProfileImage(
+    takePicture: () -> Unit,
     imageSize: Dp = 200.dp,
 ) {
     Box(
@@ -36,6 +28,11 @@ fun ProfileImage(
             .background(Color.LightGray, shape = CircleShape)
             .padding(2.dp)
             .background(Color.White, shape = CircleShape)
+            .clickable (
+                interactionSource = MutableInteractionSource(),
+                indication = null,
+                onClick = takePicture
+            )
     ) {
         Box(
             modifier = Modifier
@@ -53,6 +50,7 @@ fun ProfileImage(
 
         Box(
             modifier = Modifier
+                .clip(CircleShape)
                 .padding(4.dp)
                 .size(50.dp)
                 .background(Color.White, shape = CircleShape)
@@ -74,5 +72,9 @@ fun ProfileImage(
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    ProfileImage()
+    ProfileImage(
+        takePicture = {
+
+        }
+    )
 }

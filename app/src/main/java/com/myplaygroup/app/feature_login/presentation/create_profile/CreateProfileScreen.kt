@@ -4,12 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
+import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
 import com.myplaygroup.app.feature_login.presentation.create_profile.components.ProfileField
 import com.myplaygroup.app.feature_login.presentation.create_profile.components.ProfileImage
@@ -37,41 +36,24 @@ fun CreateProfileScreen(
     val scaffoldState = CollectEventFlow(viewModel, navigator)
 
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(R.string.profile_screen_title))
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back Button",
-                        )
+            DefaultTopAppBar(
+                title = stringResource(R.string.profile_screen_title),
+                navigator = navigator!!,
+            ){
+                IconButton(
+                    onClick = {
+                        viewModel.onEvent(CreateProfileScreenEvent.SaveProfile)
                     }
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = "Save Button",
-                        )
-                    }
-                },
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = Color.White,
-                elevation = 12.dp
-            )
-        },
-        scaffoldState = scaffoldState
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "Save Button",
+                    )
+                }
+            }
+        }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,7 +62,11 @@ fun CreateProfileScreen(
                 focusManager.clearFocus()
             }
         ) {
-            ProfileImage()
+            ProfileImage(
+                takePicture = {
+                    viewModel.onEvent(CreateProfileScreenEvent.TakePicture)
+                }
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
 
