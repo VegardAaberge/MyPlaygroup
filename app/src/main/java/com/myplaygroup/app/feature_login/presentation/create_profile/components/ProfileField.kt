@@ -1,12 +1,15 @@
 package com.myplaygroup.app.feature_login.presentation.create_profile.components
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.constraintlayout.widget.Placeholder
-import com.myplaygroup.app.R
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun ProfileField(
@@ -14,7 +17,9 @@ fun ProfileField(
     enabled: Boolean,
     placeholder: String,
     label: String,
-    onProfileNameChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    isPassword: Boolean = false,
+    onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 )
 {
@@ -24,10 +29,14 @@ fun ProfileField(
         label = { Text(text = label) },
         enabled = enabled,
         singleLine = true,
-        onValueChange = onProfileNameChange,
+        onValueChange = onTextChange,
+        visualTransformation = if(isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        keyboardOptions = keyboardOptions,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.White
         ),
         modifier = modifier,
     )
+
+    Spacer(modifier = Modifier.height(10.dp))
 }

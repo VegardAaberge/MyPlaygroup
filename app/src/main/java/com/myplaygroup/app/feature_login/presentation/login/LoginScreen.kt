@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,6 +14,7 @@ import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
 import com.myplaygroup.app.destinations.ForgotPasswordScreenDestination
+import com.myplaygroup.app.feature_login.presentation.forgot_password.ForgotPasswordScreen
 import com.myplaygroup.app.feature_login.presentation.login.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -20,7 +22,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun LoginScreen(
-    navigator: DestinationsNavigator,
+    navigator: DestinationsNavigator? = null,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val focusManager = LocalFocusManager.current
@@ -83,7 +85,7 @@ fun LoginScreen(
             LoginForgotPassword(
                 isBusy = isBusy,
                 forgotPasswordEvent = {
-                    navigator.navigate(ForgotPasswordScreenDestination())
+                    navigator!!.navigate(ForgotPasswordScreenDestination())
                 },
                 modifier = widthModifier
             )

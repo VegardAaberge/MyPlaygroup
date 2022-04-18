@@ -21,4 +21,9 @@
     <string name="profile_name_label">Profile name</string>
     <string name="phone_number_placeholder">Enter phone number</string>
     <string name="phone_number_label">Phone number</string>
+    <string name="confirm_password_placeholder">Confirm your password</string>
+    <string name="confirm_password_label">Confirm password</string>
+    <string name="profile_screen_title">Edit Profile</string>
+    <string name="email_placeholder">Enter email</string>
+    <string name="email_label">Email</string>
 </resources>

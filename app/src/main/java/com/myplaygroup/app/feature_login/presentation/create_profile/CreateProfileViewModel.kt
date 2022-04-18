@@ -20,11 +20,14 @@ class CreateProfileViewModel @Inject constructor(
             is CreateProfileScreenEvent.EnteredPhoneNumber -> {
                 state = state.copy(phoneNumber = event.phoneNumber)
             }
+            is CreateProfileScreenEvent.EnteredEmail -> {
+                state = state.copy(email = event.email)
+            }
             is CreateProfileScreenEvent.EnteredPassword -> {
                 state = state.copy(password = event.password)
             }
             is CreateProfileScreenEvent.EnteredRepeatedPassword -> {
-                state = state.copy(repatedPassword = event.repeatedPassword)
+                state = state.copy(repeatedPassword = event.repeatedPassword)
             }
         }
     }
