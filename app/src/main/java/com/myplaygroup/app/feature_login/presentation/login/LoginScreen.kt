@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
@@ -59,10 +58,10 @@ fun LoginScreen(
                 user = user,
                 password = password,
                 onUserChange = {
-                    viewModel.onEvent(LoginEvent.EnteredUsername(it))
+                    viewModel.onEvent(LoginScreenEvent.EnteredUsername(it))
                 },
                 onPasswordChange = {
-                    viewModel.onEvent(LoginEvent.EnteredPassword(it))
+                    viewModel.onEvent(LoginScreenEvent.EnteredPassword(it))
                 },
                 enabled = !isBusy,
                 modifier = widthModifier
@@ -74,7 +73,7 @@ fun LoginScreen(
                 enabled = !isBusy && user.isNotBlank() && password.isNotBlank(),
                 loginEvent = {
                     focusManager.clearFocus()
-                    viewModel.onEvent(LoginEvent.LoginTapped)
+                    viewModel.onEvent(LoginScreenEvent.LoginTapped)
                 },
                 modifier = widthModifier
             )

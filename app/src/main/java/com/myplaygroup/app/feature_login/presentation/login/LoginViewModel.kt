@@ -27,15 +27,15 @@ class LoginViewModel @Inject constructor(
 
     var state by mutableStateOf(LoginState())
 
-    fun onEvent(event: LoginEvent){
+    fun onEvent(event: LoginScreenEvent){
         when(event){
-            is LoginEvent.EnteredUsername -> {
+            is LoginScreenEvent.EnteredUsername -> {
                 state = state.copy(username = event.username)
             }
-            is LoginEvent.EnteredPassword -> {
+            is LoginScreenEvent.EnteredPassword -> {
                 state = state.copy(password = event.password)
             }
-            is LoginEvent.LoginTapped -> {
+            is LoginScreenEvent.LoginTapped -> {
                 authenticateAPI()
                 storeAuthentication()
                 viewModelScope.launch {

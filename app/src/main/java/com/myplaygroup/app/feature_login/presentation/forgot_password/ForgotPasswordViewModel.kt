@@ -49,7 +49,7 @@ class ForgotPasswordViewModel @Inject constructor(
         when(result){
             is Resource.Success -> {
                 _eventFlow.emit(
-                    UiEvent.ShowSnackbar("Sent, please check your email")
+                    UiEvent.ShowSnackbar(result.data!!)
                 )
                 state = state.copy(
                     shouldCheckCode = true,
@@ -69,7 +69,7 @@ class ForgotPasswordViewModel @Inject constructor(
             }
             is Resource.Error -> {
                 _eventFlow.emit(
-                    UiEvent.ShowSnackbar("Failed to send")
+                    UiEvent.ShowSnackbar(result.message!!)
                 )
             }
             is Resource.Loading -> {
@@ -82,7 +82,7 @@ class ForgotPasswordViewModel @Inject constructor(
         when(result){
             is Resource.Success -> {
                 _eventFlow.emit(
-                    UiEvent.ShowSnackbar("Correct Code")
+                    UiEvent.ShowSnackbar(result.data!!)
                 )
 
                 state = state.copy(
@@ -93,7 +93,7 @@ class ForgotPasswordViewModel @Inject constructor(
             }
             is Resource.Error -> {
                 _eventFlow.emit(
-                    UiEvent.ShowSnackbar("Failed to send")
+                    UiEvent.ShowSnackbar(result.message!!)
                 )
 
                 state = state.copy(
