@@ -4,4 +4,5 @@ sealed class CreateProfileScreenEvent {
     data class EnteredProfileName(val profileName: String) : CreateProfileScreenEvent()
     data class EnteredPassword(val password: String) : CreateProfileScreenEvent()
     data class EnteredRepeatedPassword(val repeatedPassword: String) : CreateProfileScreenEvent()
+    data class EnteredPhoneNumber(val phoneNumber: String) : CreateProfileScreenEvent()
 }

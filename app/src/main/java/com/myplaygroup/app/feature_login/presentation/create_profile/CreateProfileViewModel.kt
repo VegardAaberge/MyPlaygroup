@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.feature_login.presentation.forgot_password.ForgotPasswordState
 import javax.inject.Inject
 
 class CreateProfileViewModel @Inject constructor(
@@ -17,6 +16,9 @@ class CreateProfileViewModel @Inject constructor(
         when(event){
             is CreateProfileScreenEvent.EnteredProfileName -> {
                 state = state.copy(profileName = event.profileName)
+            }
+            is CreateProfileScreenEvent.EnteredPhoneNumber -> {
+                state = state.copy(phoneNumber = event.phoneNumber)
             }
             is CreateProfileScreenEvent.EnteredPassword -> {
                 state = state.copy(password = event.password)
