@@ -11,6 +11,7 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.util.Constants.KEY_PASSWORD
 import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
+import com.myplaygroup.app.destinations.CreateProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
@@ -36,8 +37,6 @@ class LoginViewModel @Inject constructor(
                 state = state.copy(password = event.password)
             }
             is LoginScreenEvent.LoginTapped -> {
-                authenticateAPI()
-                storeAuthentication()
                 viewModelScope.launch {
                     repository
                         .authenticate(state.username, state.password)
@@ -63,12 +62,24 @@ class LoginViewModel @Inject constructor(
     private suspend fun collectAuthenticateResponse(result: Resource<String>) {
         when(result){
             is Resource.Success -> {
-                _eventFlow.emit(
-                    UiEvent.PopAndNavigateTo(
-                        popRoute = LoginScreenDestination.route,
-                        destination = MainScreenDestination
+                if(result.data == "HAS BEEN INITIALISED"){
+
+                    authenticateAPI()
+                    storeAuthentication()
+                    _eventFlow.emit(
+                        UiEvent.PopAndNavigateTo(
+                            popRoute = LoginScreenDestination.route,
+                            destination = MainScreenDestination
+                        )
                     )
-                )
+                }else{
+                    _eventFlow.emit(
+                        UiEvent.NavigateTo(
+                            destination = CreateProfileScreenDestination
+                        )
+                    )
+                }
+
             }
             is Resource.Error -> {
                 state = state.copy(password = "")

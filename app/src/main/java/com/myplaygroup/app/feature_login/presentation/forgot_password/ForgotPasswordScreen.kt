@@ -43,7 +43,7 @@ fun ForgotPasswordScreen(
                 shouldCheckCode = shouldCheckCode,
                 enabled = isActionIconEnabled,
             ){
-                viewModel.onEvent(ForgotPasswordEvent.ActionButtonTapped)
+                viewModel.onEvent(ForgotPasswordScreenEvent.ActionButtonTapped)
                 focusManager.clearFocus()
             }
         }
@@ -70,7 +70,7 @@ fun ForgotPasswordScreen(
             EmailField(
                 email = email,
                 onTextChanged = {
-                    viewModel.onEvent(ForgotPasswordEvent.EnteredEmail(it))
+                    viewModel.onEvent(ForgotPasswordScreenEvent.EnteredEmail(it))
                 },
                 isEnabled = !isBusy && !shouldCheckCode,
                 modifier = widthModifier
@@ -83,7 +83,7 @@ fun ForgotPasswordScreen(
                 countDown = countDown,
                 isEnabled = !isBusy && shouldCheckCode,
                 onValueChange = {
-                    viewModel.onEvent(ForgotPasswordEvent.EnteredCode(it))
+                    viewModel.onEvent(ForgotPasswordScreenEvent.EnteredCode(it))
                 },
                 modifier = widthModifier
             )

@@ -20,16 +20,16 @@ class ForgotPasswordViewModel @Inject constructor(
 
     var state by mutableStateOf(ForgotPasswordState())
 
-    fun onEvent(event: ForgotPasswordEvent)
+    fun onEvent(event: ForgotPasswordScreenEvent)
     {
         when(event){
-            is ForgotPasswordEvent.EnteredEmail -> {
+            is ForgotPasswordScreenEvent.EnteredEmail -> {
                 state = state.copy(email = event.email)
             }
-            is ForgotPasswordEvent.EnteredCode -> {
+            is ForgotPasswordScreenEvent.EnteredCode -> {
                 state = state.copy(code = event.code)
             }
-            is ForgotPasswordEvent.ActionButtonTapped -> {
+            is ForgotPasswordScreenEvent.ActionButtonTapped -> {
                 viewModelScope.launch {
                     if(state.shouldCheckCode){
                         repository
