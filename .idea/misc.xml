@@ -13,8 +13,13 @@
         <entry key="../../../../../layout/compose-model-1650279783977.xml" value="0.29074074074074074" />
         <entry key="../../../../../layout/compose-model-1650281890313.xml" value="0.2799831081081081" />
         <entry key="../../../../../layout/compose-model-1650285631527.xml" value="0.11636363636363636" />
+        <entry key="../../../../../layout/compose-model-1650287206020.xml" value="0.1" />
+        <entry key="../../../../../layout/compose-model-1650290202383.xml" value="0.11636363636363636" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_flip_camera_android_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_image_100.xml" value="0.157" />
+        <entry key="app/src/main/res/drawable/ic_baseline_lens_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
       </map>
     </option>

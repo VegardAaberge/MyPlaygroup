@@ -6,15 +6,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.core.presentation.camera.components.CameraView
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
+import com.myplaygroup.app.core.presentation.components.RequestPermissions
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
 import com.myplaygroup.app.destinations.ForgotPasswordScreenDestination
-import com.myplaygroup.app.feature_login.presentation.forgot_password.ForgotPasswordScreen
 import com.myplaygroup.app.feature_login.presentation.login.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -25,9 +25,9 @@ fun LoginScreen(
     navigator: DestinationsNavigator? = null,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    RequestPermissions()
+
     val focusManager = LocalFocusManager.current
-
-
     val scaffoldState = CollectEventFlow(viewModel, navigator)
 
     val isBusy = viewModel.isBusy.value
