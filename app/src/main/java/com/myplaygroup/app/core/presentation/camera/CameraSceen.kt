@@ -1,27 +1,30 @@
 package com.myplaygroup.app.core.presentation.camera
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
-import com.myplaygroup.app.R
-import com.myplaygroup.app.core.presentation.camera.components.CameraAcceptControls
 import com.myplaygroup.app.core.presentation.camera.components.CameraFooter
 import com.myplaygroup.app.core.presentation.camera.components.CameraUIAction
 import com.myplaygroup.app.core.presentation.camera.components.CameraView
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
-import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -32,25 +35,77 @@ fun CameraScreen(
     viewModel: CameraViewModel = hiltViewModel()
 ) {
     val scaffoldState = CollectEventFlow(viewModel, navigator)
-    val state = viewModel.state
+
+    var imageSize = Size(9999f, 9999f)
+    var offsetX by remember { mutableStateOf(0f) }
+    var offsetY by remember { mutableStateOf(0f) }
+    var cutPercentage by remember { mutableStateOf(0.85f) }
+    val photoUri = viewModel.state.photoUri
 
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = {
-            DefaultTopAppBar(stringResource(R.string.camera_title), navigator)
-        }
     ) {
 
-        if(state.photoUri != null)
+        if(photoUri != null)
         {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .pointerInput(Unit) {
+                    detectTransformGestures { _, pan, zoom, _ ->
+                        val newZoom = cutPercentage * zoom
+                        val newOffsetX = offsetX + pan.x
+                        val newOffsetY = offsetY + pan.y
+
+                        cutPercentage = when {
+                            newZoom < 0.4f -> 0.4f
+                            newZoom > 1f -> 1f
+                            else -> newZoom
+                        }
+
+                        val maxOffsetX = (imageSize.width - (cutPercentage * imageSize.minDimension)) / 2
+                        val maxOffsetY = (imageSize.height - (cutPercentage * imageSize.minDimension)) / 2
+
+                        offsetX = when {
+                            newOffsetX < -maxOffsetX -> -maxOffsetX
+                            newOffsetX > maxOffsetX -> maxOffsetX
+                            else -> newOffsetX
+                        }
+
+                        offsetY = when {
+                            newOffsetY < -maxOffsetY -> -maxOffsetY
+                            newOffsetY > maxOffsetY -> maxOffsetY
+                            else -> newOffsetY
+                        }
+                    }
+                }) {
                 Image(
-                    painter = rememberImagePainter(state.photoUri),
+                    painter = rememberImagePainter(photoUri),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center)
                 )
+
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ){
+                    imageSize = size
+                    val squarePath = Path().apply {
+                        addRect(Rect(
+                            Offset(
+                                center.x + offsetX,
+                                center.y + offsetY
+                            ),
+                            (cutPercentage * imageSize.minDimension) / 2
+                        ))
+                    }
+                    clipPath(squarePath, clipOp = ClipOp.Difference) {
+                        drawRect(SolidColor(Color.Black.copy(alpha = 0.5f)))
+                    }
+                }
 
                 CameraFooter(false){ action ->
                     when(action){

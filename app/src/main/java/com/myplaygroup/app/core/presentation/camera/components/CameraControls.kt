@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -35,8 +34,8 @@ fun BoxScope.CameraFooter(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Black)
-                .requiredHeight(100.dp)
+                .background(Color.Transparent)
+                .requiredHeight(120.dp)
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
