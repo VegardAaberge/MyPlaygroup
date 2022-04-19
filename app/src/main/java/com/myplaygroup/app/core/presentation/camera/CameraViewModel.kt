@@ -3,7 +3,7 @@ package com.myplaygroup.app.core.presentation.camera
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
+import android.media.ExifInterface
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.webkit.MimeTypeMap
@@ -15,7 +15,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.core.net.toFile
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.presentation.camera.components.getOutputDirectory
-import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.ByteArrayOutputStream
@@ -39,21 +38,16 @@ class CameraViewModel @Inject constructor(
                 state = state.copy(photoUri = event.uri)
             }
             is CameraScreenEvent.AcceptPhoto -> {
-                val bitmapOrg = BitmapFactory.decodeFile(File(state.photoUri!!.getPath()).getAbsolutePath())
-
-                val bitmap = if(event.imageSize.height > event.imageSize.width && bitmapOrg.width > bitmapOrg.height){
-                    convertBitmap(bitmapOrg, true)
-                }else{
-                    convertBitmap(bitmapOrg, false)
-                }
+                val path = state.photoUri!!.getPath()?.let { File(it).getAbsolutePath() }
+                val bitmapOrg = BitmapFactory.decodeFile(path!!)
 
                 val croppedBitmap = cropBitmap(
-                    bitmap = bitmap,
+                    bitmap = bitmapOrg,
                     canvasSize = event.imageSize,
                     cutRect = event.cutRect
                 )
 
-                val newUri = convertBitmapToUri(croppedBitmap)
+                val newUri = convertBitmapToUri(croppedBitmap, path!!)
 
                 state = state.copy(photoUri = newUri)
             }
@@ -69,42 +63,18 @@ class CameraViewModel @Inject constructor(
                 .format(System.currentTimeMillis()) + extension
         )
 
-    fun convertBitmap(bitmap: Bitmap, shouldRotate: Boolean) : Bitmap {
-
-        // Rotate the bitmap if it has different rotation than the canvas
-        val matrix = Matrix()
-        if(shouldRotate){
-            matrix.postRotate(90f)
-        }
-
-        // create the scaled bitmap that will be passed to the converted bitmap
-        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width, bitmap.height, true)
-
-        return Bitmap.createBitmap(
-            scaledBitmap,
-            0,
-            0,
-            scaledBitmap.width,
-            scaledBitmap.height,
-            matrix,
-            true
-        )
-    }
-
     fun cropBitmap(bitmap: Bitmap, canvasSize: Size, cutRect: Rect) : Bitmap {
 
-        // Scale the cut rectange to the bitmap
+        // Scale the cut rectangle to the bitmap
         val scalingFactor = max(bitmap.height, bitmap.width) / canvasSize.maxDimension
         val cutBitmapSize = cutRect.maxDimension * scalingFactor
-        val cutCenterX = cutRect.center.x * scalingFactor
-        val cutCenterY = cutRect.center.y * scalingFactor
+        val cutCenterY = cutRect.center.x * scalingFactor
+        val cutCenterX = cutRect.center.y * scalingFactor
 
         // Calculate the start point
-        val isPortrait = canvasSize.height > canvasSize.width
-        val outsideScreenX = if(isPortrait) (bitmap.width - canvasSize.width * scalingFactor) / 2 else 0f
-        val outsideScreenY = if(!isPortrait) (bitmap.height - canvasSize.height * scalingFactor) / 2 else 0f
-        val startX = (outsideScreenX + cutCenterX - cutBitmapSize / 2).toInt()
-        val startY = (outsideScreenY + cutCenterY - cutBitmapSize / 2).toInt()
+        val outsideScreen = (bitmap.height - canvasSize.minDimension * scalingFactor) / 2
+        val startX = (cutCenterX - cutBitmapSize / 2).toInt()
+        val startY = (outsideScreen + cutCenterY - cutBitmapSize / 2).toInt()
 
         return Bitmap.createBitmap(
             bitmap,
@@ -115,7 +85,7 @@ class CameraViewModel @Inject constructor(
         )
     }
 
-    fun convertBitmapToUri(bitmap: Bitmap) : Uri {
+    fun convertBitmapToUri(bitmap: Bitmap, oldPath: String) : Uri {
 
         // Get the bytes from the bitmap
         val outputStream = ByteArrayOutputStream()
@@ -127,6 +97,10 @@ class CameraViewModel @Inject constructor(
         val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
         photoFile.writeBytes(bytes)
         val newUri = Uri.fromFile(photoFile)
+
+        // Move the Exif to the new file
+        val newPath = File(newUri.getPath()).getAbsolutePath()
+        copyExif(oldPath, newPath)
 
         // Make sure the file is visible to the system
         val mimeType = MimeTypeMap.getSingleton()
@@ -142,6 +116,36 @@ class CameraViewModel @Inject constructor(
         return newUri
     }
 
+    fun copyExif(oldPath: String, newPath: String) {
+        val oldExif = ExifInterface(oldPath)
+        val attributes = arrayOf(
+            ExifInterface.TAG_DATETIME,
+            ExifInterface.TAG_DATETIME_DIGITIZED,
+            ExifInterface.TAG_EXPOSURE_TIME,
+            ExifInterface.TAG_FLASH,
+            ExifInterface.TAG_FOCAL_LENGTH,
+            ExifInterface.TAG_GPS_ALTITUDE,
+            ExifInterface.TAG_GPS_ALTITUDE_REF,
+            ExifInterface.TAG_GPS_DATESTAMP,
+            ExifInterface.TAG_GPS_LATITUDE,
+            ExifInterface.TAG_GPS_LATITUDE_REF,
+            ExifInterface.TAG_GPS_LONGITUDE,
+            ExifInterface.TAG_GPS_LONGITUDE_REF,
+            ExifInterface.TAG_GPS_PROCESSING_METHOD,
+            ExifInterface.TAG_GPS_TIMESTAMP,
+            ExifInterface.TAG_MAKE,
+            ExifInterface.TAG_MODEL,
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.TAG_SUBSEC_TIME,
+            ExifInterface.TAG_WHITE_BALANCE
+        )
+        val newExif = ExifInterface(newPath)
+        for (i in attributes.indices) {
+            val value = oldExif.getAttribute(attributes[i])
+            if (value != null) newExif.setAttribute(attributes[i], value)
+        }
+        newExif.saveAttributes()
+    }
 }
 
 private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
