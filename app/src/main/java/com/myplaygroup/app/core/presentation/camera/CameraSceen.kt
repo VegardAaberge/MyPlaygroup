@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.myplaygroup.app.core.presentation.camera.components.CameraFooter
@@ -36,7 +37,9 @@ fun CameraScreen(
 ) {
     val scaffoldState = CollectEventFlow(viewModel, navigator)
 
+    var canvasSize = Size(9999f, 9999f)
     var imageSize = Size(9999f, 9999f)
+    var cutRect = Rect(0f,0f,0f,0f)
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
     var cutPercentage by remember { mutableStateOf(0.85f) }
@@ -63,8 +66,8 @@ fun CameraScreen(
                             else -> newZoom
                         }
 
-                        val maxOffsetX = (imageSize.width - (cutPercentage * imageSize.minDimension)) / 2
-                        val maxOffsetY = (imageSize.height - (cutPercentage * imageSize.minDimension)) / 2
+                        val maxOffsetX = (canvasSize.width - cutRect.width) / 2
+                        val maxOffsetY = (canvasSize.height - cutRect.width) / 2
 
                         offsetX = when {
                             newOffsetX < -maxOffsetX -> -maxOffsetX
@@ -92,15 +95,16 @@ fun CameraScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ){
-                    imageSize = size
+                    canvasSize = size
+                    cutRect = Rect(
+                        Offset(
+                            center.x + offsetX,
+                            center.y + offsetY
+                        ),
+                        cutPercentage * canvasSize.minDimension / 2
+                    )
                     val squarePath = Path().apply {
-                        addRect(Rect(
-                            Offset(
-                                center.x + offsetX,
-                                center.y + offsetY
-                            ),
-                            (cutPercentage * imageSize.minDimension) / 2
-                        ))
+                        addRect(cutRect)
                     }
                     clipPath(squarePath, clipOp = ClipOp.Difference) {
                         drawRect(SolidColor(Color.Black.copy(alpha = 0.5f)))
@@ -113,7 +117,7 @@ fun CameraScreen(
                             viewModel.onEvent(CameraScreenEvent.RejectPhoto)
                         }
                         is CameraUIAction.OnAcceptClick -> {
-                            viewModel.onEvent(CameraScreenEvent.AcceptPhoto)
+                            viewModel.onEvent(CameraScreenEvent.AcceptPhoto(cutRect, canvasSize))
                         }
                     }
                 }
