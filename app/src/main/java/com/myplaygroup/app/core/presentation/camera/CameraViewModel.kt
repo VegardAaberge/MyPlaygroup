@@ -100,9 +100,11 @@ class CameraViewModel @Inject constructor(
         val cutCenterY = cutRect.center.y * scalingFactor
 
         // Calculate the start point
-        val widthDiff = (bitmap.width - canvasSize.width * scalingFactor) / 2
-        val startX = (widthDiff + cutCenterX - cutBitmapSize / 2).toInt()
-        val startY = (cutCenterY - cutBitmapSize / 2).toInt()
+        val isPortrait = canvasSize.height > canvasSize.width
+        val outsideScreenX = if(isPortrait) (bitmap.width - canvasSize.width * scalingFactor) / 2 else 0f
+        val outsideScreenY = if(!isPortrait) (bitmap.height - canvasSize.height * scalingFactor) / 2 else 0f
+        val startX = (outsideScreenX + cutCenterX - cutBitmapSize / 2).toInt()
+        val startY = (outsideScreenY + cutCenterY - cutBitmapSize / 2).toInt()
 
         return Bitmap.createBitmap(
             bitmap,
