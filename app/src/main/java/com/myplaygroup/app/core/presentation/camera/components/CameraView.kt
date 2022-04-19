@@ -9,29 +9,13 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.Email
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.myplaygroup.app.R
-import com.myplaygroup.app.feature_login.data.data_source.CameraUIAction
 
 @Composable
 fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureException) -> Unit) {
@@ -103,75 +87,6 @@ private fun CameraPreviewView(
         AndroidView({ previewView }, modifier = Modifier.fillMaxSize()) {
 
         }
-        Column(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            CameraControls(cameraUIAction)
-        }
-
+        CameraFooter(true, cameraUIAction)
     }
-}
-
-@Composable
-fun CameraControls(cameraUIAction: (CameraUIAction) -> Unit) {
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Black)
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        CameraControl(
-            painter = painterResource(id = R.drawable.ic_baseline_flip_camera_android_24),
-            R.string.icn_camera_view_switch_camera_content_description,
-            modifier= Modifier.size(64.dp),
-            onClick = { cameraUIAction(CameraUIAction.OnSwitchCameraClick) }
-        )
-
-        CameraControl(
-            painter = painterResource(id = R.drawable.ic_baseline_lens_24),
-            R.string.icn_camera_view_camera_shutter_content_description,
-            modifier= Modifier
-                .size(64.dp)
-                .padding(1.dp)
-                .border(1.dp, Color.White, CircleShape),
-            onClick = { cameraUIAction(CameraUIAction.OnCameraClick) }
-        )
-
-        CameraControl(
-            painter = painterResource(id = R.drawable.ic_baseline_photo_library_24),
-            R.string.icn_camera_view_view_gallery_content_description,
-            modifier= Modifier.size(64.dp),
-            onClick = { cameraUIAction(CameraUIAction.OnGalleryViewClick) }
-        )
-
-    }
-}
-
-
-@Composable
-fun CameraControl(
-    painter: Painter,
-    contentDescId: Int,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-
-
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(
-            painter = painter,
-            contentDescription = stringResource(id = contentDescId),
-            modifier = modifier,
-            tint = Color.White
-        )
-    }
-
 }

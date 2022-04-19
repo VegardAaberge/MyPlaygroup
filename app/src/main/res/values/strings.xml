@@ -25,7 +25,9 @@
     <string name="profile_screen_title">Edit Profile</string>
     <string name="email_placeholder">Enter email</string>
     <string name="email_label">Email</string>
-    <string name="icn_camera_view_switch_camera_content_description" />
-    <string name="icn_camera_view_camera_shutter_content_description" />
-    <string name="icn_camera_view_view_gallery_content_description" />
+    <string name="camera_flip">Flip</string>
+    <string name="camera_gallery">Gallery</string>
+    <string name="camera_title">Camera</string>
+    <string name="camera_reject">Reject</string>
+    <string name="camera_accept">Accept</string>
 </resources>
