@@ -17,6 +17,7 @@ open class BaseViewModel : ViewModel() {
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()
+        object PopPage : UiEvent()
         data class NavigateTo(val destination: DirectionDestination) : UiEvent()
         data class PopAndNavigateTo(val popRoute: String, val destination: DirectionDestination) : UiEvent()
     }

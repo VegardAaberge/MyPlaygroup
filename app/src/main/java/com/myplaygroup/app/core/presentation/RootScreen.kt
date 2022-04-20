@@ -25,7 +25,7 @@ fun RootScreen(
     if(viewModel.IsAuthenticated()){
         PopAndNavigateTo(navigator, MainScreenDestination)
     }else{
-        PopAndNavigateTo(navigator, CameraScreenDestination)
+        PopAndNavigateTo(navigator, CreateProfileScreenDestination)
     }
 }
 
