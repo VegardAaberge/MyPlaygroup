@@ -42,7 +42,7 @@ class CameraViewModel @Inject constructor(
                     state.photoBitmap!!
                 }
 
-                return takePhotoCallback(bitmap)
+                takePhotoCallback(bitmap)
             }
             is CameraScreenEvent.RejectPhoto -> {
                 state = state.copy(photoBitmap = null)
