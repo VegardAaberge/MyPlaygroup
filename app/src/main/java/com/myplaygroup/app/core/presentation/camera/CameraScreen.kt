@@ -1,5 +1,6 @@
 package com.myplaygroup.app.core.presentation.camera
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,21 +25,25 @@ import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination
 @Composable
 fun CameraScreen(
-    navigator: DestinationsNavigator,
-    viewModel: CameraViewModel = hiltViewModel()
+    shouldCrop: Boolean,
+    viewModel: CameraViewModel = hiltViewModel(),
+    takePhotoCallback: (Bitmap) -> Unit
 ) {
-    val scaffoldState = CollectEventFlow(viewModel, navigator)
+    val scaffoldState = CollectEventFlow(viewModel)
+
+    viewModel.takePhotoCallback = takePhotoCallback
+    viewModel.state = viewModel.state.copy(shouldCrop = shouldCrop)
 
     var canvasSize = Size(9999f, 9999f)
-    var imageSize = Size(9999f, 9999f)
     var cutRect = Rect(0f,0f,0f,0f)
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
     var cutPercentage by remember { mutableStateOf(0.85f) }
+
     val photoBitmap = viewModel.state.photoBitmap
+    val shouldCrop = viewModel.state.shouldCrop
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -51,29 +56,31 @@ fun CameraScreen(
                 .background(Color.Black)
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
-                        val newZoom = cutPercentage * zoom
-                        val newOffsetX = offsetX + pan.x
-                        val newOffsetY = offsetY + pan.y
+                        if(shouldCrop){
+                            val newZoom = cutPercentage * zoom
+                            val newOffsetX = offsetX + pan.x
+                            val newOffsetY = offsetY + pan.y
 
-                        cutPercentage = when {
-                            newZoom < 0.4f -> 0.4f
-                            newZoom > 1f -> 1f
-                            else -> newZoom
-                        }
+                            cutPercentage = when {
+                                newZoom < 0.4f -> 0.4f
+                                newZoom > 1f -> 1f
+                                else -> newZoom
+                            }
 
-                        val maxOffsetX = (canvasSize.width - cutRect.width) / 2
-                        val maxOffsetY = (canvasSize.height - cutRect.width) / 2
+                            val maxOffsetX = (canvasSize.width - cutRect.width) / 2
+                            val maxOffsetY = (canvasSize.height - cutRect.width) / 2
 
-                        offsetX = when {
-                            newOffsetX < -maxOffsetX -> -maxOffsetX
-                            newOffsetX > maxOffsetX -> maxOffsetX
-                            else -> newOffsetX
-                        }
+                            offsetX = when {
+                                newOffsetX < -maxOffsetX -> -maxOffsetX
+                                newOffsetX > maxOffsetX -> maxOffsetX
+                                else -> newOffsetX
+                            }
 
-                        offsetY = when {
-                            newOffsetY < -maxOffsetY -> -maxOffsetY
-                            newOffsetY > maxOffsetY -> maxOffsetY
-                            else -> newOffsetY
+                            offsetY = when {
+                                newOffsetY < -maxOffsetY -> -maxOffsetY
+                                newOffsetY > maxOffsetY -> maxOffsetY
+                                else -> newOffsetY
+                            }
                         }
                     }
                 }) {
@@ -86,23 +93,25 @@ fun CameraScreen(
                         .align(Alignment.Center)
                 )
 
-                Canvas(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ){
-                    canvasSize = size
-                    cutRect = Rect(
-                        Offset(
-                            center.x + offsetX,
-                            center.y + offsetY
-                        ),
-                        cutPercentage * canvasSize.minDimension / 2
-                    )
-                    val squarePath = Path().apply {
-                        addRect(cutRect)
-                    }
-                    clipPath(squarePath, clipOp = ClipOp.Difference) {
-                        drawRect(SolidColor(Color.Black.copy(alpha = 0.5f)))
+                if(shouldCrop){
+                    Canvas(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ){
+                        canvasSize = size
+                        cutRect = Rect(
+                            Offset(
+                                center.x + offsetX,
+                                center.y + offsetY
+                            ),
+                            cutPercentage * canvasSize.minDimension / 2
+                        )
+                        val squarePath = Path().apply {
+                            addRect(cutRect)
+                        }
+                        clipPath(squarePath, clipOp = ClipOp.Difference) {
+                            drawRect(SolidColor(Color.Black.copy(alpha = 0.5f)))
+                        }
                     }
                 }
 

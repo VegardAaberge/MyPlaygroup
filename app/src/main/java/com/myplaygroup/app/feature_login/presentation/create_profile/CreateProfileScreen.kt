@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
+import com.myplaygroup.app.core.presentation.camera.CameraScreen
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
@@ -29,10 +30,33 @@ fun CreateProfileScreen(
     navigator: DestinationsNavigator? = null,
     viewModel: CreateProfileViewModel = hiltViewModel()
 ) {
+    val takePictureMode = viewModel.state.takePictureMode
+
+    if(takePictureMode){
+        CameraScreen(
+            shouldCrop = true,
+        ){
+            viewModel.onEvent(
+                CreateProfileScreenEvent.TakePictureDone(it)
+            )
+        }
+    }else{
+        CreateProfileScreenBody(
+            navigator = navigator,
+            viewModel = viewModel
+        )
+    }
+}
+
+@Composable
+fun CreateProfileScreenBody(
+    navigator: DestinationsNavigator?,
+    viewModel: CreateProfileViewModel
+) {
+
     val focusManager = LocalFocusManager.current
-
     val isBusy = viewModel.isBusy.value
-
+    val profileBitmap = viewModel.state.profileBitmap
     val scaffoldState = CollectEventFlow(viewModel, navigator)
 
     Scaffold(
@@ -63,6 +87,7 @@ fun CreateProfileScreen(
             }
         ) {
             ProfileImage(
+                profileBitmap = profileBitmap,
                 takePicture = {
                     viewModel.onEvent(CreateProfileScreenEvent.TakePicture)
                 }

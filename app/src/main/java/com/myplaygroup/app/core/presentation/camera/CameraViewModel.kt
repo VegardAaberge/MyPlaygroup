@@ -1,6 +1,7 @@
 package com.myplaygroup.app.core.presentation.camera
 
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,33 +17,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CameraViewModel @Inject constructor(
-    @ApplicationContext private val context : Context,
-    private val imageRepository : ImageRepository
+    @ApplicationContext private val context : Context
 ) : BaseViewModel() {
+
+    lateinit var takePhotoCallback: (Bitmap) -> Unit
 
     var state by mutableStateOf(CameraScreenState())
 
     fun onEvent(event: CameraScreenEvent){
         when(event){
             is CameraScreenEvent.TakePhoto -> {
-                viewModelScope.launch {
-                    val rotatedBitmap = BitmapUtils.rotateImageFromExif(event.uri, context)
+                val rotatedBitmap = BitmapUtils.rotateImageFromExif(event.uri, context)
 
-                    state = state.copy(photoBitmap = rotatedBitmap)
-                }
+                state = state.copy(photoBitmap = rotatedBitmap)
             }
             is CameraScreenEvent.AcceptPhoto -> {
-                viewModelScope.launch {
-                    val croppedBitmap = BitmapUtils.cropBitmap(
+                val bitmap = if(state.shouldCrop){
+                    BitmapUtils.cropBitmap(
                         bitmap = state.photoBitmap!!,
                         canvasSize = event.imageSize,
                         cutRect = event.cutRect
                     )
-
-                    imageRepository.saveProfileImage(croppedBitmap)
-
-                    _eventFlow.emit(UiEvent.PopPage)
+                }else{
+                    state.photoBitmap!!
                 }
+
+                return takePhotoCallback(bitmap)
             }
             is CameraScreenEvent.RejectPhoto -> {
                 state = state.copy(photoBitmap = null)
