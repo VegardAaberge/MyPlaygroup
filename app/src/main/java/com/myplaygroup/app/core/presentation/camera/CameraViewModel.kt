@@ -2,7 +2,6 @@ package com.myplaygroup.app.core.presentation.camera
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -15,6 +14,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.core.net.toFile
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.presentation.camera.components.getOutputDirectory
+import com.myplaygroup.app.core.util.getImageFromGallery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.ByteArrayOutputStream
@@ -35,24 +35,23 @@ class CameraViewModel @Inject constructor(
     fun onEvent(event: CameraScreenEvent){
         when(event){
             is CameraScreenEvent.TakePhoto -> {
-                state = state.copy(photoUri = event.uri)
+
+                val rotatedBitmap = context.getImageFromGallery(event.uri)
+
+                state = state.copy(photoBitmap = rotatedBitmap)
             }
             is CameraScreenEvent.AcceptPhoto -> {
-                val path = state.photoUri!!.getPath()?.let { File(it).getAbsolutePath() }
-                val bitmapOrg = BitmapFactory.decodeFile(path!!)
 
                 val croppedBitmap = cropBitmap(
-                    bitmap = bitmapOrg,
+                    bitmap = state.photoBitmap!!,
                     canvasSize = event.imageSize,
                     cutRect = event.cutRect
                 )
 
-                val newUri = convertBitmapToUri(croppedBitmap, path!!)
-
-                state = state.copy(photoUri = newUri)
+                state = state.copy(photoBitmap = croppedBitmap)
             }
             is CameraScreenEvent.RejectPhoto -> {
-                state = state.copy(photoUri = null)
+                state = state.copy(photoBitmap = null)
             }
         }
     }
@@ -68,13 +67,15 @@ class CameraViewModel @Inject constructor(
         // Scale the cut rectangle to the bitmap
         val scalingFactor = max(bitmap.height, bitmap.width) / canvasSize.maxDimension
         val cutBitmapSize = cutRect.maxDimension * scalingFactor
-        val cutCenterY = cutRect.center.x * scalingFactor
-        val cutCenterX = cutRect.center.y * scalingFactor
+        val cutCenterX = cutRect.center.x * scalingFactor
+        val cutCenterY = cutRect.center.y * scalingFactor
 
         // Calculate the start point
-        val outsideScreen = (bitmap.height - canvasSize.minDimension * scalingFactor) / 2
-        val startX = (cutCenterX - cutBitmapSize / 2).toInt()
-        val startY = (outsideScreen + cutCenterY - cutBitmapSize / 2).toInt()
+        val isPotrait = bitmap.height > bitmap.width
+        val outsideScreenX = if(isPotrait) (bitmap.width - canvasSize.width * scalingFactor) / 2 else 0f
+        val outsideScreenY = if(!isPotrait) (bitmap.height - canvasSize.height * scalingFactor) / 2 else 0f
+        val startX = (outsideScreenX + cutCenterX - cutBitmapSize / 2).toInt()
+        val startY = (outsideScreenY + cutCenterY - cutBitmapSize / 2).toInt()
 
         return Bitmap.createBitmap(
             bitmap,
