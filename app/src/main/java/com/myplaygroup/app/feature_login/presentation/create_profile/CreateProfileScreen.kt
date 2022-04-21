@@ -88,6 +88,7 @@ fun CreateProfileScreenBody(
                 profileBitmap = profileBitmap,
                 takePicture = {
                     if(!isBusy){
+                        focusManager.clearFocus()
                         viewModel.onEvent(CreateProfileScreenEvent.TakePicture)
                     }
                 }

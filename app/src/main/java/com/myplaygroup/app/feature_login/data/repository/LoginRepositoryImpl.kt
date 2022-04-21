@@ -50,13 +50,13 @@ class LoginRepositoryImpl @Inject constructor(
                     basicAuthInterceptor.username = username
                     basicAuthInterceptor.password = password
 
-                    if(!response.body()!!.createProfile)
-                    {
-                        sharedPreferences.edit {
-                            putString(Constants.KEY_USERNAME, username)
+                    sharedPreferences.edit {
+                        putString(Constants.KEY_USERNAME, username)
+                        if(!response.body()!!.createProfile)
+                        {
                             putString(Constants.KEY_PASSWORD, password)
-                            apply()
                         }
+                        apply()
                     }
 
                     emit(

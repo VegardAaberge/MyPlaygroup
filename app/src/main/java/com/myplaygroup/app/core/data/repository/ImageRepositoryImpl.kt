@@ -1,16 +1,20 @@
 package com.myplaygroup.app.core.data.repository
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
 import com.myplaygroup.app.core.domain.repository.ImageRepository
+import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.Constants.NO_USERNAME
 import com.myplaygroup.app.core.util.FileUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val sharedPreferences: SharedPreferences,
 ) : ImageRepository {
 
     override suspend fun storeProfileImage(bitmap: Bitmap) {
@@ -20,14 +24,16 @@ class ImageRepositoryImpl @Inject constructor(
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         val bytes = outputStream.toByteArray()
 
-        val profileFile = FileUtils.saveProfileFile(bytes)
+        val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_USERNAME) ?: NO_USERNAME
+        val profileFile = FileUtils.saveProfileFile(bytes, username)
 
         val profileUri = Uri.fromFile(profileFile)
         FileUtils.makeUriVisible(context, profileUri)
     }
 
     override suspend fun getProfileImage(): Uri? {
-        val profileFile = FileUtils.getProfileFile()
+        val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_USERNAME) ?: NO_USERNAME
+        val profileFile = FileUtils.getProfileFile(username)
         if(!profileFile.exists())
             return null
 

@@ -23,8 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val repository: LoginRepository,
-    private val basicAuthInterceptor: BasicAuthInterceptor,
-    private val sharedPref: SharedPreferences
 ) : BaseViewModel() {
 
     var state by mutableStateOf(LoginState())
@@ -44,19 +42,6 @@ class LoginViewModel @Inject constructor(
                         .collect { collectAuthenticateResponse(it) }
                 }
             }
-        }
-    }
-
-    private fun authenticateAPI(){
-        basicAuthInterceptor.username = state.username
-        basicAuthInterceptor.password = state.password
-    }
-
-    private fun storeAuthentication(){
-        sharedPref.edit {
-            putString(KEY_USERNAME, state.username)
-            putString(KEY_PASSWORD, state.password)
-            apply()
         }
     }
 

@@ -70,13 +70,6 @@ class CreateProfileViewModel @Inject constructor(
                     val uri = imageRepository.getProfileImage()
 
                     launch(Dispatchers.IO) {
-                        //loginRepository
-                            //.uploadProfileImage(uri)
-                            //.collect{ collectUploadProfileImage(it) }
-
-                    }
-
-                    launch(Dispatchers.IO) {
                         loginRepository.createProfile(
                             profileUri = uri,
                             profileName = state.profileName,

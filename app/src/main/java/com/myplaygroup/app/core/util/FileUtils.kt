@@ -15,23 +15,24 @@ class FileUtils {
         lateinit var outputDirectory: File
 
         private const val USER_DIR = "user"
-        private const val PROFILE_FILE = "profile.jpg"
+        private const val JPG_EXT = ".jpg"
 
-        fun saveProfileFile(bytes: ByteArray): File {
+        fun saveProfileFile(bytes: ByteArray, username: String): File {
             val userDirectory = "$outputDirectory/$USER_DIR"
             verifyThatDirectoryExist(userDirectory)
 
-            val newFile = File(userDirectory, PROFILE_FILE)
+            val profilePath = username + JPG_EXT
+            val newFile = File(userDirectory, profilePath)
             WriteBytes(newFile, bytes)
 
             return newFile
         }
 
-        fun getProfileFile() : File {
+        fun getProfileFile(username: String) : File {
             val userDirectory = "$outputDirectory/$USER_DIR"
             verifyThatDirectoryExist(userDirectory)
-
-            return File(userDirectory, PROFILE_FILE)
+            
+            return File(userDirectory, username + JPG_EXT)
         }
 
         fun makeUriVisible(context: Context, newUri: Uri){
