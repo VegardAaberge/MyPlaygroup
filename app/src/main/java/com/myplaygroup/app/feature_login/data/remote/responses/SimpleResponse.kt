@@ -1,4 +1,4 @@
-package no.vegardaaberge.data.responses
+package com.myplaygroup.app.feature_login.data.remote.responses
 
 data class SimpleResponse (
     val successful: Boolean,

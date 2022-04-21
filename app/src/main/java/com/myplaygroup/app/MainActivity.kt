@@ -9,7 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.myplaygroup.app.core.presentation.camera.components.getOutputDirectory
 import com.myplaygroup.app.core.util.FileUtils
-import com.myplaygroup.app.ui.theme.MyPlaygroupTheme
+import com.myplaygroup.app.core.ui.theme.MyPlaygroupTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
 

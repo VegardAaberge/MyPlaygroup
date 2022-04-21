@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.camera.CameraScreen
-import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
-import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
+import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.core.presentation.components.scaffoldColumnModifier
 import com.myplaygroup.app.feature_login.presentation.create_profile.components.ProfileField
 import com.myplaygroup.app.feature_login.presentation.create_profile.components.ProfileImage
 import com.ramcosta.composedestinations.annotation.Destination
@@ -57,7 +57,7 @@ fun CreateProfileScreenBody(
     val isBusy = viewModel.isBusy.value
     val profileBitmap = viewModel.state.profileBitmap
     val isFilledIn = viewModel.state.isFilledIn()
-    val scaffoldState = CollectEventFlow(viewModel, navigator)
+    val scaffoldState = collectEventFlow(viewModel, navigator)
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -80,7 +80,7 @@ fun CreateProfileScreenBody(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = ScaffoldColumnModifier(){
+            modifier = scaffoldColumnModifier {
                 focusManager.clearFocus()
             }
         ) {

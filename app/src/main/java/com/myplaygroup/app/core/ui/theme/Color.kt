@@ -1,4 +1,4 @@
-package com.myplaygroup.app.ui.theme
+package com.myplaygroup.app.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -5,13 +5,10 @@ import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewModelScope
-import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.BitmapUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -48,5 +45,9 @@ class CameraViewModel @Inject constructor(
                 state = state.copy(photoBitmap = null)
             }
         }
+    }
+
+    fun setShouldCrop(shouldCrop: Boolean) {
+        state = state.copy(shouldCrop = shouldCrop)
     }
 }

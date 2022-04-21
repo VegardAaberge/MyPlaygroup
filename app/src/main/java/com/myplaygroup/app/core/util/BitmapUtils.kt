@@ -3,14 +3,14 @@ package com.myplaygroup.app.core.util
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.ExifInterface
 import android.net.Uri
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.exifinterface.media.ExifInterface
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils
 import kotlin.math.max
 
-class BitmapUtils(){
+class BitmapUtils{
     companion object
     {
         fun cropBitmap(bitmap: Bitmap, canvasSize: Size, cutRect: Rect) : Bitmap {
@@ -21,9 +21,9 @@ class BitmapUtils(){
             val cutCenterY = cutRect.center.y * scalingFactor
 
             // Calculate the start point
-            val isPotrait = bitmap.height > bitmap.width
-            val outsideScreenX = if(isPotrait) (bitmap.width - canvasSize.width * scalingFactor) / 2 else 0f
-            val outsideScreenY = if(!isPotrait) (bitmap.height - canvasSize.height * scalingFactor) / 2 else 0f
+            val isPortrait = bitmap.height > bitmap.width
+            val outsideScreenX = if(isPortrait) (bitmap.width - canvasSize.width * scalingFactor) / 2 else 0f
+            val outsideScreenY = if(!isPortrait) (bitmap.height - canvasSize.height * scalingFactor) / 2 else 0f
             val startX = (outsideScreenX + cutCenterX - cutBitmapSize / 2).toInt()
             val startY = (outsideScreenY + cutCenterY - cutBitmapSize / 2).toInt()
 

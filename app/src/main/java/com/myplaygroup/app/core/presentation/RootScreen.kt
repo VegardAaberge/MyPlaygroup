@@ -1,19 +1,10 @@
 package com.myplaygroup.app.core.presentation
 
-import android.content.SharedPreferences
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myplaygroup.app.core.presentation.components.RequestPermissions
-import com.myplaygroup.app.core.util.Constants.KEY_PASSWORD
-import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
-import com.myplaygroup.app.core.util.Constants.NO_PASSWORD
-import com.myplaygroup.app.core.util.Constants.NO_USERNAME
 import com.myplaygroup.app.destinations.*
-import com.myplaygroup.app.feature_login.presentation.login.LoginScreen
-import com.myplaygroup.app.feature_main.presentation.MainScreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import javax.inject.Inject
 
 
 @Destination(start = true)
@@ -22,14 +13,14 @@ fun RootScreen(
     navigator: DestinationsNavigator,
     viewModel: RootViewModel = hiltViewModel(),
 ) {
-    if(viewModel.IsAuthenticated()){
-        PopAndNavigateTo(navigator, MainScreenDestination)
+    if(viewModel.isAuthenticated()){
+        popAndNavigateTo(navigator, MainScreenDestination)
     }else{
-        PopAndNavigateTo(navigator, LoginScreenDestination)
+        popAndNavigateTo(navigator, LoginScreenDestination)
     }
 }
 
-fun PopAndNavigateTo(navigator: DestinationsNavigator, destination: DirectionDestination){
+private fun popAndNavigateTo(navigator: DestinationsNavigator, destination: DirectionDestination){
     navigator.navigate(destination){
         popUpTo(RootScreenDestination.route){
             inclusive = true

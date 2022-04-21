@@ -6,9 +6,6 @@ import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.core.net.toFile
 import java.io.File
-import java.nio.file.Files
-import java.text.SimpleDateFormat
-import java.util.*
 
 class FileUtils {
     companion object{
@@ -23,7 +20,7 @@ class FileUtils {
 
             val profilePath = username + JPG_EXT
             val newFile = File(userDirectory, profilePath)
-            WriteBytes(newFile, bytes)
+            writeBytes(newFile, bytes)
 
             return newFile
         }
@@ -31,7 +28,7 @@ class FileUtils {
         fun getProfileFile(username: String) : File {
             val userDirectory = "$outputDirectory/$USER_DIR"
             verifyThatDirectoryExist(userDirectory)
-            
+
             return File(userDirectory, username + JPG_EXT)
         }
 
@@ -52,7 +49,7 @@ class FileUtils {
             }
         }
 
-        private fun WriteBytes(newFile: File, bytes: ByteArray) {
+        private fun writeBytes(newFile: File, bytes: ByteArray) {
             if(newFile.exists()){
                 newFile.delete()
                 newFile.createNewFile()

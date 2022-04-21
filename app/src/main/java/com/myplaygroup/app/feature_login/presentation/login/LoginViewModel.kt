@@ -1,16 +1,11 @@
 package com.myplaygroup.app.feature_login.presentation.login
 
-import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.edit
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
-import com.myplaygroup.app.core.util.Constants.KEY_PASSWORD
-import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
 import com.myplaygroup.app.destinations.CreateProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination

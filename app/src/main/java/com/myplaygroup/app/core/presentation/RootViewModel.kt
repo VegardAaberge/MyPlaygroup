@@ -13,7 +13,7 @@ class RootViewModel @Inject constructor(
     private val sharedPref: SharedPreferences,
 ) : BaseViewModel() {
 
-    fun IsAuthenticated(): Boolean {
+    fun isAuthenticated(): Boolean {
         val currentUsername = sharedPref.getString(KEY_USERNAME, NO_USERNAME) ?: NO_USERNAME
         val currentPassword = sharedPref.getString(KEY_PASSWORD, NO_PASSWORD) ?: NO_PASSWORD
 

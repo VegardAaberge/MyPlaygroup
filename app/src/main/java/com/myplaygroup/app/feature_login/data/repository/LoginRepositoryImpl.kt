@@ -20,7 +20,7 @@ import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import no.vegardaaberge.data.responses.SimpleResponse
+import com.myplaygroup.app.feature_login.data.remote.responses.SimpleResponse
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject

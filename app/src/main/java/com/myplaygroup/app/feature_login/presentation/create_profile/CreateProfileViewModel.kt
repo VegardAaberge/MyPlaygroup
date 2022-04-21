@@ -10,7 +10,6 @@ import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -83,25 +82,7 @@ class CreateProfileViewModel @Inject constructor(
         }
     }
 
-    suspend fun collectUploadProfileImage(result: Resource<String>) {
-        when (result) {
-            is Resource.Success -> {
-                _eventFlow.emit(
-                    UiEvent.ShowSnackbar("Uploaded Profile Image")
-                )
-            }
-            is Resource.Error -> {
-                _eventFlow.emit(
-                    UiEvent.ShowSnackbar("Upload Profile Image: " + result.message!!)
-                )
-            }
-            is Resource.Loading -> {
-                _isBusy.value = result.isLoading
-            }
-        }
-    }
-
-    suspend fun collectCreateProfile(result: Resource<String>){
+    private suspend fun collectCreateProfile(result: Resource<String>){
         when (result) {
             is Resource.Success -> {
                 _eventFlow.emit(

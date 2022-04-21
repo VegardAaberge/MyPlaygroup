@@ -4,14 +4,12 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.navigation.NavOptions
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.feature_login.presentation.create_profile.CreateProfileScreen
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun CollectEventFlow(
+fun collectEventFlow(
     viewModel: BaseViewModel,
     navigator: DestinationsNavigator? = null
 ) : ScaffoldState {

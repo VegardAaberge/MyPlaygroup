@@ -6,14 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
-import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
-import com.myplaygroup.app.feature_login.presentation.create_profile.CreateProfileScreen
+import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.core.presentation.components.scaffoldColumnModifier
 import com.myplaygroup.app.feature_login.presentation.forgot_password.components.EmailField
 import com.myplaygroup.app.feature_login.presentation.forgot_password.components.ForgotPasswordInfo
 import com.myplaygroup.app.feature_login.presentation.forgot_password.components.InsertCodeField
@@ -26,7 +24,7 @@ fun ForgotPasswordScreen(
     viewModel: ForgotPasswordViewModel = hiltViewModel()
 ) {
     val focusManager = LocalFocusManager.current
-    val scaffoldState = CollectEventFlow(viewModel)
+    val scaffoldState = collectEventFlow(viewModel)
 
     val isBusy = viewModel.isBusy.value
     val email = viewModel.state.email
@@ -57,7 +55,7 @@ fun ForgotPasswordScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = ScaffoldColumnModifier(){
+            modifier = scaffoldColumnModifier {
                 focusManager.clearFocus()
             }
         ) {

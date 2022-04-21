@@ -21,9 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.camera.components.CameraFooter
 import com.myplaygroup.app.core.presentation.camera.components.CameraUIAction
 import com.myplaygroup.app.core.presentation.camera.components.CameraView
-import com.myplaygroup.app.core.presentation.components.CollectEventFlow
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.myplaygroup.app.core.presentation.components.collectEventFlow
 
 @Composable
 fun CameraScreen(
@@ -31,10 +29,10 @@ fun CameraScreen(
     viewModel: CameraViewModel = hiltViewModel(),
     takePhotoCallback: (Bitmap) -> Unit
 ) {
-    val scaffoldState = CollectEventFlow(viewModel)
+    val scaffoldState = collectEventFlow(viewModel)
 
     viewModel.takePhotoCallback = takePhotoCallback
-    viewModel.state = viewModel.state.copy(shouldCrop = shouldCrop)
+    viewModel.setShouldCrop(shouldCrop)
 
     var canvasSize = Size(9999f, 9999f)
     var cutRect = Rect(0f,0f,0f,0f)

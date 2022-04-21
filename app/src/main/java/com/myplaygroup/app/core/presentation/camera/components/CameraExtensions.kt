@@ -78,12 +78,11 @@ fun getOutputFileOptions(
         // Mirror image when using the front camera
         isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
     }
+
     // Create output options object which contains file + metadata
-    val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+    return ImageCapture.OutputFileOptions.Builder(photoFile)
         .setMetadata(metadata)
         .build()
-
-    return outputOptions
 }
 
 fun createFile(baseFolder: File, format: String, extension: String) =

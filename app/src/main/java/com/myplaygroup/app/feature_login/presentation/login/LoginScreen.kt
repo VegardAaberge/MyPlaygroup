@@ -9,11 +9,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.myplaygroup.app.core.presentation.camera.components.CameraView
-import com.myplaygroup.app.core.presentation.components.CollectEventFlow
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.RequestPermissions
-import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
+import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.core.presentation.components.scaffoldColumnModifier
 import com.myplaygroup.app.destinations.ForgotPasswordScreenDestination
 import com.myplaygroup.app.feature_login.presentation.login.components.*
 import com.ramcosta.composedestinations.annotation.Destination
@@ -28,7 +27,7 @@ fun LoginScreen(
     RequestPermissions()
 
     val focusManager = LocalFocusManager.current
-    val scaffoldState = CollectEventFlow(viewModel, navigator)
+    val scaffoldState = collectEventFlow(viewModel, navigator)
 
     val isBusy = viewModel.isBusy.value
     val user = viewModel.state.username
@@ -40,7 +39,7 @@ fun LoginScreen(
         Column(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = ScaffoldColumnModifier(){
+            modifier = scaffoldColumnModifier {
                 focusManager.clearFocus()
             }
         ) {
