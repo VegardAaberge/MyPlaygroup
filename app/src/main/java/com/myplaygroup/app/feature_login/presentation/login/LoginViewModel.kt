@@ -14,6 +14,7 @@ import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
 import com.myplaygroup.app.destinations.CreateProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
+import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -59,27 +60,24 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectAuthenticateResponse(result: Resource<String>) {
+    private suspend fun collectAuthenticateResponse(result: Resource<LoginResponse>) {
         when(result){
             is Resource.Success -> {
-                if(result.data == "HAS BEEN INITIALISED"){
 
-                    authenticateAPI()
-                    storeAuthentication()
+                if(result.data!!.createProfile){
+                    _eventFlow.emit(
+                        UiEvent.NavigateTo(
+                            destination = CreateProfileScreenDestination
+                        )
+                    )
+                }else{
                     _eventFlow.emit(
                         UiEvent.PopAndNavigateTo(
                             popRoute = LoginScreenDestination.route,
                             destination = MainScreenDestination
                         )
                     )
-                }else{
-                    _eventFlow.emit(
-                        UiEvent.NavigateTo(
-                            destination = CreateProfileScreenDestination
-                        )
-                    )
                 }
-
             }
             is Resource.Error -> {
                 state = state.copy(password = "")

@@ -3,8 +3,6 @@ package com.myplaygroup.app.feature_login.presentation.create_profile
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.camera.CameraScreen
 import com.myplaygroup.app.core.presentation.components.CollectEventFlow
+import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.ScaffoldColumnModifier
 import com.myplaygroup.app.feature_login.presentation.create_profile.components.ProfileField
@@ -57,6 +56,7 @@ fun CreateProfileScreenBody(
     val focusManager = LocalFocusManager.current
     val isBusy = viewModel.isBusy.value
     val profileBitmap = viewModel.state.profileBitmap
+    val isFilledIn = viewModel.state.isFilledIn()
     val scaffoldState = CollectEventFlow(viewModel, navigator)
 
     Scaffold(
@@ -69,12 +69,10 @@ fun CreateProfileScreenBody(
                 IconButton(
                     onClick = {
                         viewModel.onEvent(CreateProfileScreenEvent.SaveProfile)
-                    }
+                    },
+                    enabled = !isBusy && isFilledIn,
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Save Button",
-                    )
+                    Text(text = "Save")
                 }
             }
         }
@@ -89,13 +87,19 @@ fun CreateProfileScreenBody(
             ProfileImage(
                 profileBitmap = profileBitmap,
                 takePicture = {
-                    viewModel.onEvent(CreateProfileScreenEvent.TakePicture)
+                    if(!isBusy){
+                        viewModel.onEvent(CreateProfileScreenEvent.TakePicture)
+                    }
                 }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             TextFields(viewModel)
+        }
+
+        if(isBusy){
+            CustomProgressIndicator()
         }
     }
 }

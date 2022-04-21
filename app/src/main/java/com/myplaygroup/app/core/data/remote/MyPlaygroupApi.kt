@@ -1,9 +1,7 @@
 package com.myplaygroup.app.core.data.remote
 
-import com.myplaygroup.app.feature_login.data.remote.requests.LoginRequest
-import com.myplaygroup.app.feature_login.data.remote.requests.RegisterRequest
-import com.myplaygroup.app.feature_login.data.remote.requests.SendEmailRequest
-import com.myplaygroup.app.feature_login.data.remote.requests.VerifyCodeRequest
+import com.myplaygroup.app.feature_login.data.remote.requests.*
+import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
 import no.vegardaaberge.data.responses.SimpleResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -14,7 +12,7 @@ interface MyPlaygroupApi {
     @POST("/login")
     suspend fun login(
         @Body loginRequest: LoginRequest
-    ): Response<SimpleResponse>
+    ): Response<LoginResponse>
 
     @POST("/register")
     suspend fun register(
@@ -29,5 +27,10 @@ interface MyPlaygroupApi {
     @POST("/checkVerificationCode")
     suspend fun checkVerificationCode(
         @Body codeRequest: VerifyCodeRequest
+    ): Response<SimpleResponse>
+
+    @POST("/registerProfile")
+    suspend fun registerProfile(
+        @Body codeRequest: ProfileRequest
     ): Response<SimpleResponse>
 }

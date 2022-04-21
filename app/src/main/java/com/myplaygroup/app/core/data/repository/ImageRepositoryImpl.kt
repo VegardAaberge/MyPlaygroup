@@ -13,7 +13,7 @@ class ImageRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ImageRepository {
 
-    override suspend fun saveProfileImage(bitmap: Bitmap) {
+    override suspend fun storeProfileImage(bitmap: Bitmap) {
 
         // Get the bytes from the bitmap
         val outputStream = ByteArrayOutputStream()

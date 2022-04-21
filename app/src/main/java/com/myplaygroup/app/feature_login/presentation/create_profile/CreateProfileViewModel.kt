@@ -4,14 +4,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateProfileViewModel @Inject constructor(
+    private val loginRepository : LoginRepository,
     private val imageRepository : ImageRepository
 ) : BaseViewModel() {
 
@@ -44,11 +49,79 @@ class CreateProfileViewModel @Inject constructor(
                 )
             }
             is CreateProfileScreenEvent.SaveProfile -> {
+
                 viewModelScope.launch {
+
+                    if(!state.isFilledIn()){
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar("Please fill out all the fields")
+                        )
+                    }
+
+                    if(state.password != state.repeatedPassword){
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar("The passwords do not match")
+                        )
+                    }
+
                     state.profileBitmap?.let {
-                        imageRepository.saveProfileImage(it)
+                        imageRepository.storeProfileImage(it)
+                    }
+                    val uri = imageRepository.getProfileImage()
+
+                    launch(Dispatchers.IO) {
+                        //loginRepository
+                            //.uploadProfileImage(uri)
+                            //.collect{ collectUploadProfileImage(it) }
+
+                    }
+
+                    launch(Dispatchers.IO) {
+                        loginRepository.createProfile(
+                            profileUri = uri,
+                            profileName = state.profileName,
+                            phoneNumber = state.phoneNumber,
+                            email = state.email,
+                            newPassword = state.password
+                        ).collect { collectCreateProfile(it) }
                     }
                 }
+            }
+        }
+    }
+
+    suspend fun collectUploadProfileImage(result: Resource<String>) {
+        when (result) {
+            is Resource.Success -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Uploaded Profile Image")
+                )
+            }
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Upload Profile Image: " + result.message!!)
+                )
+            }
+            is Resource.Loading -> {
+                _isBusy.value = result.isLoading
+            }
+        }
+    }
+
+    suspend fun collectCreateProfile(result: Resource<String>){
+        when (result) {
+            is Resource.Success -> {
+                _eventFlow.emit(
+                    UiEvent.PopPage
+                )
+            }
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar("Create Profile: " + result.message!!)
+                )
+            }
+            is Resource.Loading -> {
+                _isBusy.value = result.isLoading
             }
         }
     }
