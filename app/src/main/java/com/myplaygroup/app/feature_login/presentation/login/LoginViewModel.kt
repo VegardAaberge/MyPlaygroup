@@ -45,13 +45,13 @@ class LoginViewModel @Inject constructor(
             is Resource.Success -> {
 
                 if(result.data!!.createProfile){
-                    _eventFlow.emit(
+                    setUIEvent(
                         UiEvent.NavigateTo(
                             destination = CreateProfileScreenDestination
                         )
                     )
                 }else{
-                    _eventFlow.emit(
+                    setUIEvent(
                         UiEvent.PopAndNavigateTo(
                             popRoute = LoginScreenDestination.route,
                             destination = MainScreenDestination
@@ -62,12 +62,12 @@ class LoginViewModel @Inject constructor(
             is Resource.Error -> {
                 state = state.copy(password = "")
 
-                _eventFlow.emit(
+                setUIEvent(
                     UiEvent.ShowSnackbar("Fail")
                 )
             }
             is Resource.Loading -> {
-                _isBusy.value = result.isLoading
+                isBusy(result.isLoading)
             }
         }
     }

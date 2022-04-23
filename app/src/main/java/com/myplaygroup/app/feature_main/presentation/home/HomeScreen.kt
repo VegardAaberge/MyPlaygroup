@@ -10,11 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.myplaygroup.app.feature_main.presentation.MainViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    mainViewModel: MainViewModel,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    viewModel.mainViewModel = mainViewModel
     val imageUri = viewModel.state.imageUri
 
     Column(

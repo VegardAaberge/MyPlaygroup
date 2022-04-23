@@ -87,24 +87,30 @@ fun MainScreen(
             )
         }
     ) {
-        BottomNavigationScreen(navController = navController)
+        BottomNavigationScreen(
+            navController = navController,
+            viewModel = viewModel
+        )
     }
 }
 
 @Composable
-private fun BottomNavigationScreen(navController: NavHostController) {
+private fun BottomNavigationScreen(
+    navController: NavHostController,
+    viewModel: MainViewModel
+) {
     NavHost(
         navController = navController,
         startDestination = "home"
     ){
         composable(Screen.HomeFragment.route){
-            HomeScreen()
+            HomeScreen(viewModel)
         }
         composable(Screen.ChatFragment.route){
-            ChatScreen()
+            ChatScreen(viewModel)
         }
         composable(Screen.SettingsFragment.route){
-            SettingsScreen()
+            SettingsScreen(viewModel)
         }
     }
 }

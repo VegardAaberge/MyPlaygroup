@@ -52,13 +52,13 @@ class CreateProfileViewModel @Inject constructor(
                 viewModelScope.launch {
 
                     if(!state.isFilledIn()){
-                        _eventFlow.emit(
+                        setUIEvent(
                             UiEvent.ShowSnackbar("Please fill out all the fields")
                         )
                     }
 
                     if(state.password != state.repeatedPassword){
-                        _eventFlow.emit(
+                        setUIEvent(
                             UiEvent.ShowSnackbar("The passwords do not match")
                         )
                     }
@@ -85,17 +85,17 @@ class CreateProfileViewModel @Inject constructor(
     private suspend fun collectCreateProfile(result: Resource<String>){
         when (result) {
             is Resource.Success -> {
-                _eventFlow.emit(
+                setUIEvent(
                     UiEvent.PopPage
                 )
             }
             is Resource.Error -> {
-                _eventFlow.emit(
+                setUIEvent(
                     UiEvent.ShowSnackbar("Create Profile: " + result.message!!)
                 )
             }
             is Resource.Loading -> {
-                _isBusy.value = result.isLoading
+                isBusy(result.isLoading)
             }
         }
     }

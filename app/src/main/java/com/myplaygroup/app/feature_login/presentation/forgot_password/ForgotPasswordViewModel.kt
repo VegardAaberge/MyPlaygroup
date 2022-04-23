@@ -48,7 +48,7 @@ class ForgotPasswordViewModel @Inject constructor(
     private suspend fun collectEmailRequest(result: Resource<String>) {
         when(result){
             is Resource.Success -> {
-                _eventFlow.emit(
+                setUIEvent(
                     UiEvent.ShowSnackbar(result.data!!)
                 )
                 state = state.copy(
@@ -68,12 +68,12 @@ class ForgotPasswordViewModel @Inject constructor(
                 }
             }
             is Resource.Error -> {
-                _eventFlow.emit(
+                setUIEvent(
                     UiEvent.ShowSnackbar(result.message!!)
                 )
             }
             is Resource.Loading -> {
-                _isBusy.value = result.isLoading
+                isBusy(result.isLoading)
             }
         }
     }
@@ -81,7 +81,7 @@ class ForgotPasswordViewModel @Inject constructor(
     private suspend fun collectCodeRequest(result: Resource<String>) {
         when(result){
             is Resource.Success -> {
-                _eventFlow.emit(
+                setUIEvent(
                     UiEvent.ShowSnackbar(result.data!!)
                 )
 
@@ -92,7 +92,7 @@ class ForgotPasswordViewModel @Inject constructor(
                 )
             }
             is Resource.Error -> {
-                _eventFlow.emit(
+                setUIEvent(
                     UiEvent.ShowSnackbar(result.message!!)
                 )
 
@@ -102,7 +102,7 @@ class ForgotPasswordViewModel @Inject constructor(
                 )
             }
             is Resource.Loading -> {
-                _isBusy.value = result.isLoading
+                isBusy(result.isLoading)
             }
         }
     }
