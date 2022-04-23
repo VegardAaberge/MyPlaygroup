@@ -13,6 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
+import com.myplaygroup.app.core.presentation.TopAppBar.AppBarBackButton
+import com.myplaygroup.app.core.presentation.TopAppBar.AppBarMenuButton
 import com.myplaygroup.app.core.presentation.camera.CameraScreen
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
@@ -64,7 +66,9 @@ fun CreateProfileScreenBody(
         topBar = {
             DefaultTopAppBar(
                 title = stringResource(R.string.profile_screen_title),
-                navigator = navigator!!,
+                navigationIcon = {
+                    AppBarBackButton(navigator!!)
+                }
             ){
                 IconButton(
                     onClick = {
