@@ -22,9 +22,12 @@
         <entry key="../../../../../layout/compose-model-1650536306982.xml" value="0.32545454545454544" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_chat_bubble_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_chat_bubble_outline_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_flip_camera_android_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_image_100.xml" value="0.157" />
         <entry key="app/src/main/res/drawable/ic_baseline_lens_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_person_100.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
       </map>
     </option>

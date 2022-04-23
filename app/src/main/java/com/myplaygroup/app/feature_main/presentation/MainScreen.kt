@@ -8,12 +8,16 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.sharp.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collection.mutableVectorOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.TopAppBar.AppBarMenuButton
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
@@ -42,12 +47,12 @@ fun MainScreen(
     val navController = rememberNavController()
     val scaffoldState = collectEventFlow(viewModel, navigator)
 
+    val title =
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            DefaultTopAppBar("Main Screen", navigationIcon = {
-                AppBarMenuButton()
-            })
+            DefaultTopAppBar("Main Screen")
         },
         bottomBar = {
             BottomNavigationBar(
@@ -55,20 +60,20 @@ fun MainScreen(
                     BottomNavItem(
                         name = "Home",
                         route = Screen.HomeFragment.route,
-                        outlinedIcon = Icons.Outlined.Home,
-                        filledIcon = Icons.Default.Home,
+                        outlinedIcon = painterResource(id = R.drawable.ic_outline_home_24),
+                        filledIcon = painterResource(id = R.drawable.ic_baseline_home_24),
                     ),
                     BottomNavItem(
                         name = "Chat",
                         route = Screen.ChatFragment.route,
-                        outlinedIcon = Icons.Outlined.Notifications,
-                        filledIcon = Icons.Default.Notifications,
+                        outlinedIcon = painterResource(id = R.drawable.ic_baseline_chat_bubble_outline_24),
+                        filledIcon = painterResource(id = R.drawable.ic_baseline_chat_bubble_24)
                     ),
                     BottomNavItem(
-                        name = "Settings",
+                        name = "Me",
                         route = Screen.SettingsFragment.route,
-                        outlinedIcon = Icons.Outlined.Settings,
-                        filledIcon = Icons.Default.Settings,
+                        outlinedIcon = painterResource(id = R.drawable.ic_outline_person_24),
+                        filledIcon = painterResource(id = R.drawable.ic_baseline_person_24),
                     ),
                 ),
                 navController = navController,
@@ -159,14 +164,14 @@ private fun BottomNavigationBar(
                                 })
                             {
                                 Icon(
-                                    imageVector = icon,
+                                    painter = icon,
                                     contentDescription = item.name,
                                     modifier = Modifier.size(30.dp)
                                 )
                             }
                         }else{
                             Icon(
-                                imageVector = icon,
+                                painter = icon,
                                 contentDescription = item.name,
                                 modifier = Modifier.size(30.dp)
                             )

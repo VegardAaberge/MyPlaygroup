@@ -18,24 +18,11 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     viewModel.mainViewModel = mainViewModel
-    val imageUri = viewModel.state.imageUri
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize()
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = rememberImagePainter(data = imageUri),
-            contentDescription = null,
-            modifier = Modifier
-                .size(300.dp)
-        )
-
-        Button(onClick = {
-            viewModel.onEvent(HomeScreenEvent.LogoutButtonTapped)
-        }) {
-            Text(text = "Logout")
-        }
+        Text(text = "Home screen")
     }
 }

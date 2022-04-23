@@ -1,11 +1,12 @@
 package com.myplaygroup.app.feature_main.presentation
 
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class BottomNavItem(
     val name: String,
     val route: String,
-    val outlinedIcon: ImageVector,
+    val outlinedIcon: Painter,
     val badgeCount: Int = 0,
-    val filledIcon: ImageVector
+    val filledIcon: Painter
 )
