@@ -20,7 +20,6 @@ class ChatViewModel @Inject constructor(
     private val repository: MainRepository
 ) : ViewModel() {
 
-    var isBusy = false
     lateinit var mainViewModel: MainViewModel
     var state by mutableStateOf(ChatState())
 
@@ -38,21 +37,26 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectGetMessages(result: Resource<List<Message>>) = viewModelScope.launch(Dispatchers.Main) {
+    private fun collectGetMessages(result: Resource<List<Message>>) = viewModelScope.launch(Dispatchers.Main) {
         when (result) {
             is Resource.Success -> {
                 state = state.copy(
-                    messages = result.data!!
+                    messages = result.data!!,
+                    showProgressIndicator = state.isLoading && result.data!!.isEmpty()
                 )
             }
             is Resource.Error -> {
                 mainViewModel.setUIEvent(
                     BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
                 )
+                state = state.copy(
+                    messages = result.data!!,
+                )
             }
             is Resource.Loading -> {
                 state = state.copy(
-                    isBusy = result.isLoading
+                    isLoading = result.isLoading,
+                    showProgressIndicator = result.isLoading
                 )
             }
         }

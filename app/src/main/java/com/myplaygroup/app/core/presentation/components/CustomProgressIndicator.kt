@@ -13,22 +13,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomProgressIndicator() {
+fun CustomProgressIndicator(
+    alpha: Float = 0.3f
+) {
     Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .alpha(0.3f)
-            .background(Color.Black)
     ) {
         Box(
             modifier = Modifier
+                .fillMaxSize()
+                .alpha(alpha)
+                .background(Color.Black)
+        )
+        CircularProgressIndicator(
+            modifier = Modifier
                 .size(70.dp)
-                .align(Alignment.Center)
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .fillMaxSize()
-            )
-        }
+        )
     }
 }

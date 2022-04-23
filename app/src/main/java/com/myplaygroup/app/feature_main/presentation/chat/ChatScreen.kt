@@ -19,7 +19,7 @@ fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel()
 ) {
     val messages = viewModel.state.messages
-    val isBusy = viewModel.state.isBusy
+    val showProgressIndicator = viewModel.state.showProgressIndicator
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -45,8 +45,8 @@ fun ChatScreen(
             }
         }
 
-        if(isBusy){
-            CustomProgressIndicator()
+        if(viewModel.state.showProgressIndicator){
+            CustomProgressIndicator(0f)
         }
     }
 }
