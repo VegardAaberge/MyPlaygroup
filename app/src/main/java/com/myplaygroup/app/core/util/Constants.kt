@@ -2,6 +2,8 @@ package com.myplaygroup.app.core.util
 
 object Constants {
 
+    const val MAIN_DATABASE_NAME = "main_db"
+
     const val DEBUG_KEY = "MyPlaygroupApp"
 
     const val ENCRYPTED_SHARED_PREF_NAME = "enc_shared_pref"

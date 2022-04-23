@@ -7,7 +7,6 @@ import okhttp3.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class BasicAuthInterceptor @Inject constructor() : Interceptor {
 
     var username: String? = null

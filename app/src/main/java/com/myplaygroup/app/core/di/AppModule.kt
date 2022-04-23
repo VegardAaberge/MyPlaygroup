@@ -1,13 +1,17 @@
 package com.myplaygroup.app.core.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.myplaygroup.app.core.util.Constants.BASE_URL
 import com.myplaygroup.app.core.util.Constants.ENCRYPTED_SHARED_PREF_NAME
 import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
+import com.myplaygroup.app.core.util.Constants.MAIN_DATABASE_NAME
+import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +25,24 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
+    @Provides
+    @Singleton
+    fun providesStockDatabase(app: Application): MainDatabase {
+        return Room.databaseBuilder(
+            app,
+            MainDatabase::class.java,
+            MAIN_DATABASE_NAME
+        ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNoteDao(db: MainDatabase) = db.mainDao()
+
+    @Singleton
+    @Provides
+    fun provideBasicAuthInterceptor() = BasicAuthInterceptor()
 
     @Singleton
     @Provides

@@ -3,8 +3,10 @@ package com.myplaygroup.app.core.data.remote
 import com.myplaygroup.app.feature_login.data.remote.requests.*
 import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.remote.responses.SimpleResponse
+import com.myplaygroup.app.feature_main.data.remote.MessageResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface MyPlaygroupApi {
@@ -33,4 +35,7 @@ interface MyPlaygroupApi {
     suspend fun registerProfile(
         @Body codeRequest: ProfileRequest
     ): Response<SimpleResponse>
+
+    @GET("/getChatMessages")
+    suspend fun getMessages(): MessageResponse
 }
