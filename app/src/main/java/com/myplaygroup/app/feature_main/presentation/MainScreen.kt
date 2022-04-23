@@ -2,22 +2,12 @@ package com.myplaygroup.app.feature_main.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.sharp.Person
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collection.mutableVectorOf
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +18,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.myplaygroup.app.R
-import com.myplaygroup.app.core.presentation.TopAppBar.AppBarMenuButton
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.presentation.chat.ChatScreen
@@ -47,30 +36,32 @@ fun MainScreen(
     val navController = rememberNavController()
     val scaffoldState = collectEventFlow(viewModel, navigator)
 
-    val title =
+    var title by remember{
+        mutableStateOf("")
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            DefaultTopAppBar("Main Screen")
+            DefaultTopAppBar(title)
         },
         bottomBar = {
             BottomNavigationBar(
                 items = listOf(
                     BottomNavItem(
-                        name = "Home",
+                        name = stringResource(R.string.bar_home),
                         route = Screen.HomeFragment.route,
                         outlinedIcon = painterResource(id = R.drawable.ic_outline_home_24),
                         filledIcon = painterResource(id = R.drawable.ic_baseline_home_24),
                     ),
                     BottomNavItem(
-                        name = "Chat",
+                        name = stringResource(R.string.bar_chat),
                         route = Screen.ChatFragment.route,
                         outlinedIcon = painterResource(id = R.drawable.ic_baseline_chat_bubble_outline_24),
                         filledIcon = painterResource(id = R.drawable.ic_baseline_chat_bubble_24)
                     ),
                     BottomNavItem(
-                        name = "Me",
+                        name = stringResource(R.string.bar_settings),
                         route = Screen.SettingsFragment.route,
                         outlinedIcon = painterResource(id = R.drawable.ic_outline_person_24),
                         filledIcon = painterResource(id = R.drawable.ic_baseline_person_24),
@@ -78,6 +69,7 @@ fun MainScreen(
                 ),
                 navController = navController,
                 onItemClick = { item ->
+                    title = item.name
                     navController.navigate(item.route) {
 
                         navController.graph.startDestinationRoute?.let { screen_route ->
@@ -106,7 +98,7 @@ private fun BottomNavigationScreen(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = Screen.HomeFragment.route
     ){
         composable(Screen.HomeFragment.route){
             HomeScreen(viewModel)
@@ -135,8 +127,6 @@ private fun BottomNavigationBar(
         backgroundColor = Color(0xFFF0F0F0),
         elevation = 5.dp
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-
         items.forEach { item ->
             val selected = item.route == backStackEntry.value?.destination?.route
             val icon = if(selected) item.filledIcon else item.outlinedIcon

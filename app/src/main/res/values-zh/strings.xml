@@ -31,4 +31,7 @@
     <string name="camera_title">Camera</string>
     <string name="camera_reject">Reject</string>
     <string name="camera_accept">Accept</string>
+    <string name="bar_home">Home</string>
+    <string name="bar_chat">Chat</string>
+    <string name="bar_settings">Me</string>
 </resources>
