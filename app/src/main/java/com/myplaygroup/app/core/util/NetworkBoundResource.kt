@@ -4,33 +4,37 @@ import kotlinx.coroutines.flow.*
 import java.lang.Exception
 
 inline fun <ResultType, RequestType> networkBoundResource(
-    crossinline query: () -> Flow<ResultType>,
+    crossinline query: suspend () -> ResultType,
     crossinline fetch: suspend () -> RequestType,
     crossinline saveFetchResult: suspend (RequestType) -> Unit,
     crossinline onFetchFailed: (Throwable) -> Unit =  { Unit },
     crossinline shouldFetch: (ResultType) -> Boolean = { true }
 ) = flow {
     emit(Resource.Loading(true))
-    val data = query().first()
+    val data = query()
 
-    val flow = if(shouldFetch(data)){
-        emit(Resource.Success(data))
-
+    if(shouldFetch(data)){
         try {
             val fetchedResult = fetch()
             saveFetchResult(fetchedResult)
-            query().map {
-                Resource.Success(it)
-            }
+
+            emit(Resource.Success(
+                data = query()
+            ))
 
         } catch (t: Throwable){
             onFetchFailed(t)
-            query().map {
-                Resource.Error("Couldn't reach server. It might be down", it)
-            }
+
+            emit(Resource.Error(
+                message = "Couldn't reach server: ${t.message}",
+                data = query()
+            ))
         }
     }else{
-        query().map { Resource.Success(it) }
+        emit(Resource.Success(
+            data = query()
+        ))
     }
-    emitAll(flow)
+
+    emit(Resource.Loading(false))
 }
