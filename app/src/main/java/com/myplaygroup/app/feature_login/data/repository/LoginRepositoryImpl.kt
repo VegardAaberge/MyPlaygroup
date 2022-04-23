@@ -52,8 +52,13 @@ class LoginRepositoryImpl @Inject constructor(
 
                     sharedPreferences.edit {
                         putString(Constants.KEY_USERNAME, username)
-                        if(!response.body()!!.createProfile)
+
+                        val profile = response.body()!!
+                        if(!profile.createProfile)
                         {
+                            putString(Constants.KEY_EMAIL, profile.email)
+                            putString(Constants.KEY_PHONE_NUMBER, profile.phoneNumber)
+                            putString(Constants.KEY_PROFILE_NAME, profile.profileName)
                             putString(Constants.KEY_PASSWORD, password)
                         }
                         apply()

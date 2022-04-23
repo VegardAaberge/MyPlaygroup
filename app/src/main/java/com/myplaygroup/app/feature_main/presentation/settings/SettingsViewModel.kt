@@ -11,7 +11,12 @@ import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.Constants.KEY_EMAIL
+import com.myplaygroup.app.core.util.Constants.KEY_PASSWORD
+import com.myplaygroup.app.core.util.Constants.KEY_PHONE_NUMBER
+import com.myplaygroup.app.core.util.Constants.KEY_PROFILE_NAME
 import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
+import com.myplaygroup.app.core.util.Constants.NO_PASSWORD
 import com.myplaygroup.app.core.util.Constants.NO_USERNAME
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
@@ -37,7 +42,7 @@ class SettingsViewModel @Inject constructor(
 
     init {
         username = sharedPref.getString(KEY_USERNAME, NO_USERNAME) ?: NO_USERNAME
-        profileName = "Vegard Profile Name"
+        profileName = sharedPref.getString(KEY_PROFILE_NAME, "") ?: ""
 
         viewModelScope.launch {
             val uri = imageRepository.getProfileImage()
@@ -59,8 +64,11 @@ class SettingsViewModel @Inject constructor(
         basicAuthInterceptor.username = null
         basicAuthInterceptor.password = null
         sharedPref.edit {
-            putString(Constants.KEY_USERNAME, Constants.NO_USERNAME)
-            putString(Constants.KEY_PASSWORD, Constants.NO_PASSWORD)
+            putString(KEY_USERNAME, NO_USERNAME)
+            putString(KEY_PASSWORD, NO_PASSWORD)
+            putString(KEY_EMAIL, "")
+            putString(KEY_PHONE_NUMBER, "")
+            putString(KEY_PROFILE_NAME, "")
         }
         mainViewModel.setUIEvent(
             BaseViewModel.UiEvent.PopAndNavigateTo(

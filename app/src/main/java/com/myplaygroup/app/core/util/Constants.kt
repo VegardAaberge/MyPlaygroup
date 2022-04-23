@@ -10,6 +10,11 @@ object Constants {
     const val NO_USERNAME = "NO_USERNAME"
     const val NO_PASSWORD = "NO_PASSWORD"
 
+    const val KEY_PROFILE_NAME = "KEY_PROFILE_NAME"
+    const val KEY_PHONE_NUMBER = "KEY_PHONE_NUMBER"
+    const val KEY_EMAIL = "KEY_EMAIL"
+
+
     const val BASE_URL = "http://10.0.2.2:8080"
 
     val IGNORE_AUTH_URLS = listOf("/login", "/register")

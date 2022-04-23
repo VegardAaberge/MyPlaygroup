@@ -4,6 +4,8 @@ import com.myplaygroup.app.core.data.repository.ImageRepositoryImpl
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.feature_login.data.repository.LoginRepositoryImpl
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
+import com.myplaygroup.app.feature_main.data.repository.MainRepositoryImpl
+import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,7 +24,13 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindImageRepositoryRepository(
+    abstract fun bindImageRepository(
         imageRepository: ImageRepositoryImpl
     ): ImageRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMainRepository(
+        mainRepository: MainRepositoryImpl
+    ): MainRepository
 }
