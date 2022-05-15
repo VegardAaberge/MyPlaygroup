@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.util.Constants
-import com.myplaygroup.app.core.util.Constants.NO_USERNAME
+import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.core.util.FileUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.ByteArrayOutputStream
@@ -24,7 +24,7 @@ class ImageRepositoryImpl @Inject constructor(
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         val bytes = outputStream.toByteArray()
 
-        val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_USERNAME) ?: NO_USERNAME
+        val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_VALUE) ?: NO_VALUE
         val profileFile = FileUtils.saveProfileFile(bytes, username)
 
         val profileUri = Uri.fromFile(profileFile)
@@ -32,7 +32,7 @@ class ImageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProfileImage(): Uri? {
-        val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_USERNAME) ?: NO_USERNAME
+        val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_VALUE) ?: NO_VALUE
         val profileFile = FileUtils.getProfileFile(username)
         if(!profileFile.exists())
             return null

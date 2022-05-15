@@ -10,14 +10,11 @@ import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.core.util.Constants
-import com.myplaygroup.app.core.util.Constants.KEY_EMAIL
-import com.myplaygroup.app.core.util.Constants.KEY_PASSWORD
-import com.myplaygroup.app.core.util.Constants.KEY_PHONE_NUMBER
+import com.myplaygroup.app.core.util.Constants.KEY_ACCESS_TOKEN
 import com.myplaygroup.app.core.util.Constants.KEY_PROFILE_NAME
+import com.myplaygroup.app.core.util.Constants.KEY_REFRESH_TOKEN
 import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
-import com.myplaygroup.app.core.util.Constants.NO_PASSWORD
-import com.myplaygroup.app.core.util.Constants.NO_USERNAME
+import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
@@ -41,8 +38,8 @@ class SettingsViewModel @Inject constructor(
     var state by mutableStateOf(HomeState())
 
     init {
-        username = sharedPref.getString(KEY_USERNAME, NO_USERNAME) ?: NO_USERNAME
-        profileName = sharedPref.getString(KEY_PROFILE_NAME, "") ?: ""
+        username = sharedPref.getString(KEY_USERNAME, NO_VALUE) ?: NO_VALUE
+        profileName = sharedPref.getString(KEY_PROFILE_NAME, NO_VALUE) ?: NO_VALUE
 
         viewModelScope.launch {
             val uri = imageRepository.getProfileImage()
@@ -61,14 +58,11 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun logout(){
-        basicAuthInterceptor.username = null
-        basicAuthInterceptor.password = null
+        basicAuthInterceptor.accessToken = null
         sharedPref.edit {
-            putString(KEY_USERNAME, NO_USERNAME)
-            putString(KEY_PASSWORD, NO_PASSWORD)
-            putString(KEY_EMAIL, "")
-            putString(KEY_PHONE_NUMBER, "")
-            putString(KEY_PROFILE_NAME, "")
+            putString(KEY_USERNAME, NO_VALUE)
+            putString(KEY_ACCESS_TOKEN, NO_VALUE)
+            putString(KEY_REFRESH_TOKEN, NO_VALUE)
         }
         mainViewModel.setUIEvent(
             BaseViewModel.UiEvent.PopAndNavigateTo(

@@ -1,16 +1,13 @@
 package com.myplaygroup.app.core.data.remote
 
 import com.myplaygroup.app.core.util.Constants.IGNORE_AUTH_URLS
-import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class BasicAuthInterceptor @Inject constructor() : Interceptor {
 
-    var username: String? = null
-    var password: String? = null
+    var accessToken: String? = null
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -20,7 +17,7 @@ class BasicAuthInterceptor @Inject constructor() : Interceptor {
         val authenticatedRequest = request.newBuilder()
             .header(
                 "Authorization",
-                Credentials.basic(username ?: "", password ?: "")
+                "Bearer " + accessToken
             )
             .build()
         return chain.proceed(authenticatedRequest)

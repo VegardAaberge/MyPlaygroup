@@ -12,7 +12,6 @@ import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
 import com.myplaygroup.app.core.util.Constants
-import com.myplaygroup.app.feature_login.data.remote.requests.LoginRequest
 import com.myplaygroup.app.feature_login.data.remote.requests.ProfileRequest
 import com.myplaygroup.app.feature_login.data.remote.requests.SendEmailRequest
 import com.myplaygroup.app.feature_login.data.remote.requests.VerifyCodeRequest
@@ -42,35 +41,47 @@ class LoginRepositoryImpl @Inject constructor(
 
             try {
                 val response = api.login(
-                    LoginRequest(username, password)
+                    username = username,
+                    password = password
                 )
 
-                val responseMessage = response.body()?.message
-                if(response.isSuccessful && response.body()!!.successful){
-                    basicAuthInterceptor.username = username
-                    basicAuthInterceptor.password = password
+                if(response.isSuccessful){
+                    if(response.body() != null){
+                        val loginResponse = response.body()!!;
+                        basicAuthInterceptor.accessToken = loginResponse.access_token
+                        sharedPreferences.edit() {
+                            putString(Constants.KEY_USERNAME, username)
+                            putString(Constants.KEY_ACCESS_TOKEN, loginResponse.access_token)
+                            putString(Constants.KEY_REFRESH_TOKEN, loginResponse.refresh_token)
 
-                    sharedPreferences.edit {
-                        putString(Constants.KEY_USERNAME, username)
-
-                        val profile = response.body()!!
-                        if(!profile.createProfile)
-                        {
-                            putString(Constants.KEY_EMAIL, profile.email)
-                            putString(Constants.KEY_PHONE_NUMBER, profile.phoneNumber)
-                            putString(Constants.KEY_PROFILE_NAME, profile.profileName)
-                            putString(Constants.KEY_PASSWORD, password)
+                            if(loginResponse.profile_created){
+                                putString(Constants.KEY_PROFILE_NAME, loginResponse.profile_name)
+                                putString(Constants.KEY_EMAIL, loginResponse.email)
+                                putString(Constants.KEY_PHONE_NUMBER, loginResponse.phone_number)
+                            }
+                            apply()
                         }
-                        apply()
-                    }
+                        emit(
+                            Resource.Success(loginResponse)
+                        )
 
-                    emit(
-                        Resource.Success(response.body())
-                    )
+                    }else{
+                        emit(
+                            Resource.Error("Response body is missing")
+                        )
+                    }
+                }else if(response.code() == 401) {
+                    emit(Resource.Error("??? Error: ${response.message()}"))
+                }else if(response.code() == 402) {
+                    emit(Resource.Error("??? Error: ${response.message()}"))
+                }else if(response.code() == 403) {
+                    emit(Resource.Error("Wrong username or password"))
+                }else if(response.code() == 404) {
+                    emit(Resource.Error("Not Found Exception: ${response.message()}"))
+                }else if(response.code() == 500) {
+                    emit(Resource.Error("Server error: ${response.message()}"))
                 }else{
-                    emit(
-                        Resource.Error(responseMessage ?: response.message())
-                    )
+                    emit(Resource.Error("Unknown error: ${response.message()}"))
                 }
 
             }catch (e: Exception){

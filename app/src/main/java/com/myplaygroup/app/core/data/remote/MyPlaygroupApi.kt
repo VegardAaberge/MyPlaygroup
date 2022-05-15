@@ -5,15 +5,15 @@ import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.remote.responses.SimpleResponse
 import com.myplaygroup.app.feature_main.data.remote.MessageResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface MyPlaygroupApi {
 
-    @POST("/login")
+    @FormUrlEncoded
+    @POST("api/v1/login")
     suspend fun login(
-        @Body loginRequest: LoginRequest
+        @Field("username") username: String,
+        @Field("password") password: String
     ): Response<LoginResponse>
 
     @POST("/register")

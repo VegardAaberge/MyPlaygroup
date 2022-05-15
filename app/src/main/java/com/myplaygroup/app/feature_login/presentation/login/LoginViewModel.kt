@@ -44,7 +44,7 @@ class LoginViewModel @Inject constructor(
         when(result){
             is Resource.Success -> {
 
-                if(result.data!!.createProfile){
+                if(result.data!!.profile_created){
                     setUIEvent(
                         UiEvent.NavigateTo(
                             destination = CreateProfileScreenDestination
