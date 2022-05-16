@@ -6,10 +6,11 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.google.gson.GsonBuilder
+import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
+import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
 import com.myplaygroup.app.core.util.Constants.BASE_URL
 import com.myplaygroup.app.core.util.Constants.ENCRYPTED_SHARED_PREF_NAME
-import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
-import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.util.Constants.MAIN_DATABASE_NAME
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import dagger.Module
@@ -18,9 +19,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -49,7 +53,11 @@ class AppModule {
     fun provideMyPlaygroupApi(
         basicAuthInterceptor: BasicAuthInterceptor
     ) : MyPlaygroupApi {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
         val client = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
             .addInterceptor(basicAuthInterceptor)
             .build()
         return Retrofit.Builder()

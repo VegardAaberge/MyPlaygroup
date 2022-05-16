@@ -18,6 +18,7 @@ fun ChatScreen(
     mainViewModel: MainViewModel,
     viewModel: ChatViewModel = hiltViewModel()
 ) {
+    viewModel.mainViewModel = mainViewModel
     val messages = viewModel.state.messages
     val showProgressIndicator = viewModel.state.showProgressIndicator
 
@@ -36,7 +37,7 @@ fun ChatScreen(
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(text = "Message: ${message.message}")
-                    Text(text = "Owner: ${message.owner}")
+                    Text(text = "Owner: ${message.createdBy}")
                     Text(text = "Created: ${message.created}")
                     Divider(modifier = Modifier.padding(
                         horizontal = 16.dp

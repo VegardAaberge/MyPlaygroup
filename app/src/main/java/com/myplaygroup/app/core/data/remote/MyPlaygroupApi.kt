@@ -10,7 +10,7 @@ import retrofit2.http.*
 interface MyPlaygroupApi {
 
     @FormUrlEncoded
-    @POST("api/v1/login")
+    @POST("/api/v1/login")
     suspend fun login(
         @Field("username") username: String,
         @Field("password") password: String
@@ -36,6 +36,6 @@ interface MyPlaygroupApi {
         @Body codeRequest: ProfileRequest
     ): Response<SimpleResponse>
 
-    @GET("/getChatMessages")
+    @GET("/api/v1/chat")
     suspend fun getMessages(): MessageResponse
 }
