@@ -16,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ChatScreen(
@@ -76,8 +79,12 @@ fun ChatScreen(
                             end = if(isOwner) 50.dp else 10.dp,
                         )) {
 
-                        Text(text = "${message.createdBy}")
-                        Text(text = "${message.created}")
+                        Text(text = message.createdBy)
+                        Text(text = LocalDateTime
+                            .ofEpochSecond(message.created, 0, ZoneOffset.UTC)
+                            .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
+                            .toString()
+                        )
                     }
 
                     Divider(modifier = Modifier.padding(
