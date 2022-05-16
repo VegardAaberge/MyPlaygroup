@@ -7,7 +7,7 @@ inline fun <ResultType, RequestType> networkBoundResource(
     crossinline query: suspend () -> ResultType,
     crossinline fetch: suspend () -> RequestType,
     crossinline saveFetchResult: suspend (RequestType) -> Unit,
-    crossinline onFetchFailed: (Throwable) -> Unit = { Unit },
+    crossinline onFetchFailed: suspend (Throwable) -> Boolean,
     crossinline shouldFetch: (ResultType) -> Boolean = { true }
 ) = flow {
     emit(Resource.Loading(true))
@@ -24,12 +24,29 @@ inline fun <ResultType, RequestType> networkBoundResource(
             ))
 
         } catch (t: Throwable){
-            onFetchFailed(t)
+            val tryAgain = onFetchFailed(t)
 
-            emit(Resource.Error(
-                message = "Couldn't reach server: ${t.message}",
-                data = query()
-            ))
+            if(tryAgain)
+            {
+                try {
+                    val fetchedResult = fetch()
+                    saveFetchResult(fetchedResult)
+
+                    emit(Resource.Success(
+                        data = query()
+                    ))
+                }catch (t: Throwable) {
+                    emit(Resource.Error(
+                        message = "Couldn't reach server: ${t.message}",
+                        data = query()
+                    ))
+                }
+            }else{
+                emit(Resource.Error(
+                    message = "Couldn't reach server: ${t.message}",
+                    data = query()
+                ))
+            }
         }
     }else{
         emit(Resource.Success(

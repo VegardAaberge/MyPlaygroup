@@ -2,6 +2,7 @@ package com.myplaygroup.app.core.data.remote
 
 import com.myplaygroup.app.feature_login.data.remote.requests.*
 import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
+import com.myplaygroup.app.feature_login.data.remote.responses.RefreshTokenResponse
 import com.myplaygroup.app.feature_login.data.remote.responses.SimpleResponse
 import com.myplaygroup.app.feature_main.data.remote.MessageResponse
 import retrofit2.Response
@@ -38,4 +39,7 @@ interface MyPlaygroupApi {
 
     @GET("/api/v1/chat")
     suspend fun getMessages(): MessageResponse
+
+    @GET("api/v1/login/refresh_token/")
+    suspend fun refreshToken(): Response<RefreshTokenResponse>
 }

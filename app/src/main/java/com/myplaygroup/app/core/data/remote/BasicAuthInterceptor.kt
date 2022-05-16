@@ -20,6 +20,11 @@ class BasicAuthInterceptor @Inject constructor() : Interceptor {
                 "Bearer " + accessToken
             )
             .build()
-        return chain.proceed(authenticatedRequest)
+
+        val response = chain.proceed(authenticatedRequest)
+        if(response.code == 403){
+            accessToken = null
+        }
+        return response
     }
 }
