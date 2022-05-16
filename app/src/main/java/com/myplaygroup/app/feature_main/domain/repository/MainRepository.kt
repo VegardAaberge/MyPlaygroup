@@ -9,4 +9,6 @@ interface MainRepository {
     suspend fun getChatMessages(
         fetchFromRemote: Boolean
     ) : Flow<Resource<List<Message>>>
+
+    fun ClearAllTables()
 }

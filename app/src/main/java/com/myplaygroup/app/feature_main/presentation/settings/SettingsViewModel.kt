@@ -17,6 +17,7 @@ import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
 import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
+import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
 import com.myplaygroup.app.feature_main.presentation.home.HomeScreenEvent
 import com.myplaygroup.app.feature_main.presentation.home.HomeState
@@ -29,6 +30,7 @@ class SettingsViewModel @Inject constructor(
     private val sharedPref: SharedPreferences,
     private val basicAuthInterceptor: BasicAuthInterceptor,
     private val imageRepository: ImageRepository,
+    private val repository: MainRepository
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -61,9 +63,11 @@ class SettingsViewModel @Inject constructor(
         basicAuthInterceptor.accessToken = null
         sharedPref.edit {
             putString(KEY_USERNAME, NO_VALUE)
+            putString(KEY_PROFILE_NAME, NO_VALUE)
             putString(KEY_ACCESS_TOKEN, NO_VALUE)
             putString(KEY_REFRESH_TOKEN, NO_VALUE)
         }
+        repository.ClearAllTables();
         mainViewModel.setUIEvent(
             BaseViewModel.UiEvent.PopAndNavigateTo(
                 popRoute = MainScreenDestination.route,

@@ -5,19 +5,22 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
-import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Constants.KEY_ACCESS_TOKEN
 import com.myplaygroup.app.core.util.Constants.KEY_REFRESH_TOKEN
 import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
-import com.myplaygroup.app.feature_main.data.local.MainDao
+import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.models.MessageEntity
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,11 +28,13 @@ import javax.inject.Singleton
 @Singleton
 class MainRepositoryImpl @Inject constructor(
     private val api: MyPlaygroupApi,
-    private val dao: MainDao,
+    private val mainDatabase: MainDatabase,
     private val app: Application,
     private val sharedPreferences: SharedPreferences,
     private val basicAuthInterceptor: BasicAuthInterceptor
 ) : MainRepository {
+
+    private val dao = mainDatabase.mainDao()
 
     override suspend fun getChatMessages(
         fetchFromRemote: Boolean
@@ -85,5 +90,12 @@ class MainRepositoryImpl @Inject constructor(
         }
 
         return response.isSuccessful && response.body() != null
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun ClearAllTables() {
+        GlobalScope.launch(Dispatchers.IO) {
+            mainDatabase.clearAllTables()
+        }
     }
 }
