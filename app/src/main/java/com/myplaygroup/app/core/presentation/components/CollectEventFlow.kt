@@ -4,6 +4,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.collectLatest
@@ -15,9 +16,10 @@ fun collectEventFlow(
 ) : ScaffoldState {
 
     val scaffoldState = rememberScaffoldState()
+    val context = LocalContext.current
 
-    LaunchedEffect(key1 = true){
-        viewModel.eventFlow.collectLatest { event ->
+    LaunchedEffect(viewModel, context){
+        viewModel.eventChannelFlow.collect { event ->
             when(event){
                 is BaseViewModel.UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
