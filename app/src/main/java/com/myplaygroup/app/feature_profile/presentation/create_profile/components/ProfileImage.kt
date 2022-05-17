@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_login.presentation.create_profile.components
+package com.myplaygroup.app.feature_profile.presentation.create_profile.components
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image

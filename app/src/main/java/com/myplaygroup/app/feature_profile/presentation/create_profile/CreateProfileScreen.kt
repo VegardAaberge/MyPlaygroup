@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_login.presentation.create_profile
+package com.myplaygroup.app.feature_profile.presentation.create_profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,8 +20,8 @@ import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.core.presentation.components.scaffoldColumnModifier
-import com.myplaygroup.app.feature_login.presentation.create_profile.components.ProfileField
-import com.myplaygroup.app.feature_login.presentation.create_profile.components.ProfileImage
+import com.myplaygroup.app.feature_profile.presentation.create_profile.components.ProfileField
+import com.myplaygroup.app.feature_profile.presentation.create_profile.components.ProfileImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_login.presentation.create_profile
+package com.myplaygroup.app.feature_profile.presentation.create_profile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.destinations.*
-import com.myplaygroup.app.feature_login.presentation.create_profile.CreateProfileScreen
+import com.myplaygroup.app.feature_profile.presentation.create_profile.CreateProfileScreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
