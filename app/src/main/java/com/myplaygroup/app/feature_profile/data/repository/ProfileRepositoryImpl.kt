@@ -74,6 +74,7 @@ class ProfileRepositoryImpl @Inject constructor(
                         putString(KEY_EMAIL, body.email)
                         apply()
                     }
+                    emit(Resource.Success("SUCCESS"))
                 }else {
                     emit(Resource.Error("ERROR: ${response.message()}"))
                 }
@@ -131,6 +132,7 @@ class ProfileRepositoryImpl @Inject constructor(
                         putString(KEY_EMAIL, body.email)
                         apply()
                     }
+                    emit(Resource.Success("SUCCESS"))
                 }else {
                     emit(Resource.Error("ERROR: ${response.message()}"))
                 }
