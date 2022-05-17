@@ -1,12 +1,18 @@
 package com.myplaygroup.app.feature_main.presentation.settings
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,14 +70,19 @@ fun UserSection(viewModel: SettingsViewModel) {
             image = rememberImagePainter(data = profileImage),
             modifier = Modifier
                 .size(100.dp)
-                .weight(3f)
         )
         Spacer(modifier = Modifier.width(16.dp))
         ProfileInfo(
             header = username,
             subHeader = profileName,
             modifier = Modifier
-                .weight(7f)
+                .weight(1f)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        EditProfileArrow(
+            editProfileEvent = {
+                viewModel.onEvent(HomeScreenEvent.EditProfileTapped)
+            }
         )
     }
 }
@@ -113,5 +125,30 @@ private fun ProfileInfo(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = subHeader)
+    }
+}
+
+@Composable
+private fun EditProfileArrow(
+    editProfileEvent: () -> Unit,
+    boxHeight: Dp = 100.dp,
+    boxWidth: Dp = 50.dp,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = Modifier
+        .height(100.dp)
+        .width(50.dp)
+        .clickable {
+            editProfileEvent()
+        })
+    {
+        Icon(
+            imageVector = Icons.Default.ArrowForward,
+            contentDescription = "Edit Profile",
+            tint = Color.Black,
+            modifier = Modifier
+                .size(24.dp)
+                .align(Alignment.Center)
+        )
     }
 }

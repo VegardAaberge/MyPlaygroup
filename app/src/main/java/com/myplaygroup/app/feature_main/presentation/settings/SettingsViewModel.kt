@@ -15,6 +15,7 @@ import com.myplaygroup.app.core.util.Constants.KEY_PROFILE_NAME
 import com.myplaygroup.app.core.util.Constants.KEY_REFRESH_TOKEN
 import com.myplaygroup.app.core.util.Constants.KEY_USERNAME
 import com.myplaygroup.app.core.util.Constants.NO_VALUE
+import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
@@ -55,6 +56,11 @@ class SettingsViewModel @Inject constructor(
         when(event){
             is HomeScreenEvent.LogoutButtonTapped -> {
                 logout()
+            }
+            is HomeScreenEvent.EditProfileTapped -> {
+                mainViewModel.setUIEvent(
+                    BaseViewModel.UiEvent.NavigateTo(EditProfileScreenDestination)
+                )
             }
         }
     }

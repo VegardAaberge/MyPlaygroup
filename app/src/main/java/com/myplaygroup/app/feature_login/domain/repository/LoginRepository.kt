@@ -12,13 +12,5 @@ interface LoginRepository {
 
     suspend fun checkVerificationCode(code: String): Flow<Resource<String>>
 
-    suspend fun createProfile(
-        profileName: String,
-        phoneNumber: String,
-        email: String,
-        newPassword: String,
-        profileUri: Uri?
-    ) : Flow<Resource<String>>
-
     suspend fun uploadProfileImage(uri: Uri?) : Flow<Resource<String>>
 }

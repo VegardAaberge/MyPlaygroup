@@ -6,6 +6,8 @@ import com.myplaygroup.app.feature_login.data.repository.LoginRepositoryImpl
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.feature_main.data.repository.MainRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
+import com.myplaygroup.app.feature_profile.data.repository.ProfileRepositoryImpl
+import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,10 @@ abstract class RepositoryModule {
     abstract fun bindMainRepository(
         mainRepository: MainRepositoryImpl
     ): MainRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindProfileRepository(
+        profileRepository: ProfileRepositoryImpl
+    ): ProfileRepository
 }

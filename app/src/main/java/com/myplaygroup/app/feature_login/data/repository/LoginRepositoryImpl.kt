@@ -12,8 +12,6 @@ import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
 import com.myplaygroup.app.core.util.Constants
-import com.myplaygroup.app.core.util.Constants.NO_VALUE
-import com.myplaygroup.app.feature_login.data.remote.requests.ProfileRequest
 import com.myplaygroup.app.feature_login.data.remote.requests.SendEmailRequest
 import com.myplaygroup.app.feature_login.data.remote.requests.VerifyCodeRequest
 import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
@@ -23,7 +21,6 @@ import kotlinx.coroutines.flow.flow
 import com.myplaygroup.app.feature_login.data.remote.responses.SimpleResponse
 import retrofit2.Response
 import java.lang.Exception
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
@@ -133,49 +130,6 @@ class LoginRepositoryImpl @Inject constructor(
                 emit(getSuccessResponse(response))
 
             }catch (e: Exception){
-                Log.e(DEBUG_KEY, e.stackTraceToString())
-                emit(Resource.Error(context.getString(R.string.api_login_exception)))
-            }finally {
-                emit(Resource.Loading(false))
-            }
-        }
-    }
-
-    override suspend fun createProfile(
-        profileName: String,
-        phoneNumber: String,
-        email: String,
-        newPassword: String,
-        profileUri: Uri?
-    ): Flow<Resource<String>> {
-
-        return flow {
-            emit(Resource.Loading(true))
-
-            try {
-                val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_VALUE) ?: NO_VALUE
-                if(username == NO_VALUE){
-                    throw IllegalStateException("No username found")
-                }
-
-                val response = api.registerProfile(
-                    username,
-                    ProfileRequest(
-                        profileName = profileName,
-                        phoneNumber = phoneNumber,
-                        email = email,
-                        password = newPassword
-                    )
-                )
-
-                emit(getSuccessResponse(response))
-
-            }
-            catch (e : IllegalStateException){
-                Log.e(DEBUG_KEY, e.stackTraceToString())
-                emit(Resource.Error(e.message.toString()))
-            }
-            catch (e: Exception){
                 Log.e(DEBUG_KEY, e.stackTraceToString())
                 emit(Resource.Error(context.getString(R.string.api_login_exception)))
             }finally {
