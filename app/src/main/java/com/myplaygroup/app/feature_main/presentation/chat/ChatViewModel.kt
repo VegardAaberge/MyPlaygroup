@@ -12,6 +12,7 @@ import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,10 +22,54 @@ class ChatViewModel @Inject constructor(
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
+
     var state by mutableStateOf(ChatState())
 
     init {
         getMessages(true)
+    }
+
+    fun onEvent(event: ChatScreenEvent){
+        when(event){
+            is ChatScreenEvent.EnteredNewMessage -> {
+                state = state.copy(newMessage = event.newMessage)
+            }
+            is ChatScreenEvent.SendMessageTapped -> {
+                val username = mainViewModel.state.username;
+                val receivers = if(username == "admin"){
+                    listOf<String>("meng", "vegard")
+                }else{
+                    listOf<String>("admin")
+                }
+
+                viewModelScope.launch(Dispatchers.IO) {
+                    repository.sendMessage(
+                        message = state.newMessage,
+                        receivers = receivers
+                    ).collectLatest { collectInsertMessages(it) }
+
+                    getMessages(true)
+                }
+
+            }
+        }
+    }
+
+    private fun collectInsertMessages(result: Resource<String>) {
+        when (result) {
+            is Resource.Success -> {}
+            is Resource.Error -> {
+                mainViewModel.setUIEvent(
+                    BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
+                )
+            }
+            is Resource.Loading -> {
+                state = state.copy(
+                    isLoading = result.isLoading,
+                    showProgressIndicator = result.isLoading
+                )
+            }
+        }
     }
 
     private fun getMessages(

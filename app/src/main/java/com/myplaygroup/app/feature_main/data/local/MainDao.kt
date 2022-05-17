@@ -14,6 +14,11 @@ interface MainDao {
         messages: List<MessageEntity>
     )
 
+    @Insert(onConflict = REPLACE)
+    suspend fun insertMessage(
+        message: MessageEntity
+    )
+
     @Query("DELETE FROM messageentity")
     fun clearComments()
 

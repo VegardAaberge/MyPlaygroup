@@ -10,7 +10,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
 
 fun MessageEntity.toMessage() : Message {
     val dateFormat = DateTimeFormatter.ofPattern(dateFormat, Locale("en"))

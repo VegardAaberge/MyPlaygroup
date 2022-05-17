@@ -4,11 +4,14 @@ import com.myplaygroup.app.feature_login.data.remote.requests.*
 import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.remote.responses.RefreshTokenResponse
 import com.myplaygroup.app.feature_login.data.remote.responses.SimpleResponse
+import com.myplaygroup.app.feature_main.data.models.MessageEntity
+import com.myplaygroup.app.feature_main.data.remote.MessageRequest
 import com.myplaygroup.app.feature_main.data.remote.MessageResponse
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
 import com.myplaygroup.app.feature_profile.data.responses.ProfileResponse
 import retrofit2.Response
 import retrofit2.http.*
+import java.util.*
 
 interface MyPlaygroupApi {
 
@@ -49,6 +52,13 @@ interface MyPlaygroupApi {
     @GET("/api/v1/chat")
     suspend fun getMessages(): MessageResponse
 
+    @POST("/api/v1/chat")
+    suspend fun sendMessage(
+        @Body messageRequest: MessageRequest
+    ): Response<MessageEntity>
+
     @GET("api/v1/login/refresh_token/")
     suspend fun refreshToken(): Response<RefreshTokenResponse>
+
+
 }

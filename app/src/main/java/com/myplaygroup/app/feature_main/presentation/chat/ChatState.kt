@@ -5,5 +5,6 @@ import com.myplaygroup.app.feature_main.domain.model.Message
 data class ChatState (
     val isLoading: Boolean = false,
     val showProgressIndicator: Boolean = false,
+    val newMessage: String = "",
     val messages: List<Message> = emptyList()
 )

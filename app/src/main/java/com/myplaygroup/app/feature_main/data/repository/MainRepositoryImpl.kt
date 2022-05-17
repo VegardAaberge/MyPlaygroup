@@ -1,10 +1,14 @@
 package com.myplaygroup.app.feature_main.data.repository
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
+import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Constants.KEY_ACCESS_TOKEN
 import com.myplaygroup.app.core.util.Constants.KEY_REFRESH_TOKEN
 import com.myplaygroup.app.core.util.Constants.NO_VALUE
@@ -14,13 +18,17 @@ import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.models.MessageEntity
+import com.myplaygroup.app.feature_main.data.remote.MessageRequest
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,7 +39,8 @@ class MainRepositoryImpl @Inject constructor(
     private val mainDatabase: MainDatabase,
     private val app: Application,
     private val sharedPreferences: SharedPreferences,
-    private val basicAuthInterceptor: BasicAuthInterceptor
+    private val basicAuthInterceptor: BasicAuthInterceptor,
+    @ApplicationContext private val context: Context
 ) : MainRepository {
 
     private val dao = mainDatabase.mainDao()
@@ -96,6 +105,41 @@ class MainRepositoryImpl @Inject constructor(
     override fun ClearAllTables() {
         GlobalScope.launch(Dispatchers.IO) {
             mainDatabase.clearAllTables()
+        }
+    }
+
+    override suspend fun sendMessage(
+        message: String,
+        receivers: List<String>
+    ): Flow<Resource<String>> {
+
+        return flow {
+            emit(Resource.Loading(true))
+
+            try {
+                val response = api.sendMessage(
+                    MessageRequest(
+                        message = message,
+                        receivers = receivers
+                    )
+                )
+
+                if(response.isSuccessful && response.code() == 200 && response.body() != null){
+
+                    val message = response.body()!!
+                    dao.insertMessage(message)
+
+                    emit(Resource.Success("Message sent"))
+                }else{
+                    emit(Resource.Error("Unknown error: ${response.message()}"))
+                }
+
+            }catch (e: Exception){
+                Log.e(Constants.DEBUG_KEY, e.stackTraceToString())
+                emit(Resource.Error(context.getString(R.string.api_login_exception)))
+            }finally {
+                emit(Resource.Loading(false))
+            }
         }
     }
 }
