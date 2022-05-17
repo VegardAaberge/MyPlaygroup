@@ -32,8 +32,9 @@ interface MyPlaygroupApi {
         @Body codeRequest: VerifyCodeRequest
     ): Response<SimpleResponse>
 
-    @POST("/registerProfile")
+    @POST("/api/v1/registration/update/{username}")
     suspend fun registerProfile(
+        @Path("username") username: String,
         @Body codeRequest: ProfileRequest
     ): Response<SimpleResponse>
 
