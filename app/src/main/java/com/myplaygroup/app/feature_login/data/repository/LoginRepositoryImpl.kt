@@ -15,11 +15,10 @@ import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
 import com.myplaygroup.app.feature_login.data.requests.VerifyCodeRequest
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
+import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import com.myplaygroup.app.feature_login.data.responses.SimpleResponse
-import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -94,7 +93,7 @@ class LoginRepositoryImpl @Inject constructor(
 
     override suspend fun sendEmailRequestForm(
         email: String
-    ): Flow<Resource<String>> {
+    ): Flow<Resource<SendResetPasswordResponse>> {
 
         return flow {
             emit(Resource.Loading(true))
@@ -104,7 +103,12 @@ class LoginRepositoryImpl @Inject constructor(
                     SendEmailRequest(email)
                 )
 
-                emit(getSuccessResponse(response))
+                if(response.isSuccessful && response.code() == 200 && response.body() != null){
+                    val body = response.body()!!
+                    emit(Resource.Success(body))
+                }else{
+                    emit(Resource.Error("Error: " + response.message()))
+                }
 
             }catch (e: Exception){
                 Log.e(DEBUG_KEY, e.stackTraceToString())
@@ -116,7 +120,8 @@ class LoginRepositoryImpl @Inject constructor(
     }
 
     override suspend fun checkVerificationCode(
-        code: String
+        code: String,
+        token: String
     ): Flow<Resource<String>> {
 
         return flow {
@@ -124,10 +129,18 @@ class LoginRepositoryImpl @Inject constructor(
 
             try {
                 val response = api.checkVerificationCode(
-                    VerifyCodeRequest(code)
+                    VerifyCodeRequest(
+                        token = token,
+                        code = code
+                    )
                 )
 
-                emit(getSuccessResponse(response))
+                if(response.isSuccessful && response.code() == 200 && response.body() != null){
+                    val body = response.body()!!
+                    emit(Resource.Success(body.message))
+                }else{
+                    emit(Resource.Error("Error: " + response.message()))
+                }
 
             }catch (e: Exception){
                 Log.e(DEBUG_KEY, e.stackTraceToString())
@@ -150,16 +163,6 @@ class LoginRepositoryImpl @Inject constructor(
             }finally {
                 emit(Resource.Loading(false))
             }
-        }
-    }
-
-    private fun getSuccessResponse(response: Response<SimpleResponse>) : Resource<String> {
-
-        val responseMessage = response.body()?.message
-        return if(response.isSuccessful && response.body()!!.successful){
-            Resource.Success(responseMessage)
-        }else{
-            Resource.Error(responseMessage ?: response.message())
         }
     }
 }

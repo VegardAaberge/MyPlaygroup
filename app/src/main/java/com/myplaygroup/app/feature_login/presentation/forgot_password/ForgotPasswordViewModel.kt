@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,8 @@ class ForgotPasswordViewModel @Inject constructor(
 
     var state by mutableStateOf(ForgotPasswordState())
 
+    var token = ""
+
     fun onEvent(event: ForgotPasswordScreenEvent)
     {
         when(event){
@@ -33,7 +36,7 @@ class ForgotPasswordViewModel @Inject constructor(
                 viewModelScope.launch {
                     if(state.shouldCheckCode){
                         repository
-                            .checkVerificationCode(state.code)
+                            .checkVerificationCode(state.code, token)
                             .collect { collectCodeRequest(it) }
                     }else{
                         repository
@@ -45,16 +48,17 @@ class ForgotPasswordViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectEmailRequest(result: Resource<String>) {
+    private suspend fun collectEmailRequest(result: Resource<SendResetPasswordResponse>) {
         when(result){
             is Resource.Success -> {
                 setUIEvent(
-                    UiEvent.ShowSnackbar(result.data!!)
+                    UiEvent.ShowSnackbar("Success")
                 )
                 state = state.copy(
                     shouldCheckCode = true,
                     countDown = 60,
                 )
+                token = result.data!!.token
 
                 viewModelScope.launch (Dispatchers.Default) {
                     while (state.countDown >= 0){

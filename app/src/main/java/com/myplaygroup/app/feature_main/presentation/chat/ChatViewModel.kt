@@ -57,7 +57,9 @@ class ChatViewModel @Inject constructor(
 
     private fun collectInsertMessages(result: Resource<String>) {
         when (result) {
-            is Resource.Success -> {}
+            is Resource.Success -> {
+                state = state.copy(newMessage = "")
+            }
             is Resource.Error -> {
                 mainViewModel.setUIEvent(
                     BaseViewModel.UiEvent.ShowSnackbar(result.message!!)

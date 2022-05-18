@@ -17,7 +17,7 @@ object Constants {
     const val KEY_EMAIL = "KEY_EMAIL"
 
 
-    const val BASE_URL = "http://vegardaaberge.no:8080"
+    const val BASE_URL = "http://192.168.50.91:8080"
 
-    val IGNORE_AUTH_URLS = listOf("/api/v1/login", "/api/v1/reset_password")
+    val IGNORE_AUTH_URLS = listOf("/api/v1/login", "/api/v1/reset-password/send", "/api/v1/reset-password/verify")
 }

@@ -3,7 +3,7 @@ package com.myplaygroup.app.core.data.remote
 import com.myplaygroup.app.feature_login.data.requests.*
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
-import com.myplaygroup.app.feature_login.data.responses.SimpleResponse
+import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
 import com.myplaygroup.app.feature_main.data.models.MessageEntity
 import com.myplaygroup.app.feature_main.data.requests.MessageRequest
 import com.myplaygroup.app.feature_main.data.requests.MessageResponse
@@ -21,17 +21,12 @@ interface MyPlaygroupApi {
         @Field("password") password: String
     ): Response<LoginResponse>
 
-    @POST("/register")
-    suspend fun register(
-        @Body registerRequest: RegisterRequest
-    ): Response<SimpleResponse>
-
-    @POST("/sendEmailRequest")
+    @POST("/api/v1/reset-password/send")
     suspend fun sendEmailRequest(
         @Body emailRequest: SendEmailRequest
-    ): Response<SimpleResponse>
+    ): Response<SendResetPasswordResponse>
 
-    @POST("/checkVerificationCode")
+    @POST("/api/v1/reset-password/verify")
     suspend fun checkVerificationCode(
         @Body codeRequest: VerifyCodeRequest
     ): Response<SimpleResponse>
@@ -56,7 +51,7 @@ interface MyPlaygroupApi {
         @Body messageRequest: MessageRequest
     ): Response<MessageEntity>
 
-    @GET("api/v1/login/refresh_token/")
+    @GET("api/v1/login/refresh_token")
     suspend fun refreshToken(): Response<RefreshTokenResponse>
 
 
