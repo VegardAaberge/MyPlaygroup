@@ -1,22 +1,23 @@
-package com.myplaygroup.app.core.presentation.TopAppBar
+package com.myplaygroup.app.core.presentation.app_bar
 
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-fun AppBarMenuButton() {
+fun AppBarBackButton(
+    navigator: DestinationsNavigator
+) {
     IconButton(
         onClick = {
-
+            navigator.popBackStack()
         }
     ) {
         Icon(
-            imageVector = Icons.Filled.Menu,
+            imageVector = Icons.Filled.ArrowBack,
             contentDescription = "Back Button",
         )
     }

@@ -2,7 +2,7 @@ package com.myplaygroup.app.feature_login.domain.repository
 
 import android.net.Uri
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
+import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import kotlinx.coroutines.flow.Flow
 
 interface LoginRepository {

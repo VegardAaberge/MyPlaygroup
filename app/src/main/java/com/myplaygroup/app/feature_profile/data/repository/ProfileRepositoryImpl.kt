@@ -14,12 +14,10 @@ import com.myplaygroup.app.core.util.Constants.KEY_PHONE_NUMBER
 import com.myplaygroup.app.core.util.Constants.KEY_PROFILE_NAME
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
-import com.myplaygroup.app.feature_login.data.remote.responses.SimpleResponse
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.Response
 import java.lang.Exception
 import java.lang.IllegalStateException
 import javax.inject.Inject

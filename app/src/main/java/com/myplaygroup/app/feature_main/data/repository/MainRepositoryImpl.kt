@@ -18,7 +18,7 @@ import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.models.MessageEntity
-import com.myplaygroup.app.feature_main.data.remote.MessageRequest
+import com.myplaygroup.app.feature_main.data.requests.MessageRequest
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import dagger.hilt.android.qualifiers.ApplicationContext

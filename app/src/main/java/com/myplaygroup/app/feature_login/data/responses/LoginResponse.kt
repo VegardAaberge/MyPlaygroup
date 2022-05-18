@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_login.data.remote.responses
+package com.myplaygroup.app.feature_login.data.responses
 
 data class LoginResponse (
     val access_token: String,

@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_login.data.remote.requests
+package com.myplaygroup.app.feature_login.data.requests
 
 data class RegisterRequest (
     val username: String,

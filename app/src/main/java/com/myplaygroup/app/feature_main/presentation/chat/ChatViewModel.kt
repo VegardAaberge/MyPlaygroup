@@ -48,7 +48,7 @@ class ChatViewModel @Inject constructor(
                         receivers = receivers
                     ).collectLatest { collectInsertMessages(it) }
 
-                    getMessages(true)
+                    getMessages(false)
                 }
 
             }

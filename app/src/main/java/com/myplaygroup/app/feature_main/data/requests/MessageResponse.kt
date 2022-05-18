@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_main.data.remote
+package com.myplaygroup.app.feature_main.data.requests
 
 import com.myplaygroup.app.feature_main.data.models.MessageEntity
 

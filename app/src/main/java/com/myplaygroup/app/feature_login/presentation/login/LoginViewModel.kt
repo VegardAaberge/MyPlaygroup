@@ -9,7 +9,7 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.destinations.CreateProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
-import com.myplaygroup.app.feature_login.data.remote.responses.LoginResponse
+import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

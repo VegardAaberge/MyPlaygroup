@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_login.data.remote.responses
+package com.myplaygroup.app.feature_login.data.responses
 
 data class SimpleResponse (
     val successful: Boolean,
