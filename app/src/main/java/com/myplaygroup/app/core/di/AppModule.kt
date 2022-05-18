@@ -6,9 +6,8 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.google.gson.GsonBuilder
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
-import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
+import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.util.Constants.BASE_URL
 import com.myplaygroup.app.core.util.Constants.ENCRYPTED_SHARED_PREF_NAME
 import com.myplaygroup.app.core.util.Constants.MAIN_DATABASE_NAME
@@ -22,7 +21,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 import javax.inject.Singleton
 
 
@@ -52,7 +50,7 @@ class AppModule {
     @Provides
     fun provideMyPlaygroupApi(
         basicAuthInterceptor: BasicAuthInterceptor
-    ) : MyPlaygroupApi {
+    ) : PlaygroupApi {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -65,7 +63,7 @@ class AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
-            .create(MyPlaygroupApi::class.java)
+            .create(PlaygroupApi::class.java)
     }
 
     @Singleton

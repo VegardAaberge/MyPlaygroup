@@ -7,7 +7,7 @@ import android.util.Log
 import androidx.core.content.edit
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
-import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
+import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Constants.KEY_EMAIL
 import com.myplaygroup.app.core.util.Constants.KEY_PHONE_NUMBER
@@ -23,7 +23,7 @@ import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
-    private val api: MyPlaygroupApi,
+    private val api: PlaygroupApi,
     private val sharedPreferences: SharedPreferences,
     private val basicAuthInterceptor: BasicAuthInterceptor,
     @ApplicationContext private val context: Context

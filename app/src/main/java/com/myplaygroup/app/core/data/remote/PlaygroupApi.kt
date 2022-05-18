@@ -12,7 +12,7 @@ import com.myplaygroup.app.feature_profile.data.responses.ProfileResponse
 import retrofit2.Response
 import retrofit2.http.*
 
-interface MyPlaygroupApi {
+interface PlaygroupApi {
 
     @FormUrlEncoded
     @POST("/api/v1/login")
@@ -31,13 +31,13 @@ interface MyPlaygroupApi {
         @Body codeRequest: VerifyCodeRequest
     ): Response<SimpleResponse>
 
-    @POST("/api/v1/registration/profile/create/{username}")
+    @POST("/api/v1/profile/create/{username}")
     suspend fun createProfile(
         @Path("username") username: String,
         @Body codeRequest: ProfileRequest
     ): Response<ProfileResponse>
 
-    @POST("/api/v1/registration/profile/edit/{username}")
+    @POST("/api/v1/profile/edit/{username}")
     suspend fun editProfile(
         @Path("username") username: String,
         @Body codeRequest: ProfileRequest

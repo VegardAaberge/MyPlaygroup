@@ -10,7 +10,7 @@ import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.core.data.remote.MyPlaygroupApi
+import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
 import com.myplaygroup.app.feature_login.data.requests.VerifyCodeRequest
@@ -23,7 +23,7 @@ import java.lang.Exception
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
-    private val api: MyPlaygroupApi,
+    private val api: PlaygroupApi,
     private val basicAuthInterceptor: BasicAuthInterceptor,
     private val sharedPreferences: SharedPreferences,
     @ApplicationContext private val context: Context
