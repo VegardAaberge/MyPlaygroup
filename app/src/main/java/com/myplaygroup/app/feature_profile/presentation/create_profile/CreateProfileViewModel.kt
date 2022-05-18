@@ -64,9 +64,21 @@ class CreateProfileViewModel @Inject constructor(
                     }
 
                     state.profileBitmap?.let {
-                        imageRepository.storeProfileImage(it)
+                        val response = imageRepository.storeProfileImage(it)
+                        when(response){
+                            is Resource.Success -> {
+                                setUIEvent(
+                                    UiEvent.ShowSnackbar("uploaded profile image")
+                                )
+                            }
+                            is Resource.Error -> {
+                                setUIEvent(
+                                    UiEvent.ShowSnackbar(response.message!!)
+                                )
+                            }
+                        }
                     }
-                    val uri = imageRepository.getProfileImage()
+                    val uri = imageRepository.getProfileImage().data
 
                     launch(Dispatchers.IO) {
                         profileRepository.createProfile(

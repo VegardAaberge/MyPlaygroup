@@ -23,7 +23,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val uri = imageRepository.getProfileImage()
             state = state.copy(
-                imageUri = uri
+                imageUri = uri.data
             )
         }
     }

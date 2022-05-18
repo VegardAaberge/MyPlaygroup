@@ -9,8 +9,11 @@ import com.myplaygroup.app.feature_main.data.requests.MessageRequest
 import com.myplaygroup.app.feature_main.data.requests.MessageResponse
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
 import com.myplaygroup.app.feature_profile.data.responses.ProfileResponse
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
+import java.io.InputStream
 
 interface PlaygroupApi {
 
@@ -42,6 +45,17 @@ interface PlaygroupApi {
         @Path("username") username: String,
         @Body codeRequest: ProfileRequest
     ): Response<ProfileResponse>
+
+    @GET("/api/v1/profile/get-image/{username}")
+    suspend fun getProfileImage(
+        @Path("username") username: String,
+    ): ResponseBody
+
+    @Multipart
+    @POST("/api/v1/profile/upload-image/")
+    suspend fun uploadProfileImage(
+        @Part image: MultipartBody.Part,
+    ): Response<SimpleResponse>
 
     @GET("/api/v1/chat")
     suspend fun getMessages(): MessageResponse
