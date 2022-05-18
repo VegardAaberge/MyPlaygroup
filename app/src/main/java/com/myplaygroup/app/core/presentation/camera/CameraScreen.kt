@@ -7,6 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,11 +28,10 @@ import com.myplaygroup.app.core.presentation.components.collectEventFlow
 @Composable
 fun CameraScreen(
     shouldCrop: Boolean,
+    scaffoldState: ScaffoldState,
     viewModel: CameraViewModel = hiltViewModel(),
     takePhotoCallback: (Bitmap) -> Unit
 ) {
-    val scaffoldState = collectEventFlow(viewModel)
-
     viewModel.takePhotoCallback = takePhotoCallback
     viewModel.setShouldCrop(shouldCrop)
 

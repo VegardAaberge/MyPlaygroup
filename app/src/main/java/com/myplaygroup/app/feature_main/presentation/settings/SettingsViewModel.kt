@@ -18,6 +18,7 @@ import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
+import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
 import com.myplaygroup.app.feature_main.presentation.home.HomeScreenEvent
@@ -52,14 +53,19 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: HomeScreenEvent){
+    fun onEvent(event: SettingsScreenEvent){
         when(event){
-            is HomeScreenEvent.LogoutButtonTapped -> {
+            is SettingsScreenEvent.LogoutButtonTapped -> {
                 logout()
             }
-            is HomeScreenEvent.EditProfileTapped -> {
+            is SettingsScreenEvent.EditProfileTapped -> {
                 mainViewModel.setUIEvent(
                     BaseViewModel.UiEvent.NavigateTo(EditProfileScreenDestination)
+                )
+            }
+            is SettingsScreenEvent.EditProfilePictureTapped -> {
+                mainViewModel.setUIEvent(
+                    BaseViewModel.UiEvent.NavigateTo(ProfileSelectorScreenDestination)
                 )
             }
         }

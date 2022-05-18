@@ -31,10 +31,12 @@ fun CreateProfileScreen(
     viewModel: CreateProfileViewModel = hiltViewModel()
 ) {
     val takePictureMode = viewModel.state.takePictureMode
+    val scaffoldState = collectEventFlow(viewModel)
 
     if(takePictureMode){
         CameraScreen(
             shouldCrop = true,
+            scaffoldState = scaffoldState
         ){
             viewModel.onEvent(
                 CreateProfileScreenEvent.TakePictureDone(it)
@@ -43,6 +45,7 @@ fun CreateProfileScreen(
     }else{
         CreateProfileScreenBody(
             navigator = navigator,
+            scaffoldState = scaffoldState,
             viewModel = viewModel
         )
     }
@@ -51,6 +54,7 @@ fun CreateProfileScreen(
 @Composable
 fun CreateProfileScreenBody(
     navigator: DestinationsNavigator?,
+    scaffoldState: ScaffoldState,
     viewModel: CreateProfileViewModel
 ) {
 
@@ -58,7 +62,6 @@ fun CreateProfileScreenBody(
     val isBusy = viewModel.isBusy.value
     val profileBitmap = viewModel.state.profileBitmap
     val isFilledIn = viewModel.state.isFilledIn()
-    val scaffoldState = collectEventFlow(viewModel, navigator)
 
     Scaffold(
         scaffoldState = scaffoldState,

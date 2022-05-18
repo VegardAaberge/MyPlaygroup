@@ -45,7 +45,7 @@ fun SettingsScreen(
                 .fillMaxWidth()
                 .padding(20.dp),
             onClick = {
-                viewModel.onEvent(HomeScreenEvent.LogoutButtonTapped)
+                viewModel.onEvent(SettingsScreenEvent.LogoutButtonTapped)
             }
         ) {
             Text(text = "Logout")
@@ -70,6 +70,9 @@ fun UserSection(viewModel: SettingsViewModel) {
             image = rememberImagePainter(data = profileImage),
             modifier = Modifier
                 .size(100.dp)
+                .clickable {
+                    viewModel.onEvent(SettingsScreenEvent.EditProfilePictureTapped)
+                }
         )
         Spacer(modifier = Modifier.width(16.dp))
         ProfileInfo(
@@ -81,7 +84,7 @@ fun UserSection(viewModel: SettingsViewModel) {
         Spacer(modifier = Modifier.width(16.dp))
         EditProfileArrow(
             editProfileEvent = {
-                viewModel.onEvent(HomeScreenEvent.EditProfileTapped)
+                viewModel.onEvent(SettingsScreenEvent.EditProfileTapped)
             }
         )
     }
