@@ -16,8 +16,9 @@ object Constants {
     const val KEY_PHONE_NUMBER = "KEY_PHONE_NUMBER"
     const val KEY_EMAIL = "KEY_EMAIL"
 
-
-    const val BASE_URL = "http://vegardaaberge.no:8080"
+    const val LOCALHOST_URL = "https://192.168.50.91:8080"
+    const val SERVER_URL = "https://vegardaaberge.no:8080"
+    const val BASE_URL = LOCALHOST_URL
 
     val IGNORE_AUTH_URLS = listOf("/api/v1/login", "/api/v1/reset-password/send", "/api/v1/reset-password/verify")
 }

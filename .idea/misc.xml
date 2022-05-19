@@ -32,6 +32,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_lens_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_person_100.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="app/src/main/res/xml/network_security_config.xml" value="0.21920289855072464" />
       </map>
     </option>
   </component>

@@ -7,9 +7,11 @@ import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
+import com.myplaygroup.app.core.data.remote.NullHostNameVerifier
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.util.Constants.BASE_URL
 import com.myplaygroup.app.core.util.Constants.ENCRYPTED_SHARED_PREF_NAME
+import com.myplaygroup.app.core.util.Constants.LOCALHOST_URL
 import com.myplaygroup.app.core.util.Constants.MAIN_DATABASE_NAME
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import dagger.Module
@@ -54,10 +56,14 @@ class AppModule {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        val client = OkHttpClient.Builder()
+        val builder = OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .addInterceptor(basicAuthInterceptor)
-            .build()
+        if(BASE_URL == LOCALHOST_URL){
+            builder.hostnameVerifier(NullHostNameVerifier())
+        }
+        val client = builder.build()
+
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
