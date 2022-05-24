@@ -9,6 +9,7 @@ import androidx.security.crypto.MasterKey
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.NullHostNameVerifier
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
+import com.myplaygroup.app.core.data.remote.TrustAllX509TrustManager
 import com.myplaygroup.app.core.util.Constants.BASE_URL
 import com.myplaygroup.app.core.util.Constants.ENCRYPTED_SHARED_PREF_NAME
 import com.myplaygroup.app.core.util.Constants.LOCALHOST_URL
@@ -29,7 +30,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.SecureRandom
 import javax.inject.Singleton
+import javax.net.ssl.SSLContext
 
 
 @Module
@@ -100,6 +103,11 @@ class AppModule {
     @Singleton
     fun provideHttpClient(): HttpClient {
         return HttpClient(CIO){
+            engine {
+                https{
+                    trustManager = TrustAllX509TrustManager()
+                }
+            }
             install(Logging)
             install(WebSockets)
             install(ContentNegotiation) {

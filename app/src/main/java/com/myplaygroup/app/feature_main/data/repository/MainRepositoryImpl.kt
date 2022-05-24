@@ -121,7 +121,7 @@ class MainRepositoryImpl @Inject constructor(
                 val response = api.sendMessage(
                     SendMessageRequest(
                         message = message,
-                        //receivers = receivers
+                        receivers = receivers
                     )
                 )
 

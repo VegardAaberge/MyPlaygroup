@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.data.repository
 
+import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
@@ -11,25 +12,33 @@ import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.isActive
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.lang.NullPointerException
 import javax.inject.Inject
 
 class ChatSocketRepositoryImpl @Inject constructor(
-    private val client: HttpClient
+    private val client: HttpClient,
+    private val authInterceptor: BasicAuthInterceptor,
 ) : ChatSocketRepository {
 
     private var socket: WebSocketSession? = null;
 
     override suspend fun initSession(username: String): Resource<String> {
         return try {
-            socket = client.webSocketSession {
-                url("${ChatSocketRepository.Endpoints.ChatSocket.url}?username=$username")
+            socket = client.webSocketSession(
+                urlString = ChatSocketRepository.Endpoints.ChatSocket.url,
+            ){
+                headers {
+                    header("cookie", "Bearer " + authInterceptor.accessToken)
+                }
             }
+
             if(socket?.isActive == true){
                 Resource.Success("Established connection")
             }else return Resource.Error("Couldn't establish a connection");
@@ -42,7 +51,10 @@ class ChatSocketRepositoryImpl @Inject constructor(
 
     override suspend fun sendMessage(message: String, receivers: List<String>): Resource<String> {
         return try {
-            val requestMessage = Json.encodeToString(SendMessageRequest(message))
+            val requestMessage = Json.encodeToString(SendMessageRequest(
+                message = message,
+                receivers = receivers)
+            )
             socket?.send(Frame.Text(requestMessage))
             Resource.Success("Sent message")
         }catch (e: Exception){
