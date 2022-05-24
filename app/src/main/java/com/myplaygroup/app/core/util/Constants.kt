@@ -18,7 +18,7 @@ object Constants {
 
     const val LOCALHOST_URL = "https://192.168.50.91:8080"
     const val SERVER_URL = "https://vegardaaberge.no:8080"
-    const val BASE_URL = LOCALHOST_URL
+    const val BASE_URL = SERVER_URL
 
     val IGNORE_AUTH_URLS = listOf("/api/v1/login", "/api/v1/reset-password/send", "/api/v1/reset-password/verify")
 }

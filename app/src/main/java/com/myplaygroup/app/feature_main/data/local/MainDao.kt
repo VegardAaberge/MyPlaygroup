@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import com.myplaygroup.app.feature_main.data.models.MessageEntity
 
 @Dao
 interface MainDao {

@@ -4,16 +4,15 @@ import com.myplaygroup.app.feature_login.data.requests.*
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
 import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
-import com.myplaygroup.app.feature_main.data.models.MessageEntity
-import com.myplaygroup.app.feature_main.data.requests.MessageRequest
-import com.myplaygroup.app.feature_main.data.requests.MessageResponse
+import com.myplaygroup.app.feature_main.data.local.MessageEntity
+import com.myplaygroup.app.feature_main.data.remote.SendMessageRequest
+import com.myplaygroup.app.feature_main.data.remote.MessagesResponse
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
 import com.myplaygroup.app.feature_profile.data.responses.ProfileResponse
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
-import java.io.InputStream
 
 interface PlaygroupApi {
 
@@ -58,11 +57,11 @@ interface PlaygroupApi {
     ): Response<SimpleResponse>
 
     @GET("/api/v1/chat")
-    suspend fun getMessages(): MessageResponse
+    suspend fun getMessages(): MessagesResponse
 
     @POST("/api/v1/chat")
     suspend fun sendMessage(
-        @Body messageRequest: MessageRequest
+        @Body sendMessageRequest: SendMessageRequest
     ): Response<MessageEntity>
 
     @GET("api/v1/login/refresh_token")

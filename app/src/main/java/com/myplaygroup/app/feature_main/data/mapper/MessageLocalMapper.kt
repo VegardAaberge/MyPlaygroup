@@ -1,10 +1,7 @@
 package com.myplaygroup.app.feature_main.data.mapper
 
-import android.icu.util.LocaleData
-import com.myplaygroup.app.feature_main.data.models.MessageEntity
+import com.myplaygroup.app.feature_main.data.local.MessageEntity
 import com.myplaygroup.app.feature_main.domain.model.Message
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -17,10 +14,11 @@ fun MessageEntity.toMessage() : Message {
     val parsedDate = LocalDateTime.parse(created, dateFormat) ?: LocalDateTime.now()
 
     return Message(
+        serverId = serverId,
         message = message,
         createdBy = createdBy,
         created = parsedDate.toEpochSecond(ZoneOffset.UTC),
-        profileName = profileName ?: "NO PROFILE NAME"
+        profileName = profileName
     )
 }
 
@@ -29,6 +27,7 @@ fun Message.toMessageEntity() : MessageEntity {
     val created = dateFormat.format(LocalDateTime.ofEpochSecond(created, 0, ZoneOffset.UTC))
 
     return MessageEntity(
+        serverId = serverId,
         message = message,
         createdBy = createdBy,
         created = created,

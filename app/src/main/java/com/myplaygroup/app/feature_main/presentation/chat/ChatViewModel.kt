@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val repository: MainRepository
+    private val repository: MainRepository,
+    private val chatSocketRepository: ChatSocketRepositoryImpl
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -42,13 +44,12 @@ class ChatViewModel @Inject constructor(
                     listOf<String>("admin")
                 }
 
-                viewModelScope.launch(Dispatchers.IO) {
-                    repository.sendMessage(
+                viewModelScope.launch {
+                    val response = chatSocketRepository.sendMessage(
                         message = state.newMessage,
                         receivers = receivers
-                    ).collectLatest { collectInsertMessages(it) }
-
-                    getMessages(false)
+                    )
+                    collectInsertMessages(response)
                 }
 
             }

@@ -4,7 +4,9 @@ import com.myplaygroup.app.core.data.repository.ImageRepositoryImpl
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.feature_login.data.repository.LoginRepositoryImpl
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
+import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.data.repository.MainRepositoryImpl
+import com.myplaygroup.app.feature_main.domain.repository.ChatSocketRepository
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import com.myplaygroup.app.feature_profile.data.repository.ProfileRepositoryImpl
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
@@ -35,6 +37,12 @@ abstract class RepositoryModule {
     abstract fun bindMainRepository(
         mainRepository: MainRepositoryImpl
     ): MainRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindChatSocketRepository(
+        ChatSocketRepository: ChatSocketRepositoryImpl
+    ): ChatSocketRepository
 
     @Binds
     @Singleton

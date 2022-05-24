@@ -11,9 +11,4 @@ interface MainRepository {
     ) : Flow<Resource<List<Message>>>
 
     fun ClearAllTables()
-
-    suspend fun sendMessage(
-        message: String,
-        receivers: List<String>
-    ): Flow<Resource<String>>
 }

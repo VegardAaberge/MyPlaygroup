@@ -17,8 +17,9 @@ import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
-import com.myplaygroup.app.feature_main.data.models.MessageEntity
-import com.myplaygroup.app.feature_main.data.requests.MessageRequest
+import com.myplaygroup.app.feature_main.data.local.MessageEntity
+import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
+import com.myplaygroup.app.feature_main.data.remote.SendMessageRequest
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -53,7 +54,7 @@ class MainRepositoryImpl @Inject constructor(
                 dao.getMessages().map { it.toMessage() }
             },
             fetch = {
-                api.getMessages()
+                api.getMessages().map { it.toMessageEntity() }
             },
             saveFetchResult = { comments ->
                 dao.clearComments()
@@ -108,7 +109,7 @@ class MainRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun sendMessage(
+    suspend fun sendMessage(
         message: String,
         receivers: List<String>
     ): Flow<Resource<String>> {
@@ -118,9 +119,9 @@ class MainRepositoryImpl @Inject constructor(
 
             try {
                 val response = api.sendMessage(
-                    MessageRequest(
+                    SendMessageRequest(
                         message = message,
-                        receivers = receivers
+                        //receivers = receivers
                     )
                 )
 
