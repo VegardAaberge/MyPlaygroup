@@ -13,23 +13,21 @@ import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val chatSocketRepository: ChatSocketRepositoryImpl
+    private val socketRepository: ChatSocketRepositoryImpl
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
 
     var state by mutableStateOf(ChatState())
-
-    init {
-        getMessages(true)
-    }
 
     fun onEvent(event: ChatScreenEvent){
         when(event){
@@ -45,32 +43,21 @@ class ChatViewModel @Inject constructor(
                 }
 
                 viewModelScope.launch {
-                    val response = chatSocketRepository.sendMessage(
+                    val response = socketRepository.sendMessage(
                         message = state.newMessage,
                         receivers = receivers
                     )
                     collectInsertMessages(response)
                 }
-
             }
-        }
-    }
-
-    private fun collectInsertMessages(result: Resource<String>) {
-        when (result) {
-            is Resource.Success -> {
-                state = state.copy(newMessage = "")
+            is ChatScreenEvent.ConnectToChat -> {
+                getMessages()
+                connectToChat()
             }
-            is Resource.Error -> {
-                mainViewModel.setUIEvent(
-                    BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
-                )
-            }
-            is Resource.Loading -> {
-                state = state.copy(
-                    isLoading = result.isLoading,
-                    showProgressIndicator = result.isLoading
-                )
+            is ChatScreenEvent.DisconnectFromChat -> {
+                viewModelScope.launch {
+                    socketRepository.closeSession()
+                }
             }
         }
     }
@@ -99,6 +86,66 @@ class ChatViewModel @Inject constructor(
                 )
                 state = state.copy(
                     messages = result.data!!,
+                )
+            }
+            is Resource.Loading -> {
+                state = state.copy(
+                    isLoading = result.isLoading,
+                    showProgressIndicator = result.isLoading
+                )
+            }
+        }
+    }
+
+    private fun connectToChat() = viewModelScope.launch {
+        val result = socketRepository.initSession(mainViewModel.state.username)
+        when(result){
+            is Resource.Success -> {
+                val observeResult = socketRepository.observeMessages()
+                collectObserveMessages(observeResult)
+            }
+            is Resource.Error -> {
+                mainViewModel.setUIEvent(
+                    BaseViewModel.UiEvent.ShowSnackbar(result.message ?: "Unknown error")
+                )
+            }
+            else -> {}
+        }
+    }
+
+    private fun collectObserveMessages(observeResult: Resource<Flow<Message>>) {
+        when(observeResult){
+            is Resource.Success -> {
+                observeMessages(observeResult)
+            }
+            is Resource.Error -> {
+                mainViewModel.setUIEvent(
+                    BaseViewModel.UiEvent.ShowSnackbar(observeResult.message ?: "Unknown error")
+                )
+            }
+            else -> {}
+        }
+    }
+
+    private fun observeMessages(result: Resource<Flow<Message>>) {
+        result.data!!.onEach { message ->
+            val newList = state.messages.toMutableList().apply {
+                add(0, message)
+            }
+            state = state.copy(
+                messages = newList
+            )
+        }.launchIn(viewModelScope)
+    }
+
+    private fun collectInsertMessages(result: Resource<String>) {
+        when (result) {
+            is Resource.Success -> {
+                state = state.copy(newMessage = "")
+            }
+            is Resource.Error -> {
+                mainViewModel.setUIEvent(
+                    BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
                 )
             }
             is Resource.Loading -> {

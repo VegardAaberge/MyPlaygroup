@@ -17,6 +17,7 @@ object Constants {
     const val KEY_EMAIL = "KEY_EMAIL"
 
     const val LOCALHOST_URL = "https://192.168.50.91:8080"
+    const val LOCALHOST_SOCKET_URL = "ws://192.168.50.91:8080"
     const val SERVER_URL = "https://vegardaaberge.no:8080"
     const val BASE_URL = SERVER_URL
 
