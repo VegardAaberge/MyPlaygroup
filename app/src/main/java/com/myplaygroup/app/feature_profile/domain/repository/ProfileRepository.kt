@@ -11,11 +11,11 @@ interface ProfileRepository {
         email: String,
         newPassword: String,
         profileUri: Uri?
-    ) : Flow<Resource<String>>
+    ) : Flow<Resource<Unit>>
 
     suspend fun editProfile(
         profileName: String,
         phoneNumber: String,
         email: String,
-    ) : Flow<Resource<String>>
+    ) : Flow<Resource<Unit>>
 }

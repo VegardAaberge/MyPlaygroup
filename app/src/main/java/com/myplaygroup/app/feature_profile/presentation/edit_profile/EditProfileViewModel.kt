@@ -67,7 +67,7 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    private fun collectCreateProfile(result: Resource<String>){
+    private fun collectCreateProfile(result: Resource<Unit>){
         when (result) {
             is Resource.Success -> {
                 setUIEvent(

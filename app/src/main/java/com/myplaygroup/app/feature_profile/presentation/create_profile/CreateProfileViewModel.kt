@@ -94,7 +94,7 @@ class CreateProfileViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectCreateProfile(result: Resource<String>){
+    private suspend fun collectCreateProfile(result: Resource<Unit>){
         when (result) {
             is Resource.Success -> {
                 setUIEvent(

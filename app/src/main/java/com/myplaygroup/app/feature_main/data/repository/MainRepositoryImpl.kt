@@ -8,6 +8,7 @@ import androidx.core.content.edit
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
+import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.*
 import com.myplaygroup.app.core.util.Constants.KEY_ACCESS_TOKEN
 import com.myplaygroup.app.core.util.Constants.KEY_REFRESH_TOKEN
@@ -39,8 +40,7 @@ class MainRepositoryImpl @Inject constructor(
     private val api: PlaygroupApi,
     private val mainDatabase: MainDatabase,
     private val app: Application,
-    private val sharedPreferences: SharedPreferences,
-    private val basicAuthInterceptor: BasicAuthInterceptor,
+    private val tokenRepository: TokenRepository,
     @ApplicationContext private val context: Context
 ) : MainRepository {
 
@@ -67,7 +67,7 @@ class MainRepositoryImpl @Inject constructor(
             },
             onFetchError = { r ->
                 when(r.code()){
-                    403 -> verifyRefreshToken()
+                    403 -> tokenRepository.verifyRefreshToken()
                     else -> "Couldn't reach server: ${r.message()}"
                 }
             },
@@ -78,53 +78,6 @@ class MainRepositoryImpl @Inject constructor(
                 }
             }
         )
-    }
-
-    suspend fun verifyRefreshToken() : String {
-        if(basicAuthInterceptor.accessToken != null)
-            return "Couldn't reach server: Access token is null"
-
-        val refreshToken = sharedPreferences.getString(KEY_REFRESH_TOKEN, NO_VALUE) ?: NO_VALUE;
-        if(refreshToken == NO_VALUE)
-            return "Couldn't reach server: Refresh token is null"
-
-        basicAuthInterceptor.accessToken = refreshToken
-
-        val result = fetchApi(
-            fetch = {
-                api.refreshToken()
-            },
-            processFetch = { body ->
-                SetAccessToken(body)
-            },
-            onFetchError = { r ->
-                SetAccessToken(null)
-                "Couldn't reach server: ${r.message()}"
-            },
-            onFetchException = { t ->
-                when(t){
-                    is IOException -> "No Internet Connection"
-                    else -> {
-                        SetAccessToken(null)
-                        "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
-                    }
-                }
-            }
-        )
-
-        return if(result is Resource.Success){
-            Constants.AUTHENTICATION_ERROR_MESSAGE
-        }else{
-            result.message ?: "Unknown Error"
-        }
-    }
-
-    fun SetAccessToken(body: RefreshTokenResponse?){
-        basicAuthInterceptor.accessToken = body?.access_token
-        sharedPreferences.edit {
-            putString(KEY_ACCESS_TOKEN, body?.access_token ?: NO_VALUE)
-            putString(KEY_REFRESH_TOKEN, body?.refresh_token ?: NO_VALUE)
-        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
