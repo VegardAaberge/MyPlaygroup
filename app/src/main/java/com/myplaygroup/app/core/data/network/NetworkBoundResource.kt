@@ -58,31 +58,22 @@ inline suspend fun <ResultType, RequestType> fetchApi(
     crossinline onFetchException: suspend (Throwable) -> String,
 ) : Resource<ResultType> {
     return try {
-        fetchApiBody(fetch, processFetch, onFetchError);
+        val response = fetch()
+
+        if(response.isSuccessful && response.code() == 200){
+            val body = response.body()!!
+            val data = processFetch(body)
+
+            Resource.Success(data = data)
+        }else{
+            val localisedMessage = onFetchError(response)
+
+            Log.e(Constants.DEBUG_KEY, "Code: ${response.code()} Error: ${response.message()} Localised: $localisedMessage")
+            Resource.Error(localisedMessage)
+        }
     } catch (t: Throwable) {
         t.printStackTrace()
         val fetchMessage = onFetchException(t)
         Resource.Error(fetchMessage)
-    }
-}
-
-inline suspend fun <ResultType, RequestType> fetchApiBody(
-    crossinline fetch: suspend () -> Response<RequestType>,
-    crossinline processFetch: suspend (RequestType) -> ResultType,
-    crossinline onFetchError: suspend (Response<RequestType>) -> String,
-) : Resource<ResultType> {
-
-    val response = fetch()
-
-    return if(response.isSuccessful && response.code() == 200){
-        val body = response.body()!!
-        val data = processFetch(body)
-
-        Resource.Success(data = data)
-    }else{
-        val localisedMessage = onFetchError(response)
-
-        Log.e(Constants.DEBUG_KEY, "Code: ${response.code()} Error: ${response.message()} Localised: $localisedMessage")
-        Resource.Error(localisedMessage)
     }
 }
