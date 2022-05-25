@@ -4,7 +4,9 @@ import com.myplaygroup.app.core.util.Constants.IGNORE_AUTH_URLS
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class BasicAuthInterceptor @Inject constructor() : Interceptor {
 
     var accessToken: String? = null

@@ -84,9 +84,6 @@ class ChatViewModel @Inject constructor(
                 mainViewModel.setUIEvent(
                     BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
                 )
-                state = state.copy(
-                    messages = result.data!!,
-                )
             }
             is Resource.Loading -> {
                 state = state.copy(
