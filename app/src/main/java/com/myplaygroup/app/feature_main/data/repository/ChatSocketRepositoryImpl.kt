@@ -2,6 +2,7 @@ package com.myplaygroup.app.feature_main.data.repository
 
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
 import com.myplaygroup.app.feature_main.data.remote.MessageResponse
@@ -24,9 +25,11 @@ import javax.inject.Inject
 
 class ChatSocketRepositoryImpl @Inject constructor(
     private val client: HttpClient,
+    private val mainDatabase: MainDatabase,
     private val authInterceptor: BasicAuthInterceptor,
 ) : ChatSocketRepository {
 
+    private val dao = mainDatabase.mainDao()
     private var socket: WebSocketSession? = null;
 
     override suspend fun initSession(username: String): Resource<String> {
@@ -71,7 +74,10 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 ?.map {
                     val json = (it as? Frame.Text)?.readText() ?: ""
                     val messageResponse = Json.decodeFromString<MessageResponse>(json)
-                    messageResponse.toMessageEntity().toMessage()
+
+                    val messageEntity = messageResponse.toMessageEntity()
+                    dao.insertMessage(messageEntity)
+                    messageEntity.toMessage()
                 }
 
             if(flow == null){

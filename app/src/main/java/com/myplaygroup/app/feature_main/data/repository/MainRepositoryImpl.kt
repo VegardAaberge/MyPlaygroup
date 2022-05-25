@@ -60,7 +60,7 @@ class MainRepositoryImpl @Inject constructor(
                 val comments = messages.map { it.toMessageEntity() }
                 dao.clearComments()
                 dao.insertMessages(comments)
-                comments.map { it.toMessage() }
+                comments.map { it.toMessage() }.sortedByDescending { it.created }
             },
             shouldFetch = {
                 checkForInternetConnection(app)
