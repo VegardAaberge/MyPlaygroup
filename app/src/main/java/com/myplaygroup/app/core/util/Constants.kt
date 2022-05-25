@@ -21,5 +21,7 @@ object Constants {
     const val SERVER_URL = "https://vegardaaberge.no:8080"
     const val BASE_URL = LOCALHOST_URL
 
+    public const val AUTHENTICATION_ERROR_MESSAGE = "Couldn't reach server: Failed to load token"
+
     val IGNORE_AUTH_URLS = listOf("/api/v1/login", "/api/v1/reset-password/send", "/api/v1/reset-password/verify")
 }
