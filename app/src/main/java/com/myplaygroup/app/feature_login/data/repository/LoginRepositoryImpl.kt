@@ -79,30 +79,21 @@ class LoginRepositoryImpl @Inject constructor(
         email: String
     ): Flow<Resource<SendResetPasswordResponse>> {
 
-        return flow {
-            emit(Resource.Loading(true))
-
-            try {
-                val response = api.sendEmailRequest(
+        return fetchNetworkResource(
+            fetch = {
+                api.sendEmailRequest(
                     SendEmailRequest(email)
                 )
-
-                if(response.isSuccessful && response.code() == 200 && response.body() != null){
-                    val body = response.body()!!
-                    emit(Resource.Success(body))
-                }else{
-                    val errorMessage = "Code: ${response.code()} Error: ${response.message()}"
-                    Log.e(DEBUG_KEY, errorMessage)
-                    emit(Resource.Error(errorMessage))
+            },
+            processFetch = { r -> r },
+            onFetchError = { r -> "Couldn't reach server: ${r.message()}" },
+            onFetchException = { t ->
+                when(t){
+                    is IOException -> "No Internet Connection"
+                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
                 }
-
-            }catch (e: Exception){
-                Log.e(DEBUG_KEY, e.stackTraceToString())
-                emit(Resource.Error(context.getString(R.string.api_login_exception)))
-            }finally {
-                emit(Resource.Loading(false))
             }
-        }
+        )
     }
 
     override suspend fun checkVerificationCode(
@@ -110,31 +101,24 @@ class LoginRepositoryImpl @Inject constructor(
         token: String
     ): Flow<Resource<String>> {
 
-        return flow {
-            emit(Resource.Loading(true))
-
-            try {
-                val response = api.checkVerificationCode(
+        return fetchNetworkResource(
+            fetch = {
+                api.checkVerificationCode(
                     VerifyCodeRequest(
                         token = token,
                         code = code
                     )
                 )
-
-                if(response.isSuccessful && response.code() == 200 && response.body() != null){
-                    val body = response.body()!!
-                    emit(Resource.Success(body.message))
-                }else{
-                    emit(Resource.Error("Error: " + response.message()))
+            },
+            processFetch = { r -> r.message },
+            onFetchError = { r -> "Couldn't reach server: ${r.message()}" },
+            onFetchException = { t ->
+                when(t){
+                    is IOException -> "No Internet Connection"
+                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
                 }
-
-            }catch (e: Exception){
-                Log.e(DEBUG_KEY, e.stackTraceToString())
-                emit(Resource.Error(context.getString(R.string.api_login_exception)))
-            }finally {
-                emit(Resource.Loading(false))
             }
-        }
+        )
     }
 
     override suspend fun uploadProfileImage(uri: Uri?) : Flow<Resource<String>> {
