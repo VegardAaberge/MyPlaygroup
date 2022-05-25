@@ -57,7 +57,7 @@ interface PlaygroupApi {
     ): Response<SimpleResponse>
 
     @GET("/api/v1/chat")
-    suspend fun getMessages(): MessagesResponse
+    suspend fun getMessages(): Response<MessagesResponse>
 
     @POST("/api/v1/chat")
     suspend fun sendMessage(

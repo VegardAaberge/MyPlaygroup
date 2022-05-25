@@ -1,58 +1,88 @@
 package com.myplaygroup.app.core.util
 
+import android.util.Log
 import kotlinx.coroutines.flow.*
+import retrofit2.Response
 import java.lang.Exception
 
 inline fun <ResultType, RequestType> networkBoundResource(
     crossinline query: suspend () -> ResultType,
-    crossinline fetch: suspend () -> RequestType,
-    crossinline saveFetchResult: suspend (RequestType) -> Unit,
-    crossinline onFetchFailed: suspend (Throwable) -> Boolean,
+    crossinline fetch: suspend () -> Response<RequestType>,
+    crossinline saveFetchResult: suspend (RequestType) -> ResultType,
+    crossinline onFetchError: suspend (Response<RequestType>) -> String,
+    crossinline onFetchException: suspend (Throwable) -> String,
     crossinline shouldFetch: (ResultType) -> Boolean = { true }
 ) = flow {
+
     emit(Resource.Loading(true))
+
     val data = query()
     emit(Resource.Success(data))
 
     if(shouldFetch(data)){
-        try {
-            val fetchedResult = fetch()
-            saveFetchResult(fetchedResult)
+        var fetchedResult = fetchApi(fetch, saveFetchResult, onFetchError, onFetchException)
 
-            emit(Resource.Success(
-                data = query()
-            ))
-
-        } catch (t: Throwable){
-            val tryAgain = onFetchFailed(t)
-
-            if(tryAgain)
-            {
-                try {
-                    val fetchedResult = fetch()
-                    saveFetchResult(fetchedResult)
-
-                    emit(Resource.Success(
-                        data = query()
-                    ))
-                }catch (t: Throwable) {
-                    emit(Resource.Error(
-                        message = "Couldn't reach server: ${t.message}",
-                        data = query()
-                    ))
-                }
-            }else{
-                emit(Resource.Error(
-                    message = "Couldn't reach server: ${t.message}",
-                    data = query()
-                ))
-            }
+        if (fetchedResult is Resource.Error && fetchedResult.message == Constants.AUTHENTICATION_ERROR_MESSAGE) {
+            fetchedResult = fetchApi(fetch, saveFetchResult, onFetchError, onFetchException)
         }
-    }else{
-        emit(Resource.Success(
-            data = query()
-        ))
+
+        emit(fetchedResult)
     }
 
     emit(Resource.Loading(false))
+}
+
+inline fun <ResultType, RequestType> fetchNetworkResource(
+    crossinline fetch: suspend () -> Response<RequestType>,
+    crossinline processFetch: suspend (RequestType) -> ResultType,
+    crossinline onFetchError: suspend (Response<RequestType>) -> String,
+    crossinline onFetchException: suspend (Throwable) -> String,
+) = flow {
+
+    emit(Resource.Loading(true))
+
+    var fetchedResult = fetchApi(fetch, processFetch, onFetchError, onFetchException)
+
+    if (fetchedResult is Resource.Error && fetchedResult.message == Constants.AUTHENTICATION_ERROR_MESSAGE) {
+        fetchedResult = fetchApi(fetch, processFetch, onFetchError, onFetchException)
+    }
+
+    emit(fetchedResult)
+    emit(Resource.Loading(false))
+}
+
+inline suspend fun <ResultType, RequestType> fetchApi(
+    crossinline fetch: suspend () -> Response<RequestType>,
+    crossinline processFetch: suspend (RequestType) -> ResultType,
+    crossinline onFetchError: suspend (Response<RequestType>) -> String,
+    crossinline onFetchException: suspend (Throwable) -> String,
+) : Resource<ResultType> {
+    return try {
+        fetchApiBody(fetch, processFetch, onFetchError);
+    } catch (t: Throwable) {
+        t.printStackTrace()
+        val fetchMessage = onFetchException(t)
+        Resource.Error(fetchMessage)
+    }
+}
+
+inline suspend fun <ResultType, RequestType> fetchApiBody(
+    crossinline fetch: suspend () -> Response<RequestType>,
+    crossinline processFetch: suspend (RequestType) -> ResultType,
+    crossinline onFetchError: suspend (Response<RequestType>) -> String,
+) : Resource<ResultType> {
+
+    val response = fetch()
+
+    return if(response.isSuccessful && response.code() == 200){
+        val body = response.body()!!
+        val data = processFetch(body)
+
+        Resource.Success(data = data)
+    }else{
+        val localisedMessage = onFetchError(response)
+
+        Log.e(Constants.DEBUG_KEY, "Code: ${response.code()} Error: ${response.message()} Localised: $localisedMessage")
+        Resource.Error(localisedMessage)
+    }
 }

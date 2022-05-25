@@ -8,13 +8,12 @@ import androidx.core.content.edit
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
-import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.*
 import com.myplaygroup.app.core.util.Constants.KEY_ACCESS_TOKEN
 import com.myplaygroup.app.core.util.Constants.KEY_REFRESH_TOKEN
 import com.myplaygroup.app.core.util.Constants.NO_VALUE
-import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.core.util.checkForInternetConnection
-import com.myplaygroup.app.core.util.networkBoundResource
+import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
+import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.local.MessageEntity
@@ -29,6 +28,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.io.IOException
 import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,57 +49,82 @@ class MainRepositoryImpl @Inject constructor(
     override suspend fun getChatMessages(
         fetchFromRemote: Boolean
     ): Flow<Resource<List<Message>>> {
-        return networkBoundResource<List<Message>, List<MessageEntity>>(
+        return networkBoundResource(
             query = {
                 dao.getMessages().map { it.toMessage() }
             },
             fetch = {
-                api.getMessages().map { it.toMessageEntity() }
+                api.getMessages()
             },
-            saveFetchResult = { comments ->
+            saveFetchResult = { messages ->
+                val comments = messages.map { it.toMessageEntity() }
                 dao.clearComments()
-                dao.insertMessages(
-                    comments.map { it }
-                )
+                dao.insertMessages(comments)
+                comments.map { it.toMessage() }
             },
             shouldFetch = {
                 checkForInternetConnection(app)
             },
-            onFetchFailed = {
-                verifyRefreshToken()
+            onFetchError = { r ->
+                when(r.code()){
+                    403 -> verifyRefreshToken()
+                    else -> "Couldn't reach server: ${r.message()}"
+                }
+            },
+            onFetchException = { t ->
+                when(t){
+                    is IOException -> "No Internet Connection"
+                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
+                }
             }
         )
     }
 
-    suspend fun verifyRefreshToken() : Boolean {
+    suspend fun verifyRefreshToken() : String {
         if(basicAuthInterceptor.accessToken != null)
-            return false
+            return "Couldn't reach server: Access token is null"
 
         val refreshToken = sharedPreferences.getString(KEY_REFRESH_TOKEN, NO_VALUE) ?: NO_VALUE;
         if(refreshToken == NO_VALUE)
-            return false
+            return "Couldn't reach server: Refresh token is null"
 
         basicAuthInterceptor.accessToken = refreshToken
 
-        val response = api.refreshToken()
-
-        if(response.isSuccessful && response.body() != null){
-            val body = response.body()!!
-
-            basicAuthInterceptor.accessToken = body.access_token
-            sharedPreferences.edit {
-                putString(KEY_ACCESS_TOKEN, body.access_token)
-                putString(KEY_REFRESH_TOKEN, body.refresh_token)
+        val result = fetchApi(
+            fetch = {
+                api.refreshToken()
+            },
+            processFetch = { body ->
+                SetAccessToken(body)
+            },
+            onFetchError = { r ->
+                SetAccessToken(null)
+                "Couldn't reach server: ${r.message()}"
+            },
+            onFetchException = { t ->
+                when(t){
+                    is IOException -> "No Internet Connection"
+                    else -> {
+                        SetAccessToken(null)
+                        "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
+                    }
+                }
             }
+        )
+
+        return if(result is Resource.Success){
+            Constants.AUTHENTICATION_ERROR_MESSAGE
         }else{
-            basicAuthInterceptor.accessToken = null
-            sharedPreferences.edit {
-                putString(KEY_ACCESS_TOKEN, NO_VALUE)
-                putString(KEY_REFRESH_TOKEN, NO_VALUE)
-            }
+            result.message ?: "Unknown Error"
         }
+    }
 
-        return response.isSuccessful && response.body() != null
+    fun SetAccessToken(body: RefreshTokenResponse?){
+        basicAuthInterceptor.accessToken = body?.access_token
+        sharedPreferences.edit {
+            putString(KEY_ACCESS_TOKEN, body?.access_token ?: NO_VALUE)
+            putString(KEY_REFRESH_TOKEN, body?.refresh_token ?: NO_VALUE)
+        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)

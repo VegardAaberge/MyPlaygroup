@@ -6,13 +6,13 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.content.edit
 import com.myplaygroup.app.R
-import com.myplaygroup.app.core.data.network.fetchNetworkResource
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.fetchNetworkResource
 import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
 import com.myplaygroup.app.feature_login.data.requests.VerifyCodeRequest
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
