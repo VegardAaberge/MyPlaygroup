@@ -1,28 +1,31 @@
 package com.myplaygroup.app.core.di
 
 import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.room.Room
-import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.myplaygroup.app.core.data.settings.UserSettings
-import com.myplaygroup.app.core.data.settings.UserSettingsSerializer
+import com.google.crypto.tink.Aead
+import com.google.crypto.tink.KeyTemplates
+import com.google.crypto.tink.aead.AeadConfig
+import com.google.crypto.tink.integration.android.AndroidKeysetManager
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.NullHostNameVerifier
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.data.remote.TrustAllX509TrustManager
+import com.myplaygroup.app.core.data.settings.UserSettings
+import com.myplaygroup.app.core.data.settings.UserSettingsSerializer
 import com.myplaygroup.app.core.util.Constants.BASE_URL
-import com.myplaygroup.app.core.util.Constants.ENCRYPTED_SHARED_PREF_NAME
+import com.myplaygroup.app.core.util.Constants.DATASTORE_FILE
+import com.myplaygroup.app.core.util.Constants.KEYSET_NAME
 import com.myplaygroup.app.core.util.Constants.LOCALHOST_URL
 import com.myplaygroup.app.core.util.Constants.MAIN_DATABASE_NAME
+import com.myplaygroup.app.core.util.Constants.MASTER_KEY_URI
+import com.myplaygroup.app.core.util.Constants.PREFERENCE_FILE
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -84,23 +87,6 @@ class AppModule {
             .create(PlaygroupApi::class.java)
     }
 
-    @Singleton
-    @Provides
-    fun provideEncryptedSharedPreferences(
-        @ApplicationContext context: Context
-    ): SharedPreferences {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-        return EncryptedSharedPreferences.create(
-            context,
-            ENCRYPTED_SHARED_PREF_NAME,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-    }
-
 
     @Provides
     @Singleton
@@ -121,14 +107,27 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideDataStore(
-        application: Application
-    ): DataStore<UserSettings> {
+    fun provideAead(application: Application): Aead {
+        AeadConfig.register()
 
-        val dataStore = DataStoreFactory.create(
-            produceFile = { File(application.filesDir, ENCRYPTED_SHARED_PREF_NAME) },
-            serializer = UserSettingsSerializer()
+        return AndroidKeysetManager.Builder()
+            .withSharedPref(application, KEYSET_NAME, PREFERENCE_FILE)
+            .withKeyTemplate(KeyTemplates.get(MasterKey.KeyScheme.AES256_GCM.name))
+            .withMasterKeyUri(MASTER_KEY_URI)
+            .build()
+            .keysetHandle
+            .getPrimitive(Aead::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDataStore(
+        application: Application,
+        aead: Aead
+    ): DataStore<UserSettings> {
+        return DataStoreFactory.create(
+            produceFile = { File(application.filesDir, DATASTORE_FILE) },
+            serializer = UserSettingsSerializer(aead)
         )
-        return dataStore
     }
 }

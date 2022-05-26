@@ -6,9 +6,12 @@ object Constants {
 
     const val DEBUG_KEY = "MyPlaygroupApp"
 
-    const val ENCRYPTED_SHARED_PREF_NAME = "user-settings.json"
-    const val NO_VALUE = "VALUE_HAS_NOT_BEEN_SET"
+    const val KEYSET_NAME = "master_keyset"
+    const val PREFERENCE_FILE = "master_key_preference"
+    const val MASTER_KEY_URI = "android-keystore://master_key"
+    const val DATASTORE_FILE = "user.pb"
 
+    const val NO_VALUE = "VALUE_HAS_NOT_BEEN_SET"
 
     const val LOCALHOST_URL = "https://192.168.50.91:8080"
     const val SERVER_URL = "https://vegardaaberge.no:8080"
