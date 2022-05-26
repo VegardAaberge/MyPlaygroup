@@ -75,7 +75,7 @@ class ChatViewModel @Inject constructor(
             is Resource.Success -> {
                 state = state.copy(
                     messages = result.data!!,
-                    showProgressIndicator = state.isLoading && result.data!!.isEmpty()
+                    showProgressIndicator = state.isLoading && result.data.isEmpty()
                 )
             }
             is Resource.Error -> {

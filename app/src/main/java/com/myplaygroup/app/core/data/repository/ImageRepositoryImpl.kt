@@ -48,7 +48,7 @@ class ImageRepositoryImpl @Inject constructor(
             val data_part = bytes.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val data_multi_part = MultipartBody.Part.createFormData("image", "description", data_part)
 
-            val response = playgroupApi.uploadProfileImage(data_multi_part);
+            val response = playgroupApi.uploadProfileImage(data_multi_part)
 
             return if(response.isSuccessful && response.code() == 200 && response.body() != null){
                 Resource.Success(response.body()!!.message)
@@ -69,9 +69,9 @@ class ImageRepositoryImpl @Inject constructor(
             var profileFile = FileUtils.getProfileFile(username)
 
             if(!profileFile.exists()){
-                val response = playgroupApi.getProfileImage(username);
+                val response = playgroupApi.getProfileImage(username)
                 val byteStream = response.byteStream()
-                val bytes = byteStream.readBytes();
+                val bytes = byteStream.readBytes()
 
                 FileUtils.saveProfileFile(bytes, username)
 

@@ -30,7 +30,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
 ) : ChatSocketRepository {
 
     private val dao = mainDatabase.mainDao()
-    private var socket: WebSocketSession? = null;
+    private var socket: WebSocketSession? = null
 
     override suspend fun initSession(username: String): Resource<String> {
         return try {
@@ -44,7 +44,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
 
             if(socket?.isActive == true){
                 Resource.Success("Established connection")
-            }else return Resource.Error("Couldn't establish a connection");
+            }else return Resource.Error("Couldn't establish a connection")
 
         }catch (e: Exception) {
             e.printStackTrace()
@@ -81,7 +81,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 }
 
             if(flow == null){
-                throw NullPointerException("Flow can't be null");
+                throw NullPointerException("Flow can't be null")
             }
             Resource.Success(flow)
 

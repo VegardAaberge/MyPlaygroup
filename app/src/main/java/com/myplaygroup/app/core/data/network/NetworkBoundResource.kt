@@ -51,7 +51,7 @@ inline fun <ResultType, RequestType> fetchNetworkResource(
     emit(Resource.Loading(false))
 }
 
-inline suspend fun <ResultType, RequestType> fetchApi(
+suspend inline fun <ResultType, RequestType> fetchApi(
     crossinline fetch: suspend () -> Response<RequestType>,
     crossinline processFetch: suspend (RequestType) -> ResultType,
     crossinline onFetchError: suspend (Response<RequestType>) -> String,
