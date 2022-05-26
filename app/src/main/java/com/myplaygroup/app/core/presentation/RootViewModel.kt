@@ -6,6 +6,7 @@ import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,9 +15,9 @@ class RootViewModel @Inject constructor(
     private val dataStore: DataStore<UserSettings>
 ) : BaseViewModel() {
 
-    val userSettingsFlow: Flow<UserSettings> = dataStore.data
+    suspend fun isAuthenticated(): Boolean {
 
-    suspend fun isAuthenticated(userSettings: UserSettings): Boolean {
+        val userSettings = dataStore.data.first()
 
         if(userSettings.accessToken == NO_VALUE || userSettings.refreshToken == NO_VALUE || userSettings.username == NO_VALUE || userSettings.profileName == NO_VALUE){
             dataStore.updateData {

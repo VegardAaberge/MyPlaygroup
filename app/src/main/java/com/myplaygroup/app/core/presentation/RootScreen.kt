@@ -8,6 +8,8 @@ import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.destinations.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 
 
 @Destination(start = true)
@@ -16,12 +18,8 @@ fun RootScreen(
     navigator: DestinationsNavigator,
     viewModel: RootViewModel = hiltViewModel(),
 ) {
-    val userSettings = viewModel.userSettingsFlow.collectAsState(
-        initial = UserSettings()
-    )
-
-    LaunchedEffect(key1 = userSettings){
-        if(viewModel.isAuthenticated(userSettings.value)){
+    LaunchedEffect(key1 = true){
+        if(viewModel.isAuthenticated()){
             popAndNavigateTo(navigator, MainScreenDestination)
         }else{
             popAndNavigateTo(navigator, LoginScreenDestination)

@@ -127,13 +127,11 @@ class AppModule {
     fun provideDataStore(
         application: Application
     ): DataStore<UserSettings> {
+
         val dataStore = DataStoreFactory.create(
             produceFile = { File(application.filesDir, ENCRYPTED_SHARED_PREF_NAME) },
             serializer = UserSettingsSerializer()
         )
-        GlobalScope.launch {
-            val data = dataStore.data.first()
-        }
         return dataStore
     }
 }
