@@ -2,22 +2,16 @@ package com.myplaygroup.app.feature_main.data.repository
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
-import androidx.core.content.edit
 import com.myplaygroup.app.R
-import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.repository.TokenRepository
-import com.myplaygroup.app.core.util.*
-import com.myplaygroup.app.core.util.Constants.KEY_ACCESS_TOKEN
-import com.myplaygroup.app.core.util.Constants.KEY_REFRESH_TOKEN
-import com.myplaygroup.app.core.util.Constants.NO_VALUE
-import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
-import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
+import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.core.util.checkForInternetConnection
+import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
-import com.myplaygroup.app.feature_main.data.local.MessageEntity
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
 import com.myplaygroup.app.feature_main.data.remote.SendMessageRequest
 import com.myplaygroup.app.feature_main.domain.model.Message
@@ -30,7 +24,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.io.IOException
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 

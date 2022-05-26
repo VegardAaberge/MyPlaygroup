@@ -1,11 +1,15 @@
 package com.myplaygroup.app.feature_main.presentation.chat
 
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.model.Message
@@ -13,9 +17,7 @@ import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,14 +37,14 @@ class ChatViewModel @Inject constructor(
                 state = state.copy(newMessage = event.newMessage)
             }
             is ChatScreenEvent.SendMessageTapped -> {
-                val username = mainViewModel.state.username;
-                val receivers = if(username == "admin"){
-                    listOf<String>("meng", "vegard")
-                }else{
-                    listOf<String>("admin")
-                }
-
                 viewModelScope.launch {
+                    val username = mainViewModel.username.first()
+                    val receivers = if(username == "admin"){
+                        listOf<String>("meng", "vegard")
+                    }else{
+                        listOf<String>("admin")
+                    }
+
                     val response = socketRepository.sendMessage(
                         message = state.newMessage,
                         receivers = receivers
@@ -95,7 +97,7 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun connectToChat() = viewModelScope.launch {
-        val result = socketRepository.initSession(mainViewModel.state.username)
+        val result = socketRepository.initSession(mainViewModel.username.first())
         when(result){
             is Resource.Success -> {
                 val observeResult = socketRepository.observeMessages()

@@ -1,35 +1,30 @@
 package com.myplaygroup.app.core.data.repository
 
-import android.R.id
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import com.myplaygroup.app.R
+import androidx.datastore.core.DataStore
+import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
-import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.core.util.FileUtils
 import com.myplaygroup.app.core.util.Resource
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import okhttp3.MediaType
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.lang.Exception
 import javax.inject.Inject
 
 
 class ImageRepositoryImpl @Inject constructor(
     private val playgroupApi: PlaygroupApi,
-    private val sharedPreferences: SharedPreferences,
+    private val dataStore: DataStore<UserSettings>,
     @ApplicationContext private val context: Context,
 ) : ImageRepository {
 
@@ -43,7 +38,7 @@ class ImageRepositoryImpl @Inject constructor(
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             val bytes = outputStream.toByteArray()
 
-            val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_VALUE) ?: NO_VALUE
+            val username = dataStore.data.map { u -> u.username }.first()
             val profileFile = FileUtils.saveProfileFile(bytes, username)
 
             val profileUri = Uri.fromFile(profileFile)
@@ -67,7 +62,7 @@ class ImageRepositoryImpl @Inject constructor(
 
     override suspend fun getProfileImage(): Resource<Uri?> {
         try {
-            val username = sharedPreferences.getString(Constants.KEY_USERNAME, NO_VALUE) ?: NO_VALUE
+            val username = dataStore.data.map { u -> u.username }.first()
             var profileFile = FileUtils.getProfileFile(username)
 
             if(!profileFile.exists()){

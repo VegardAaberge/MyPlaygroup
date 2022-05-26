@@ -1,19 +1,17 @@
 package com.myplaygroup.app.feature_main.presentation.settings
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
-import com.myplaygroup.app.feature_main.presentation.home.HomeScreenEvent
 
 @Composable
 fun SettingsScreen(
@@ -57,8 +54,8 @@ fun SettingsScreen(
 fun UserSection(viewModel: SettingsViewModel) {
 
     val profileImage = viewModel.state.imageUri
-    val username = viewModel.username
-    val profileName = viewModel.profileName
+    val username = viewModel.username.collectAsState("").value
+    val profileName = viewModel.profileName.collectAsState("").value
 
     Row(
         verticalAlignment = Alignment.CenterVertically,

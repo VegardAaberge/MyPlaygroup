@@ -6,15 +6,9 @@ object Constants {
 
     const val DEBUG_KEY = "MyPlaygroupApp"
 
-    const val ENCRYPTED_SHARED_PREF_NAME = "enc_shared_pref"
-    const val KEY_USERNAME = "KEY_USERNAME"
-    const val KEY_ACCESS_TOKEN = "KEY_ACCESS_TOKEN"
-    const val KEY_REFRESH_TOKEN = "KEY_REFRESH_TOKEN"
-    const val NO_VALUE = "KEY_HAS_NO_VALUE"
+    const val ENCRYPTED_SHARED_PREF_NAME = "user-settings.json"
+    const val NO_VALUE = "VALUE_HAS_NOT_BEEN_SET"
 
-    const val KEY_PROFILE_NAME = "KEY_PROFILE_NAME"
-    const val KEY_PHONE_NUMBER = "KEY_PHONE_NUMBER"
-    const val KEY_EMAIL = "KEY_EMAIL"
 
     const val LOCALHOST_URL = "https://192.168.50.91:8080"
     const val SERVER_URL = "https://vegardaaberge.no:8080"

@@ -2,9 +2,10 @@ package com.myplaygroup.app.core.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.destinations.*
-import com.myplaygroup.app.feature_profile.presentation.create_profile.CreateProfileScreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -15,8 +16,12 @@ fun RootScreen(
     navigator: DestinationsNavigator,
     viewModel: RootViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(key1 = true){
-        if(viewModel.isAuthenticated()){
+    val userSettings = viewModel.userSettingsFlow.collectAsState(
+        initial = UserSettings()
+    )
+
+    LaunchedEffect(key1 = userSettings){
+        if(viewModel.isAuthenticated(userSettings.value)){
             popAndNavigateTo(navigator, MainScreenDestination)
         }else{
             popAndNavigateTo(navigator, LoginScreenDestination)

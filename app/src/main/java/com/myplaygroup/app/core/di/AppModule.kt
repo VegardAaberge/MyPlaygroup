@@ -3,9 +3,13 @@ package com.myplaygroup.app.core.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.myplaygroup.app.core.data.pref.UserSettings
+import com.myplaygroup.app.core.data.pref.UserSettingsSerializer
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.NullHostNameVerifier
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
@@ -26,13 +30,15 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.security.SecureRandom
+import java.io.File
 import javax.inject.Singleton
-import javax.net.ssl.SSLContext
 
 
 @Module
@@ -114,5 +120,20 @@ class AppModule {
                 json()
             }
         }
+    }
+
+    @Singleton
+    @Provides
+    fun provideDataStore(
+        application: Application
+    ): DataStore<UserSettings> {
+        val dataStore = DataStoreFactory.create(
+            produceFile = { File(application.filesDir, ENCRYPTED_SHARED_PREF_NAME) },
+            serializer = UserSettingsSerializer()
+        )
+        GlobalScope.launch {
+            val data = dataStore.data.first()
+        }
+        return dataStore
     }
 }

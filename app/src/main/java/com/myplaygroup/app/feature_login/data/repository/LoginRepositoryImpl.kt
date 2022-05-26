@@ -1,34 +1,31 @@
 package com.myplaygroup.app.feature_login.data.repository
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
-import androidx.core.content.edit
+import androidx.datastore.core.DataStore
 import com.myplaygroup.app.R
+import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
-import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
-import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
-import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
-import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
+import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.fetchNetworkResource
 import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
 import com.myplaygroup.app.feature_login.data.requests.VerifyCodeRequest
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
+import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
     private val api: PlaygroupApi,
     private val basicAuthInterceptor: BasicAuthInterceptor,
-    private val sharedPreferences: SharedPreferences,
+    private val dataStore: DataStore<UserSettings>,
     @ApplicationContext private val context: Context
 ) : LoginRepository {
 
@@ -46,17 +43,21 @@ class LoginRepositoryImpl @Inject constructor(
             },
             processFetch = { loginResponse ->
                 basicAuthInterceptor.accessToken = loginResponse.access_token
-                sharedPreferences.edit() {
-                    putString(Constants.KEY_USERNAME, username)
-                    putString(Constants.KEY_ACCESS_TOKEN, loginResponse.access_token)
-                    putString(Constants.KEY_REFRESH_TOKEN, loginResponse.refresh_token)
-
-                    if(loginResponse.profile_created){
-                        putString(Constants.KEY_PROFILE_NAME, loginResponse.profile_name)
-                        putString(Constants.KEY_EMAIL, loginResponse.email)
-                        putString(Constants.KEY_PHONE_NUMBER, loginResponse.phone_number)
+                dataStore.updateData {
+                    it.copy(
+                        username = username,
+                        accessToken = loginResponse.access_token,
+                        refreshToken = loginResponse.refresh_token,
+                    )
+                }
+                if(loginResponse.profile_created){
+                    dataStore.updateData {
+                        it.copy(
+                            profileName = loginResponse.profile_name,
+                            email = loginResponse.email,
+                            phoneNumber = loginResponse.phone_number,
+                        )
                     }
-                    apply()
                 }
                 loginResponse
             },

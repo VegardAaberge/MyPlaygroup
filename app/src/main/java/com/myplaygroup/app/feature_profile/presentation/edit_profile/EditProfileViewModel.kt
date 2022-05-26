@@ -1,13 +1,13 @@
 package com.myplaygroup.app.feature_profile.presentation.edit_profile
 
-import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.viewModelScope
-import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,21 +17,21 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
-    private val sharedPreferences: SharedPreferences
+    dataStore: DataStore<UserSettings>
 ) : BaseViewModel() {
 
     var state by mutableStateOf(EditProfileState())
 
     init {
-        val profileName = sharedPreferences.getString(Constants.KEY_PROFILE_NAME, "") ?: ""
-        val phoneNumber = sharedPreferences.getString(Constants.KEY_PHONE_NUMBER, "") ?: ""
-        val email = sharedPreferences.getString(Constants.KEY_EMAIL, "") ?: ""
-
-        state = state.copy(
-            profileName = profileName,
-            phoneNumber = phoneNumber,
-            email = email
-        )
+        viewModelScope.launch {
+            dataStore.data.collect {
+                state = state.copy(
+                    profileName = it.profileName,
+                    phoneNumber = it.phoneNumber,
+                    email = it.email
+                )
+            }
+        }
     }
 
     fun onEvent(event: EditProfileScreenEvent){

@@ -7,10 +7,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,8 +21,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
+import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
+import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -36,7 +38,9 @@ fun ChatScreen(
 
     val messages = viewModel.state.messages
     val newMessage = viewModel.state.newMessage
-    val username = viewModel.mainViewModel.state.username
+    val username = mainViewModel.username.collectAsState(
+        initial = Constants.NO_VALUE
+    ).value
 
     val showProgressIndicator = viewModel.state.showProgressIndicator
 

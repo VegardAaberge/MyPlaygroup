@@ -1,34 +1,26 @@
 package com.myplaygroup.app.feature_profile.data.repository
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.Uri
-import android.util.Log
-import androidx.core.content.edit
-import com.myplaygroup.app.R
-import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
+import androidx.datastore.core.DataStore
+import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.repository.TokenRepository
-import com.myplaygroup.app.core.util.Constants
-import com.myplaygroup.app.core.util.Constants.KEY_EMAIL
-import com.myplaygroup.app.core.util.Constants.KEY_PHONE_NUMBER
-import com.myplaygroup.app.core.util.Constants.KEY_PROFILE_NAME
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.fetchNetworkResource
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import java.io.IOException
-import java.lang.Exception
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
     private val api: PlaygroupApi,
     private val tokenRepository: TokenRepository,
-    private val sharedPreferences: SharedPreferences,
+    private val dataStore: DataStore<UserSettings>,
     @ApplicationContext private val context: Context
 ) : ProfileRepository {
 
@@ -40,7 +32,7 @@ class ProfileRepositoryImpl @Inject constructor(
         profileUri: Uri?
     ): Flow<Resource<Unit>> {
 
-        val username = sharedPreferences.getString(Constants.KEY_USERNAME, Constants.NO_VALUE) ?: Constants.NO_VALUE
+        val username = dataStore.data.map { u -> u.username }.first()
 
         return fetchNetworkResource(
             fetch = {
@@ -55,11 +47,12 @@ class ProfileRepositoryImpl @Inject constructor(
                 )
             },
             processFetch = { body ->
-                sharedPreferences.edit {
-                    putString(KEY_PROFILE_NAME, body.profileName)
-                    putString(KEY_PHONE_NUMBER, body.phoneNumber)
-                    putString(KEY_EMAIL, body.email)
-                    apply()
+                dataStore.updateData {
+                    it.copy(
+                        profileName = body.profileName,
+                        phoneNumber = body.phoneNumber,
+                        email = body.email,
+                    )
                 }
             },
             onFetchError = { r ->
@@ -83,7 +76,7 @@ class ProfileRepositoryImpl @Inject constructor(
         email: String
     ): Flow<Resource<Unit>> {
 
-        val username = sharedPreferences.getString(Constants.KEY_USERNAME, Constants.NO_VALUE) ?: Constants.NO_VALUE
+        val username = dataStore.data.map { u -> u.username }.first()
 
         return fetchNetworkResource(
             fetch = {
@@ -97,11 +90,12 @@ class ProfileRepositoryImpl @Inject constructor(
                 )
             },
             processFetch = { body ->
-                sharedPreferences.edit {
-                    putString(KEY_PROFILE_NAME, body.profileName)
-                    putString(KEY_PHONE_NUMBER, body.phoneNumber)
-                    putString(KEY_EMAIL, body.email)
-                    apply()
+                dataStore.updateData {
+                    it.copy(
+                        profileName = body.profileName,
+                        phoneNumber = body.phoneNumber,
+                        email = body.email,
+                    )
                 }
             },
             onFetchError = { r ->
