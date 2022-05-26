@@ -152,22 +152,24 @@ fun MessageItem(
             )
         }
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = if (isOwner) 10.dp else 50.dp,
-                    end = if (isOwner) 50.dp else 10.dp,
-                )) {
+        if(message.isSynced()){
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = if (isOwner) 10.dp else 50.dp,
+                        end = if (isOwner) 50.dp else 10.dp,
+                    )) {
 
-            Text(text = message.profileName)
-            Text(text = LocalDateTime
-                .ofEpochSecond(message.created, 0, ZoneOffset.UTC)
-                .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
-                .toString()
-            )
+                Text(text = message.profileName)
+                Text(text = LocalDateTime
+                    .ofEpochSecond(message.created, 0, ZoneOffset.UTC)
+                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
+                    .toString()
+                )
+            }
         }
 
         Divider(modifier = Modifier.padding(

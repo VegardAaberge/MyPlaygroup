@@ -79,39 +79,4 @@ class MainRepositoryImpl @Inject constructor(
             mainDatabase.clearAllTables()
         }
     }
-
-    suspend fun sendMessage(
-        message: String,
-        receivers: List<String>
-    ): Flow<Resource<String>> {
-
-        return flow {
-            emit(Resource.Loading(true))
-
-            try {
-                val response = api.sendMessage(
-                    SendMessageRequest(
-                        message = message,
-                        receivers = receivers
-                    )
-                )
-
-                if(response.isSuccessful && response.code() == 200 && response.body() != null){
-
-                    val message = response.body()!!
-                    dao.insertMessage(message)
-
-                    emit(Resource.Success("Message sent"))
-                }else{
-                    emit(Resource.Error("Unknown error: ${response.message()}"))
-                }
-
-            }catch (e: Exception){
-                Log.e(Constants.DEBUG_KEY, e.stackTraceToString())
-                emit(Resource.Error(context.getString(R.string.api_login_exception)))
-            }finally {
-                emit(Resource.Loading(false))
-            }
-        }
-    }
 }

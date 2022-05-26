@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SendMessageRequest(
+    val clientId: String,
     val message: String,
     val receivers: List<String>
 )

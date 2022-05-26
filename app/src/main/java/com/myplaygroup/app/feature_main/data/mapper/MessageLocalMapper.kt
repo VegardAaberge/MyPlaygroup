@@ -14,6 +14,7 @@ fun MessageEntity.toMessage() : Message {
     val parsedDate = LocalDateTime.parse(created, dateFormat) ?: LocalDateTime.now()
 
     return Message(
+        id = id,
         serverId = serverId,
         message = message,
         createdBy = createdBy,
@@ -27,6 +28,7 @@ fun Message.toMessageEntity() : MessageEntity {
     val created = dateFormat.format(LocalDateTime.ofEpochSecond(created, 0, ZoneOffset.UTC))
 
     return MessageEntity(
+        id = id,
         serverId = serverId,
         message = message,
         createdBy = createdBy,

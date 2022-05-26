@@ -1,11 +1,13 @@
 package com.myplaygroup.app.feature_main.presentation.chat
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.model.Message
@@ -125,6 +127,7 @@ class ChatViewModel @Inject constructor(
     private fun observeMessages(result: Resource<Flow<Message>>) {
         result.data!!.onEach { message ->
             val newList = state.messages.toMutableList().apply {
+                removeIf { u -> u.id == message.id }
                 add(0, message)
             }
             state = state.copy(
@@ -133,10 +136,16 @@ class ChatViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun collectInsertMessages(result: Resource<String>) {
+    private fun collectInsertMessages(result: Resource<Message>) {
         when (result) {
             is Resource.Success -> {
-                state = state.copy(newMessage = "")
+                val newList = state.messages.toMutableList().apply {
+                    add(0, result.data!!)
+                }
+                state = state.copy(
+                    newMessage = "",
+                    messages = newList
+                )
             }
             is Resource.Error -> {
                 mainViewModel.setUIEvent(

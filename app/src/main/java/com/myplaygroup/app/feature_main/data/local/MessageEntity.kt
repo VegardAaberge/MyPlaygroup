@@ -10,7 +10,7 @@ import java.util.*
 
 @Entity
 data class MessageEntity(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    @PrimaryKey val id: String,
     val serverId: Long = -1,
     val message: String,
     val profileName: String,

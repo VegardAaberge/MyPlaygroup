@@ -2,9 +2,13 @@ package com.myplaygroup.app.feature_main.data.mapper
 
 import com.myplaygroup.app.feature_main.data.local.MessageEntity
 import com.myplaygroup.app.feature_main.data.remote.MessageResponse
+import com.myplaygroup.app.feature_main.data.remote.SendMessageRequest
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 fun MessageResponse.toMessageEntity() : MessageEntity {
     return MessageEntity(
+        id = clientId,
         serverId = id,
         message = message,
         createdBy = createdBy,
@@ -13,12 +17,10 @@ fun MessageResponse.toMessageEntity() : MessageEntity {
     )
 }
 
-fun MessageEntity.toMessageResponseEntity() : MessageResponse {
-    return MessageResponse(
-        id = serverId,
+fun MessageEntity.ToSendMessageRequest(receivers: List<String>) : String {
+    return Json.encodeToString(SendMessageRequest(
+        clientId = id,
         message = message,
-        createdBy = createdBy,
-        created = created,
-        profileName = profileName
-    )
+        receivers = receivers
+    ))
 }
