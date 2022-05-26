@@ -74,7 +74,7 @@ class MainRepositoryImpl @Inject constructor(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    override fun ClearAllTables() {
+    override fun clearAllTables() {
         GlobalScope.launch(Dispatchers.IO) {
             mainDatabase.clearAllTables()
         }

@@ -8,8 +8,8 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.myplaygroup.app.core.data.pref.UserSettings
-import com.myplaygroup.app.core.data.pref.UserSettingsSerializer
+import com.myplaygroup.app.core.data.settings.UserSettings
+import com.myplaygroup.app.core.data.settings.UserSettingsSerializer
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.NullHostNameVerifier
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
@@ -30,9 +30,6 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

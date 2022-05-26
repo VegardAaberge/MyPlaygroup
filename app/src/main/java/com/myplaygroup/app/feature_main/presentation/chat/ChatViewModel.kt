@@ -1,15 +1,11 @@
 package com.myplaygroup.app.feature_main.presentation.chat
 
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.core.util.Constants
-import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.model.Message

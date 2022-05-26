@@ -4,9 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import androidx.datastore.core.DataStore
-import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
+import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
@@ -24,7 +23,7 @@ import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
     private val playgroupApi: PlaygroupApi,
-    private val dataStore: DataStore<UserSettings>,
+    private val userSettingsManager: UserSettingsManager,
     @ApplicationContext private val context: Context,
 ) : ImageRepository {
 
@@ -38,7 +37,9 @@ class ImageRepositoryImpl @Inject constructor(
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             val bytes = outputStream.toByteArray()
 
-            val username = dataStore.data.map { u -> u.username }.first()
+            val username = userSettingsManager.getFlow {
+                it.map { u -> u.username }
+            }.first()
             val profileFile = FileUtils.saveProfileFile(bytes, username)
 
             val profileUri = Uri.fromFile(profileFile)
@@ -62,7 +63,9 @@ class ImageRepositoryImpl @Inject constructor(
 
     override suspend fun getProfileImage(): Resource<Uri?> {
         try {
-            val username = dataStore.data.map { u -> u.username }.first()
+            val username = userSettingsManager.getFlow {
+                it.map { u -> u.username }
+            }.first()
             var profileFile = FileUtils.getProfileFile(username)
 
             if(!profileFile.exists()){

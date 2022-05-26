@@ -3,11 +3,10 @@ package com.myplaygroup.app.feature_login.data.repository
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.datastore.core.DataStore
 import com.myplaygroup.app.R
-import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
+import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.fetchNetworkResource
@@ -25,7 +24,7 @@ import javax.inject.Inject
 class LoginRepositoryImpl @Inject constructor(
     private val api: PlaygroupApi,
     private val basicAuthInterceptor: BasicAuthInterceptor,
-    private val dataStore: DataStore<UserSettings>,
+    private val userSettingsManager: UserSettingsManager,
     @ApplicationContext private val context: Context
 ) : LoginRepository {
 
@@ -43,21 +42,17 @@ class LoginRepositoryImpl @Inject constructor(
             },
             processFetch = { loginResponse ->
                 basicAuthInterceptor.accessToken = loginResponse.access_token
-                dataStore.updateData {
-                    it.copy(
-                        username = username,
-                        accessToken = loginResponse.access_token,
-                        refreshToken = loginResponse.refresh_token,
-                    )
-                }
+                userSettingsManager.updateUsername(username)
+                userSettingsManager.updateTokens(
+                    accessToken = loginResponse.access_token,
+                    refreshToken = loginResponse.refresh_token,
+                )
                 if(loginResponse.profile_created){
-                    dataStore.updateData {
-                        it.copy(
-                            profileName = loginResponse.profile_name,
-                            email = loginResponse.email,
-                            phoneNumber = loginResponse.phone_number,
-                        )
-                    }
+                    userSettingsManager.updateProfileInfo(
+                        profileName = loginResponse.profile_name,
+                        email = loginResponse.email,
+                        phoneNumber = loginResponse.phone_number,
+                    )
                 }
                 loginResponse
             },

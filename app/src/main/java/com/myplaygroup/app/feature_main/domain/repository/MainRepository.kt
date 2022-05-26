@@ -10,5 +10,5 @@ interface MainRepository {
         fetchFromRemote: Boolean
     ) : Flow<Resource<List<Message>>>
 
-    fun ClearAllTables()
+    fun clearAllTables()
 }

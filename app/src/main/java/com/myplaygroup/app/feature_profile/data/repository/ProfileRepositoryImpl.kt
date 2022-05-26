@@ -2,9 +2,8 @@ package com.myplaygroup.app.feature_profile.data.repository
 
 import android.content.Context
 import android.net.Uri
-import androidx.datastore.core.DataStore
-import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
+import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.fetchNetworkResource
@@ -20,7 +19,7 @@ import javax.inject.Inject
 class ProfileRepositoryImpl @Inject constructor(
     private val api: PlaygroupApi,
     private val tokenRepository: TokenRepository,
-    private val dataStore: DataStore<UserSettings>,
+    private val userSettingsManager: UserSettingsManager,
     @ApplicationContext private val context: Context
 ) : ProfileRepository {
 
@@ -32,7 +31,9 @@ class ProfileRepositoryImpl @Inject constructor(
         profileUri: Uri?
     ): Flow<Resource<Unit>> {
 
-        val username = dataStore.data.map { u -> u.username }.first()
+        val username = userSettingsManager.getFlow {
+            it.map { u -> u.username }
+        }.first()
 
         return fetchNetworkResource(
             fetch = {
@@ -47,13 +48,11 @@ class ProfileRepositoryImpl @Inject constructor(
                 )
             },
             processFetch = { body ->
-                dataStore.updateData {
-                    it.copy(
-                        profileName = body.profileName,
-                        phoneNumber = body.phoneNumber,
-                        email = body.email,
-                    )
-                }
+                userSettingsManager.updateProfileInfo(
+                    profileName = body.profileName,
+                    phoneNumber = body.phoneNumber,
+                    email = body.email,
+                )
             },
             onFetchError = { r ->
                 when(r.code()){
@@ -76,7 +75,9 @@ class ProfileRepositoryImpl @Inject constructor(
         email: String
     ): Flow<Resource<Unit>> {
 
-        val username = dataStore.data.map { u -> u.username }.first()
+        val username = userSettingsManager.getFlow {
+            it.map { u -> u.username }
+        }.first()
 
         return fetchNetworkResource(
             fetch = {
@@ -90,13 +91,11 @@ class ProfileRepositoryImpl @Inject constructor(
                 )
             },
             processFetch = { body ->
-                dataStore.updateData {
-                    it.copy(
-                        profileName = body.profileName,
-                        phoneNumber = body.phoneNumber,
-                        email = body.email,
-                    )
-                }
+                userSettingsManager.updateProfileInfo(
+                    profileName = body.profileName,
+                    phoneNumber = body.phoneNumber,
+                    email = body.email,
+                )
             },
             onFetchError = { r ->
                 when(r.code()){

@@ -3,14 +3,12 @@ package com.myplaygroup.app.feature_main.presentation.settings
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myplaygroup.app.core.data.pref.UserSettings
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
+import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
@@ -29,7 +27,7 @@ class SettingsViewModel @Inject constructor(
     private val basicAuthInterceptor: BasicAuthInterceptor,
     private val imageRepository: ImageRepository,
     private val repository: MainRepository,
-    private val dataStore: DataStore<UserSettings>
+    private val userSettingsManager: UserSettingsManager
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -40,8 +38,8 @@ class SettingsViewModel @Inject constructor(
     var state by mutableStateOf(HomeState())
 
     init {
-        username = dataStore.data.map { u -> u.username }
-        profileName = dataStore.data.map { u -> u.profileName }
+        username = userSettingsManager.getFlow { it.map { u -> u.username } }
+        profileName = userSettingsManager.getFlow { it.map { u -> u.profileName } }
 
         viewModelScope.launch {
             val uri = imageRepository.getProfileImage()
@@ -71,15 +69,9 @@ class SettingsViewModel @Inject constructor(
 
     fun logout() = viewModelScope.launch {
         basicAuthInterceptor.accessToken = null
-        dataStore.updateData {
-            it.copy(
-                username = NO_VALUE,
-                profileName = NO_VALUE,
-                accessToken = NO_VALUE,
-                refreshToken = NO_VALUE,
-            )
-        }
-        repository.ClearAllTables();
+        userSettingsManager.clearData()
+        repository.clearAllTables()
+
         mainViewModel.setUIEvent(
             BaseViewModel.UiEvent.PopAndNavigateTo(
                 popRoute = MainScreenDestination.route,

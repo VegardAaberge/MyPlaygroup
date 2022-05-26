@@ -1,4 +1,4 @@
-package com.myplaygroup.app.core.data.pref
+package com.myplaygroup.app.core.data.settings
 
 import com.myplaygroup.app.core.util.Constants.NO_VALUE
 import kotlinx.serialization.Serializable

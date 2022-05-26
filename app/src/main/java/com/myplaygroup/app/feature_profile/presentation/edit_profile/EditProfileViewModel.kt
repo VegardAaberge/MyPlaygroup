@@ -3,9 +3,8 @@ package com.myplaygroup.app.feature_profile.presentation.edit_profile
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.viewModelScope
-import com.myplaygroup.app.core.data.pref.UserSettings
+import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
@@ -17,14 +16,14 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
-    dataStore: DataStore<UserSettings>
+    userSettingsManager: UserSettingsManager
 ) : BaseViewModel() {
 
     var state by mutableStateOf(EditProfileState())
 
     init {
         viewModelScope.launch {
-            dataStore.data.collect {
+            userSettingsManager.getFlow().collect {
                 state = state.copy(
                     profileName = it.profileName,
                     phoneNumber = it.phoneNumber,

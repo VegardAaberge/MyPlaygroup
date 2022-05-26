@@ -1,4 +1,4 @@
-package com.myplaygroup.app.core.data.pref
+package com.myplaygroup.app.core.data.settings
 
 import androidx.datastore.core.Serializer
 import kotlinx.serialization.SerializationException
