@@ -51,7 +51,7 @@ class MainRepositoryImpl @Inject constructor(
     ): Flow<Resource<List<Message>>> {
         return networkBoundResource(
             query = {
-                dao.getMessages().map { it.toMessage() }
+                dao.getMessages().map { it.toMessage() }.sortedByDescending { it.created }
             },
             fetch = {
                 api.getMessages()

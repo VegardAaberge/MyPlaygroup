@@ -1,6 +1,6 @@
 package com.myplaygroup.app.feature_main.domain.repository
 
-import com.myplaygroup.app.core.util.Constants.LOCALHOST_SOCKET_URL
+import com.myplaygroup.app.core.util.Constants.BASE_SOCKET_URL
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.domain.model.Message
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +21,6 @@ interface ChatSocketRepository {
     suspend fun closeSession() : Resource<String>
 
     sealed class Endpoints(val url: String){
-        object ChatSocket: Endpoints("$LOCALHOST_SOCKET_URL/chat-socket")
+        object ChatSocket: Endpoints("$BASE_SOCKET_URL/chat-socket")
     }
 }
