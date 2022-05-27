@@ -1,13 +1,12 @@
 package com.myplaygroup.app.feature_main.presentation.chat
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.model.Message
@@ -22,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val repository: MainRepository,
+    private val imageRepository: ImageRepository,
     private val socketRepository: ChatSocketRepositoryImpl
 ) : ViewModel() {
 
@@ -52,12 +52,26 @@ class ChatViewModel @Inject constructor(
             }
             is ChatScreenEvent.ConnectToChat -> {
                 getMessages()
+                getProfileImages()
                 connectToChat()
             }
             is ChatScreenEvent.DisconnectFromChat -> {
                 viewModelScope.launch {
                     socketRepository.closeSession()
                 }
+            }
+        }
+    }
+
+    private fun getProfileImages() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val profileImageResult = imageRepository.getProfileImage()
+            if(profileImageResult is Resource.Success){
+                state = state.copy(profileImage = profileImageResult.data)
+            }else if(profileImageResult is Resource.Error){
+                mainViewModel.setUIEvent(
+                    BaseViewModel.UiEvent.ShowSnackbar(profileImageResult.message!!)
+                )
             }
         }
     }
