@@ -10,7 +10,7 @@ data class Message (
     val profileName: String,
     val createdBy: String,
     val created: Long,
-    val hasError: Boolean = false
+    var hasError: Boolean = false
 ){
     fun isSynced() : Boolean {
         return serverId >= 0

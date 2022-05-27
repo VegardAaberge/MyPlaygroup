@@ -43,11 +43,10 @@ class ChatViewModel @Inject constructor(
                         listOf<String>("admin")
                     }
 
-                    val response = socketRepository.sendMessage(
+                    socketRepository.sendMessage(
                         message = state.newMessage,
                         receivers = receivers
-                    )
-                    collectInsertMessages(response)
+                    ).collect{ collectInsertMessages(it) }
                 }
             }
             is ChatScreenEvent.ConnectToChat -> {
@@ -162,14 +161,24 @@ class ChatViewModel @Inject constructor(
                 )
             }
             is Resource.Error -> {
+                val newMessages = result.data?.let {
+                    state.messages.toMutableList().apply {
+                        val message = find { m -> m.id == it.id }
+                        message?.let { it.hasError = true }
+                    }
+                }
+                newMessages?.let {
+                    state = state.copy(
+                        messages = it
+                    )
+                }
                 mainViewModel.setUIEvent(
                     BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
                 )
             }
             is Resource.Loading -> {
                 state = state.copy(
-                    isLoading = result.isLoading,
-                    showProgressIndicator = result.isLoading
+                    isLoading = result.isLoading
                 )
             }
         }
