@@ -37,7 +37,7 @@ fun MessageItem(
                 RoundIcon(
                     iconUri = iconUri,
                     size = 40.dp,
-                    modifier = Modifier.size(60.dp)
+                    modifier = Modifier.size(50.dp)
                 )
             }
 
@@ -51,7 +51,7 @@ fun MessageItem(
                 RoundIcon(
                     iconUri = iconUri,
                     size = 40.dp,
-                    modifier = Modifier.size(60.dp)
+                    modifier = Modifier.size(50.dp)
                 )
             }
         }

@@ -25,7 +25,7 @@
         <entry key="../../../../../layout/compose-model-1652769331746.xml" value="0.13333333333333333" />
         <entry key="../../../../../layout/compose-model-1653571159189.xml" value="0.1" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/chat/components/MessageBox.kt" value="0.375" />
-        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/chat/components/MessageItem.kt" value="0.25" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/chat/components/MessageItem.kt" value="0.375" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/chat/components/OtherMessageItem.kt" value="0.375" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/chat/components/OwnerMessageItem.kt" value="0.375" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
