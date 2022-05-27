@@ -41,7 +41,9 @@ class ChatSocketRepositoryImpl @Inject constructor(
     private val dao = mainDatabase.mainDao()
     private var socket: WebSocketSession? = null
 
-    override suspend fun initSession(username: String): Resource<String> {
+    override suspend fun initSession(
+        username: String
+    ): Resource<String> {
         return try {
             socket = client.webSocketSession(
                 urlString = ChatSocketRepository.Endpoints.ChatSocket.url,
@@ -61,8 +63,11 @@ class ChatSocketRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun sendMessage(message: String, receivers: List<String>): Resource<Message> {
-        return try {
+    override suspend fun sendMessage(
+        message: String, receivers: List<String>
+    ): Flow<Resource<Message>> {
+        return flow {
+            emit(Resource.Loading(true))
 
             val userSettings = userSettingsManager.getFlow().first()
 
@@ -73,15 +78,21 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 created = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
             ).toMessageEntity()
 
-            dao.insertMessage(messageEntity)
+            try {
+                dao.insertMessage(messageEntity)
 
-            val sendMessageRequest = messageEntity.ToSendMessageRequest(receivers)
-            socket?.send(Frame.Text(sendMessageRequest))
+                emit(Resource.Success(messageEntity.toMessage()))
 
-            Resource.Success(messageEntity.toMessage())
-        }catch (e: Exception){
-            e.printStackTrace()
-            Resource.Error(e.localizedMessage ?: "Unknown error")
+                val sendMessageRequest = messageEntity.ToSendMessageRequest(receivers)
+                socket?.send(Frame.Text(sendMessageRequest))
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                val errorMessage = e.localizedMessage ?: "Unknown error"
+                emit(Resource.Error(errorMessage, messageEntity.toMessage()))
+            } finally {
+                emit(Resource.Loading(false))
+            }
         }
     }
 
