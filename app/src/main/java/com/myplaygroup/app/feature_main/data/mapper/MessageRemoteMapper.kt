@@ -13,7 +13,8 @@ fun MessageResponse.toMessageEntity() : MessageEntity {
         message = message,
         createdBy = createdBy,
         created = created,
-        profileName = profileName ?: "NO PROFILE NAME"
+        profileName = profileName ?: "",
+        hasError = id == -1L // If it has no server id, it was not saved in the database
     )
 }
 

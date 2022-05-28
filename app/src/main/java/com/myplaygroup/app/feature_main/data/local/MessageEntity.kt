@@ -15,5 +15,6 @@ data class MessageEntity(
     val message: String,
     val profileName: String,
     val created: String,
-    val createdBy: String
+    val createdBy: String,
+    val hasError: Boolean = false
 )

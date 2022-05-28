@@ -123,6 +123,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 ?.filter { it is Frame.Text }
                 ?.map {
                     val json = (it as? Frame.Text)?.readText() ?: ""
+                    Log.i(Constants.DEBUG_KEY, "ObserveMessages: " + json)
                     val messageResponse = Json.decodeFromString<MessageResponse>(json)
                     val messageEntity = messageResponse.toMessageEntity()
                     dao.insertMessage(messageEntity)

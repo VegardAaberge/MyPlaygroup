@@ -19,7 +19,8 @@ fun MessageEntity.toMessage() : Message {
         message = message,
         createdBy = createdBy,
         created = parsedDate.toEpochSecond(ZoneOffset.UTC),
-        profileName = profileName
+        profileName = profileName,
+        hasError = hasError,
     )
 }
 
@@ -33,6 +34,7 @@ fun Message.toMessageEntity() : MessageEntity {
         message = message,
         createdBy = createdBy,
         created = created,
-        profileName = profileName
+        profileName = profileName,
+        hasError = hasError
     )
 }
