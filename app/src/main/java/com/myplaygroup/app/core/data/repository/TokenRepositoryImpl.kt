@@ -21,9 +21,6 @@ class TokenRepositoryImpl @Inject constructor(
 ) : TokenRepository {
 
     override suspend fun verifyRefreshToken() : String {
-        if(basicAuthInterceptor.accessToken != null)
-            return "Couldn't reach server: Access token is null"
-
         val refreshToken = userSettingsManager.getFlow { it.map { u -> u.refreshToken }}.first()
         if(refreshToken == NO_VALUE)
             return "Couldn't reach server: Refresh token is null"
