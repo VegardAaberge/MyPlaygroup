@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.data.repository
 
+import android.util.Log
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
@@ -65,7 +66,8 @@ class ChatSocketRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sendMessage(
-        message: String, receivers: List<String>
+        message: String, receivers: List<String>,
+        tryReconnect: Boolean
     ): Flow<Resource<Message>> {
         return flow {
             emit(Resource.Loading(true))
@@ -80,18 +82,35 @@ class ChatSocketRepositoryImpl @Inject constructor(
             ).toMessageEntity()
 
             try {
+                if(socket == null || !socket!!.isActive){
+                    val result = tryReconnect(userSettings.username)
+                    if(socket == null || !socket!!.isActive){
+                        emit(Resource.Error(result.message!!))
+                        return@flow
+                    }
+                }
+
                 dao.insertMessage(messageEntity)
 
                 emit(Resource.Success(messageEntity.toMessage()))
 
+                sentMessages.add(messageEntity.id)
+
                 val sendMessageRequest = messageEntity.ToSendMessageRequest(receivers)
                 socket?.send(Frame.Text(sendMessageRequest))
+
+                withTimeout(30000){
+                    while (sentMessages.contains(messageEntity.id)){
+                        delay(100)
+                    }
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()
                 val errorMessage = e.localizedMessage ?: "Unknown error"
                 emit(Resource.Error(errorMessage, messageEntity.toMessage()))
             } finally {
+                sentMessages.removeAll { sm -> sm == messageEntity.id  }
                 emit(Resource.Loading(false))
             }
         }
@@ -107,6 +126,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                     val messageResponse = Json.decodeFromString<MessageResponse>(json)
                     val messageEntity = messageResponse.toMessageEntity()
                     dao.insertMessage(messageEntity)
+                    sentMessages.removeAll { sm -> sm == messageEntity.id  }
                     messageEntity.toMessage()
                 }
 
@@ -132,11 +152,11 @@ class ChatSocketRepositoryImpl @Inject constructor(
     }
 
     private suspend fun tryReconnect(username: String) : Resource<String> {
-        val responseMessage = tokenRepository.verifyRefreshToken()
-        if(responseMessage == Constants.AUTHENTICATION_ERROR_MESSAGE){
+        val result = tokenRepository.verifyRefreshToken()
+        if(result is Resource.Success){
             return initSession(username, false)
         }else{
-            return Resource.Error("Couldn't establish a connection")
+            return Resource.Error(result.message!!)
         }
     }
 }

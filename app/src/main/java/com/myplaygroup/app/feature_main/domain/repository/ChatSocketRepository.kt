@@ -14,7 +14,8 @@ interface ChatSocketRepository {
 
     suspend fun sendMessage(
         message: String,
-        receivers: List<String>
+        receivers: List<String>,
+        tryReconnect: Boolean = true
     ): Flow<Resource<Message>>
 
     fun observeMessages(): Resource<Flow<Message>>

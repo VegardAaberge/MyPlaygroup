@@ -20,10 +20,20 @@ class TokenRepositoryImpl @Inject constructor(
     private val userSettingsManager: UserSettingsManager
 ) : TokenRepository {
 
-    override suspend fun verifyRefreshToken() : String {
+    override suspend fun verifyRefreshTokenAndReturnMessage(): String {
+        val result = verifyRefreshToken()
+
+        return if(result is Resource.Success){
+            Constants.AUTHENTICATION_ERROR_MESSAGE
+        }else{
+            result.message!!
+        }
+    }
+
+    override suspend fun verifyRefreshToken() : Resource<Unit> {
         val refreshToken = userSettingsManager.getFlow { it.map { u -> u.refreshToken }}.first()
         if(refreshToken == NO_VALUE)
-            return "Couldn't reach server: Refresh token is null"
+            return Resource.Error("Couldn't reach server: Refresh token is null")
 
         basicAuthInterceptor.accessToken = refreshToken
 
@@ -50,9 +60,9 @@ class TokenRepositoryImpl @Inject constructor(
         )
 
         return if(result is Resource.Success){
-            Constants.AUTHENTICATION_ERROR_MESSAGE
+            Resource.Success()
         }else{
-            result.message ?: "Unknown Error"
+            Resource.Error(result.message ?: "Unknown Error")
         }
     }
 

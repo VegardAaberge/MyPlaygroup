@@ -60,7 +60,7 @@ class MainRepositoryImpl @Inject constructor(
             },
             onFetchError = { r ->
                 when(r.code()){
-                    403 -> tokenRepository.verifyRefreshToken()
+                    403 -> tokenRepository.verifyRefreshTokenAndReturnMessage()
                     else -> "Couldn't reach server: ${r.message()}"
                 }
             },
