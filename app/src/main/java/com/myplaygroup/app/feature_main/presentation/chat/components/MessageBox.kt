@@ -21,6 +21,7 @@ import java.lang.Float.min
 fun MessageBox(
     isOwner: Boolean,
     message: Message,
+    resendMessage: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val boxColor = if (isOwner) Color.Blue else Color.LightGray
@@ -39,6 +40,7 @@ fun MessageBox(
             MessageActivityIndicator(
                 isSynced = message.isSynced(),
                 hasError = message.hasError,
+                resendMessage = resendMessage,
                 modifier = Modifier.size(30.dp)
             )
         }
@@ -82,6 +84,7 @@ fun MessageBox(
             MessageActivityIndicator(
                 isSynced = message.isSynced(),
                 hasError = message.hasError,
+                resendMessage = resendMessage,
                 modifier = Modifier.width(30.dp)
             )
             Spacer(modifier = Modifier.width(20.dp))

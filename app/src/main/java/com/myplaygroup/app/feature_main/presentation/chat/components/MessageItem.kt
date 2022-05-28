@@ -14,6 +14,7 @@ import com.myplaygroup.app.feature_main.domain.model.Message
 fun MessageItem(
     isOwner: Boolean,
     message: Message,
+    resendMessage: () -> Unit = {},
     iconUri: Uri? = null
 ) {
     Column(
@@ -44,6 +45,7 @@ fun MessageItem(
             MessageBox(
                 isOwner = isOwner,
                 message = message,
+                resendMessage = resendMessage,
                 modifier = Modifier.weight(1f)
             )
 

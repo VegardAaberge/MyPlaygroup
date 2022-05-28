@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.presentation.chat.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
@@ -18,11 +19,17 @@ import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 fun MessageActivityIndicator(
     hasError: Boolean,
     isSynced: Boolean,
+    resendMessage: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .clickable {
+                if(hasError){
+                    resendMessage()
+                }
+            },
     ) {
         if (hasError) {
             Icon(

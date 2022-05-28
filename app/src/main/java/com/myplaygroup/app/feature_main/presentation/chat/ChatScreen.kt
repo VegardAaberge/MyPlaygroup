@@ -76,7 +76,10 @@ fun ChatScreen(
                     MessageItem(
                         isOwner = username == message.createdBy,
                         message = message,
-                        iconUri = profileImage
+                        iconUri = profileImage,
+                        resendMessage = {
+                            viewModel.onEvent(ChatScreenEvent.ResendMessage(message))
+                        }
                     )
                 }
             }
