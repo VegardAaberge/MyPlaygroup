@@ -54,6 +54,7 @@ class ChatViewModel @Inject constructor(
             is ChatScreenEvent.ConnectToChat -> {
                 getMessages()
                 getProfileImages()
+                connectToChat()
             }
             is ChatScreenEvent.DisconnectFromChat -> {
                 viewModelScope.launch {
@@ -96,7 +97,6 @@ class ChatViewModel @Inject constructor(
                     messages = result.data!!,
                     showProgressIndicator = state.isLoading && result.data.isEmpty()
                 )
-                connectToChat()
             }
             is Resource.Error -> {
                 mainViewModel.setUIEvent(
@@ -116,26 +116,11 @@ class ChatViewModel @Inject constructor(
         val result = socketRepository.initSession(mainViewModel.username.first())
         when(result){
             is Resource.Success -> {
-                val observeResult = socketRepository.observeMessages()
-                collectObserveMessages(observeResult)
+                observeMessages(result)
             }
             is Resource.Error -> {
                 mainViewModel.setUIEvent(
                     BaseViewModel.UiEvent.ShowSnackbar(result.message ?: "Unknown error")
-                )
-            }
-            else -> {}
-        }
-    }
-
-    private fun collectObserveMessages(observeResult: Resource<Flow<Message>>) {
-        when(observeResult){
-            is Resource.Success -> {
-                observeMessages(observeResult)
-            }
-            is Resource.Error -> {
-                mainViewModel.setUIEvent(
-                    BaseViewModel.UiEvent.ShowSnackbar(observeResult.message ?: "Unknown error")
                 )
             }
             else -> {}

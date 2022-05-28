@@ -43,7 +43,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
     override suspend fun initSession(
         username: String,
         tryReconnect: Boolean
-    ): Resource<String> {
+    ): Resource<Flow<Message>> {
         return try {
             socket = client.webSocketSession(
                 urlString = ChatSocketRepository.Endpoints.ChatSocket.url,
@@ -53,10 +53,12 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 }
             }
 
-            if(socket?.isActive == true){
-                Resource.Success("Established connection")
+            return if(socket?.isActive == true){
+                observeMessages()
+            }else if(tryReconnect){
+                tryReconnect(username)
             }else{
-                return tryReconnect(username)
+                Resource.Error("Failed to connect")
             }
 
         }catch (e: Exception) {
@@ -64,6 +66,33 @@ class ChatSocketRepositoryImpl @Inject constructor(
             Resource.Error(e.localizedMessage ?: "Unknown error")
         }
     }
+
+    fun observeMessages(): Resource<Flow<Message>> {
+        return try {
+            val flow = socket?.incoming
+                ?.receiveAsFlow()
+                ?.filter { it is Frame.Text }
+                ?.map {
+                    val json = (it as? Frame.Text)?.readText() ?: ""
+                    Log.i(Constants.DEBUG_KEY, "ObserveMessages: " + json)
+                    val messageResponse = Json.decodeFromString<MessageResponse>(json)
+                    val messageEntity = messageResponse.toMessageEntity()
+                    dao.insertMessage(messageEntity)
+                    sentMessages.removeAll { sm -> sm == messageEntity.id  }
+                    messageEntity.toMessage()
+                }
+
+            if(flow == null){
+                throw NullPointerException("Flow can't be null")
+            }
+            Resource.Success(flow)
+
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Error(e.localizedMessage ?: "Unknown error")
+        }
+    }
+
 
     override suspend fun sendMessage(
         message: String, receivers: List<String>,
@@ -116,32 +145,6 @@ class ChatSocketRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun observeMessages(): Resource<Flow<Message>> {
-        return try {
-            val flow = socket?.incoming
-                ?.receiveAsFlow()
-                ?.filter { it is Frame.Text }
-                ?.map {
-                    val json = (it as? Frame.Text)?.readText() ?: ""
-                    Log.i(Constants.DEBUG_KEY, "ObserveMessages: " + json)
-                    val messageResponse = Json.decodeFromString<MessageResponse>(json)
-                    val messageEntity = messageResponse.toMessageEntity()
-                    dao.insertMessage(messageEntity)
-                    sentMessages.removeAll { sm -> sm == messageEntity.id  }
-                    messageEntity.toMessage()
-                }
-
-            if(flow == null){
-                throw NullPointerException("Flow can't be null")
-            }
-            Resource.Success(flow)
-
-        }catch (e: Exception){
-            e.printStackTrace()
-            Resource.Error(e.localizedMessage ?: "Unknown error")
-        }
-    }
-
     override suspend fun closeSession(): Resource<String> {
         return try {
             socket?.close()
@@ -152,7 +155,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun tryReconnect(username: String) : Resource<String> {
+    private suspend fun tryReconnect(username: String) : Resource<Flow<Message>> {
         val result = tokenRepository.verifyRefreshToken()
         if(result is Resource.Success){
             return initSession(username, false)

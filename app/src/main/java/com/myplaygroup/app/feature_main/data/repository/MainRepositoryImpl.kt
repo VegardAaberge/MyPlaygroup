@@ -56,7 +56,7 @@ class MainRepositoryImpl @Inject constructor(
                 comments.map { it.toMessage() }.sortedByDescending { it.created }
             },
             shouldFetch = {
-                checkForInternetConnection(app)
+                fetchFromRemote && checkForInternetConnection(app)
             },
             onFetchError = { r ->
                 when(r.code()){

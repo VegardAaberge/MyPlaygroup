@@ -10,15 +10,13 @@ interface ChatSocketRepository {
     suspend fun initSession(
         username: String,
         tryReconnect: Boolean = true
-    ): Resource<String>
+    ): Resource<Flow<Message>>
 
     suspend fun sendMessage(
         message: String,
         receivers: List<String>,
         tryReconnect: Boolean = true
     ): Flow<Resource<Message>>
-
-    fun observeMessages(): Resource<Flow<Message>>
 
     suspend fun closeSession() : Resource<String>
 
