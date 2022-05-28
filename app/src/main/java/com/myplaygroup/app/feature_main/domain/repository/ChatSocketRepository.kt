@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.Flow
 interface ChatSocketRepository {
 
     suspend fun initSession(
-        username: String
+        username: String,
+        tryReconnect: Boolean = true
     ): Resource<String>
 
     suspend fun sendMessage(

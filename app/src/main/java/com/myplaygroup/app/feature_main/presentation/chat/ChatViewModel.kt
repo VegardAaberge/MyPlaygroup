@@ -52,7 +52,6 @@ class ChatViewModel @Inject constructor(
             is ChatScreenEvent.ConnectToChat -> {
                 getMessages()
                 getProfileImages()
-                connectToChat()
             }
             is ChatScreenEvent.DisconnectFromChat -> {
                 viewModelScope.launch {
@@ -92,6 +91,7 @@ class ChatViewModel @Inject constructor(
                     messages = result.data!!,
                     showProgressIndicator = state.isLoading && result.data.isEmpty()
                 )
+                connectToChat()
             }
             is Resource.Error -> {
                 mainViewModel.setUIEvent(
