@@ -9,6 +9,7 @@ import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.fetchNetworkResource
 import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
 import com.myplaygroup.app.feature_login.data.requests.VerifyCodeRequest
@@ -35,10 +36,12 @@ class LoginRepositoryImpl @Inject constructor(
 
         return fetchNetworkResource(
             fetch = {
-                api.login(
-                    username = username,
-                    password = password
-                )
+                if(checkForInternetConnection(context)){
+                    api.login(
+                        username = username,
+                        password = password
+                    )
+                } else throw IOException()
             },
             processFetch = { loginResponse ->
                 basicAuthInterceptor.accessToken = loginResponse.access_token
@@ -77,9 +80,11 @@ class LoginRepositoryImpl @Inject constructor(
 
         return fetchNetworkResource(
             fetch = {
-                api.sendEmailRequest(
-                    SendEmailRequest(email)
-                )
+                if(checkForInternetConnection(context)){
+                    api.sendEmailRequest(
+                        SendEmailRequest(email)
+                    )
+                } else throw IOException()
             },
             processFetch = { r -> r },
             onFetchError = { r -> "Couldn't reach server: ${r.message()}" },
@@ -99,12 +104,15 @@ class LoginRepositoryImpl @Inject constructor(
 
         return fetchNetworkResource(
             fetch = {
-                api.checkVerificationCode(
-                    VerifyCodeRequest(
-                        token = token,
-                        code = code
+                if(checkForInternetConnection(context)){
+                    api.checkVerificationCode(
+                        VerifyCodeRequest(
+                            token = token,
+                            code = code
+                        )
                     )
-                )
+                } else throw IOException()
+
             },
             processFetch = { r -> r.message },
             onFetchError = { r -> "Couldn't reach server: ${r.message()}" },
@@ -115,21 +123,6 @@ class LoginRepositoryImpl @Inject constructor(
                 }
             }
         )
-    }
-
-    override suspend fun uploadProfileImage(uri: Uri?) : Flow<Resource<String>> {
-
-        return flow {
-            try {
-                emit(Resource.Loading(true))
-                // TODO upload image
-            }catch (e: Exception){
-                Log.e(DEBUG_KEY, e.stackTraceToString())
-                emit(Resource.Error(context.getString(R.string.api_login_exception)))
-            }finally {
-                emit(Resource.Loading(false))
-            }
-        }
     }
 }
 

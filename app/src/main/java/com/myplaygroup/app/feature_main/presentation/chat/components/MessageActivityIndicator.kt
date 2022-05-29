@@ -17,11 +17,12 @@ import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 
 @Composable
 fun MessageActivityIndicator(
-    hasError: Boolean,
+    isSending: Boolean,
     isSynced: Boolean,
+    modifier: Modifier = Modifier,
     resendMessage: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
+    val hasError = !isSynced && !isSending
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -53,7 +54,7 @@ fun MessageActivityIndicatorPreview2() {
     MyPlaygroupTheme {
         MessageActivityIndicator(
             isSynced = false,
-            hasError = true,
+            isSending = false,
             modifier = Modifier.size(50.dp)
         )
     }

@@ -39,7 +39,7 @@ fun MessageBox(
             Spacer(modifier = Modifier.width(20.dp))
             MessageActivityIndicator(
                 isSynced = message.isSynced(),
-                hasError = message.hasError,
+                isSending = message.isSending,
                 resendMessage = resendMessage,
                 modifier = Modifier.size(30.dp)
             )
@@ -83,7 +83,7 @@ fun MessageBox(
         if(!isOwner){
             MessageActivityIndicator(
                 isSynced = message.isSynced(),
-                hasError = message.hasError,
+                isSending = message.isSending,
                 resendMessage = resendMessage,
                 modifier = Modifier.width(30.dp)
             )

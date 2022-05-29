@@ -1,6 +1,5 @@
 package com.myplaygroup.app.feature_main.domain.model
 
-import java.time.LocalDateTime
 import java.util.*
 
 data class Message (
@@ -10,7 +9,7 @@ data class Message (
     val profileName: String,
     val createdBy: String,
     val created: Long,
-    var hasError: Boolean = false
+    var isSending: Boolean = false
 ){
     fun isSynced() : Boolean {
         return serverId >= 0

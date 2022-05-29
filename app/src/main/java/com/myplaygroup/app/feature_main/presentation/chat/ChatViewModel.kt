@@ -1,6 +1,5 @@
 package com.myplaygroup.app.feature_main.presentation.chat
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
@@ -48,8 +46,7 @@ class ChatViewModel @Inject constructor(
                 }
             }
             is ChatScreenEvent.ConnectToChat -> {
-                getMessages(true)
-                connectToChat()
+                refreshChat()
             }
             is ChatScreenEvent.DisconnectFromChat -> {
                 viewModelScope.launch {
@@ -57,8 +54,6 @@ class ChatViewModel @Inject constructor(
                 }
             }
             is ChatScreenEvent.ResendMessage -> {
-                getMessages(true)
-
                 viewModelScope.launch {
                     val messageEntity = event.message.toMessageEntity()
                     val userSettings = userSettingsManager.getFlow().first()
@@ -73,13 +68,26 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun getMessages(
-        fetchFromRemote: Boolean = false
-    ){
+    private fun refreshChat(){
         viewModelScope.launch(Dispatchers.IO) {
             repository
-                .getChatMessages(fetchFromRemote)
+                .getChatMessages(true)
                 .collect { collectGetMessages(it)}
+        }
+
+        viewModelScope.launch(Dispatchers.IO){
+            val result = socketRepository.initSession(mainViewModel.username.first())
+            when(result){
+                is Resource.Success -> {
+                    observeMessages(result)
+                }
+                is Resource.Error -> {
+                    mainViewModel.setUIEvent(
+                        BaseViewModel.UiEvent.ShowSnackbar(result.message ?: "Unknown error")
+                    )
+                }
+                else -> {}
+            }
         }
     }
 
@@ -105,21 +113,6 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun connectToChat() = viewModelScope.launch {
-        val result = socketRepository.initSession(mainViewModel.username.first())
-        when(result){
-            is Resource.Success -> {
-                observeMessages(result)
-            }
-            is Resource.Error -> {
-                mainViewModel.setUIEvent(
-                    BaseViewModel.UiEvent.ShowSnackbar(result.message ?: "Unknown error")
-                )
-            }
-            else -> {}
-        }
-    }
-
     private fun observeMessages(result: Resource<Flow<Message>>) {
         result.data!!.onEach { message ->
             val newList = state.messages.toMutableList().apply {
@@ -135,8 +128,10 @@ class ChatViewModel @Inject constructor(
     private fun collectInsertMessages(result: Resource<Message>) {
         when (result) {
             is Resource.Success -> {
+                val message = result.data!!
                 val newList = state.messages.toMutableList().apply {
-                    add(0, result.data!!)
+                    removeIf { u -> u.id == message.id }
+                    add(0, message)
                 }
                 state = state.copy(
                     newMessage = "",
@@ -147,7 +142,7 @@ class ChatViewModel @Inject constructor(
                 val newMessages = result.data?.let {
                     state.messages.toMutableList().apply {
                         val message = find { m -> m.id == it.id }
-                        message?.let { it.hasError = true }
+                        message?.let { it.isSending = false }
                     }
                 }
                 newMessages?.let {
@@ -158,6 +153,7 @@ class ChatViewModel @Inject constructor(
                 mainViewModel.setUIEvent(
                     BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
                 )
+                refreshChat()
             }
             is Resource.Loading -> {
                 state = state.copy(

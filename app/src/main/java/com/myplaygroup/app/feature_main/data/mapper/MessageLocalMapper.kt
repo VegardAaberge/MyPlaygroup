@@ -9,7 +9,9 @@ import java.util.*
 
 const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
 
-fun MessageEntity.toMessage() : Message {
+fun MessageEntity.toMessage(
+    isSending: Boolean = false
+) : Message {
     val dateFormat = DateTimeFormatter.ofPattern(dateFormat, Locale("en"))
     val parsedDate = LocalDateTime.parse(created, dateFormat) ?: LocalDateTime.now()
 
@@ -20,7 +22,7 @@ fun MessageEntity.toMessage() : Message {
         createdBy = createdBy,
         created = parsedDate.toEpochSecond(ZoneOffset.UTC),
         profileName = profileName,
-        hasError = hasError,
+        isSending = isSending
     )
 }
 
@@ -34,7 +36,6 @@ fun Message.toMessageEntity() : MessageEntity {
         message = message,
         createdBy = createdBy,
         created = created,
-        profileName = profileName,
-        hasError = hasError
+        profileName = profileName
     )
 }

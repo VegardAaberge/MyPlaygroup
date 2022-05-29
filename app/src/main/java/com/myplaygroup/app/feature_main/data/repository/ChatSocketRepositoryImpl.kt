@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.data.repository
 
+import android.content.Context
 import android.util.Log
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.settings.UserSettings
@@ -7,7 +8,9 @@ import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.fetchApi
+import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.local.MessageEntity
 import com.myplaygroup.app.feature_main.data.mapper.ToSendMessageRequest
@@ -16,6 +19,7 @@ import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
 import com.myplaygroup.app.feature_main.data.remote.MessageResponse
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.ChatSocketRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
@@ -27,6 +31,7 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import retrofit2.Response
+import java.io.IOException
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import javax.inject.Inject
@@ -36,7 +41,8 @@ class ChatSocketRepositoryImpl @Inject constructor(
     private val mainDatabase: MainDatabase,
     private val userSettingsManager: UserSettingsManager,
     private val authInterceptor: BasicAuthInterceptor,
-    private val tokenRepository: TokenRepository
+    private val tokenRepository: TokenRepository,
+    @ApplicationContext private val context: Context
 ) : ChatSocketRepository {
 
     private val dao = mainDatabase.mainDao()
@@ -48,6 +54,10 @@ class ChatSocketRepositoryImpl @Inject constructor(
         tryReconnect: Boolean
     ): Resource<Flow<Message>> {
         return try {
+            if(!checkForInternetConnection(context)){
+                return Resource.Error("No internet connection")
+            }
+
             Log.d(Constants.DEBUG_KEY, "Init Session")
             socket = client.webSocketSession(
                 urlString = ChatSocketRepository.Endpoints.ChatSocket.url,
@@ -133,7 +143,11 @@ class ChatSocketRepositoryImpl @Inject constructor(
             try {
                 dao.insertMessage(messageEntity)
                 sentMessages.add(messageEntity.id)
-                emit(Resource.Success(messageEntity.toMessage()))
+                emit(Resource.Success(messageEntity.toMessage(true)))
+
+                if(!checkForInternetConnection(context)){
+                    throw IOException("No internet connection")
+                }
 
                 if(socket == null || !socket!!.isActive){
                     val result = tryReconnect(userSettings.username)
