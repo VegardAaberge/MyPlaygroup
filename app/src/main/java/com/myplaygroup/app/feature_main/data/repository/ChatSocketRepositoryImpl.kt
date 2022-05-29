@@ -2,11 +2,14 @@ package com.myplaygroup.app.feature_main.data.repository
 
 import android.util.Log
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
+import com.myplaygroup.app.core.data.settings.UserSettings
 import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.core.util.fetchApi
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
+import com.myplaygroup.app.feature_main.data.local.MessageEntity
 import com.myplaygroup.app.feature_main.data.mapper.ToSendMessageRequest
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
@@ -23,6 +26,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import javax.inject.Inject
@@ -98,35 +102,45 @@ class ChatSocketRepositoryImpl @Inject constructor(
 
 
     override suspend fun sendMessage(
-        message: String, receivers: List<String>,
-        tryReconnect: Boolean
+        message: String,
+        receivers: List<String>
+    ) : Flow<Resource<Message>> {
+        val userSettings = userSettingsManager.getFlow().first()
+
+        val messageEntity = Message(
+            message = message,
+            profileName = userSettings.profileName,
+            createdBy = userSettings.username,
+            created = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+        ).toMessageEntity()
+
+        return sendMessage(
+            messageEntity = messageEntity,
+            receivers = receivers,
+            userSettings = userSettings
+        )
+    }
+
+    override suspend fun sendMessage(
+        messageEntity: MessageEntity,
+        receivers: List<String>,
+        userSettings: UserSettings
     ): Flow<Resource<Message>> {
+
         return flow {
             emit(Resource.Loading(true))
 
-            val userSettings = userSettingsManager.getFlow().first()
-
-            val messageEntity = Message(
-                message = message,
-                profileName = userSettings.profileName,
-                createdBy = userSettings.username,
-                created = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-            ).toMessageEntity()
-
             try {
+                dao.insertMessage(messageEntity)
+                sentMessages.add(messageEntity.id)
+                emit(Resource.Success(messageEntity.toMessage()))
+
                 if(socket == null || !socket!!.isActive){
                     val result = tryReconnect(userSettings.username)
                     if(socket == null || !socket!!.isActive){
-                        emit(Resource.Error(result.message!!))
-                        return@flow
+                        throw IllegalStateException(result.message)
                     }
                 }
-
-                dao.insertMessage(messageEntity)
-
-                emit(Resource.Success(messageEntity.toMessage()))
-
-                sentMessages.add(messageEntity.id)
 
                 val sendMessageRequest = messageEntity.ToSendMessageRequest(receivers)
                 socket?.send(Frame.Text(sendMessageRequest))

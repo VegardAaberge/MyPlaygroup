@@ -6,10 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
@@ -24,7 +26,8 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val repository: MainRepository,
     private val socketRepository: ChatSocketRepositoryImpl,
-    private val imageRepository: ImageRepository
+    private val imageRepository: ImageRepository,
+    private val userSettingsManager: UserSettingsManager
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -54,7 +57,18 @@ class ChatViewModel @Inject constructor(
                 }
             }
             is ChatScreenEvent.ResendMessage -> {
-                Log.d(Constants.DEBUG_KEY, "ResendMessage")
+                getMessages(true)
+
+                viewModelScope.launch {
+                    val messageEntity = event.message.toMessageEntity()
+                    val userSettings = userSettingsManager.getFlow().first()
+
+                    socketRepository.sendMessage(
+                        messageEntity = messageEntity,
+                        receivers = listOf(mainViewModel.state.receiver),
+                        userSettings = userSettings
+                    ).collect{ collectInsertMessages(it) }
+                }
             }
         }
     }
