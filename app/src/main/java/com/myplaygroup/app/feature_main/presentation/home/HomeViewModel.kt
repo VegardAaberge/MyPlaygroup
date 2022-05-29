@@ -17,14 +17,4 @@ class HomeViewModel @Inject constructor(
 ): ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
-    var state by mutableStateOf(HomeState())
-
-    init {
-        viewModelScope.launch {
-            val uri = imageRepository.getProfileImage()
-            state = state.copy(
-                imageUri = uri.data
-            )
-        }
-    }
 }

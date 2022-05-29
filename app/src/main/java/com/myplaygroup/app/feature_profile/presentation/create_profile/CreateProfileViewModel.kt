@@ -4,19 +4,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
-    private val imageRepository : ImageRepository
+    private val imageRepository : ImageRepository,
+    private val userSettingsManager: UserSettingsManager
 ) : BaseViewModel() {
 
     var state by mutableStateOf(CreateProfileState())
@@ -51,6 +55,7 @@ class CreateProfileViewModel @Inject constructor(
 
                 viewModelScope.launch {
 
+                    val username = userSettingsManager.getFlow { x -> x.map { u -> u.username } }.first()
                     if(!state.isFilledIn()){
                         setUIEvent(
                             UiEvent.ShowSnackbar("Please fill out all the fields")
@@ -78,11 +83,9 @@ class CreateProfileViewModel @Inject constructor(
                             }
                         }
                     }
-                    val uri = imageRepository.getProfileImage().data
 
                     launch(Dispatchers.IO) {
                         profileRepository.createProfile(
-                            profileUri = uri,
                             profileName = state.profileName,
                             phoneNumber = state.phoneNumber,
                             email = state.email,

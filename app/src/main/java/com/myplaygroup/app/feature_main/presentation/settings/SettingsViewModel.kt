@@ -15,7 +15,6 @@ import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
 import com.myplaygroup.app.feature_main.domain.repository.MainRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
-import com.myplaygroup.app.feature_main.presentation.home.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -32,21 +31,10 @@ class SettingsViewModel @Inject constructor(
 
     lateinit var mainViewModel: MainViewModel
 
-    val username: Flow<String>
     val profileName: Flow<String>
 
-    var state by mutableStateOf(HomeState())
-
     init {
-        username = userSettingsManager.getFlow { it.map { u -> u.username } }
         profileName = userSettingsManager.getFlow { it.map { u -> u.profileName } }
-
-        viewModelScope.launch {
-            val uri = imageRepository.getProfileImage()
-            state = state.copy(
-                imageUri = uri.data
-            )
-        }
     }
 
     fun onEvent(event: SettingsScreenEvent){

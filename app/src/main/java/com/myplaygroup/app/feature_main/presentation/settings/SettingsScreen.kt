@@ -53,8 +53,8 @@ fun SettingsScreen(
 @Composable
 fun UserSection(viewModel: SettingsViewModel) {
 
-    val profileImage = viewModel.state.imageUri
-    val username = viewModel.username.collectAsState("").value
+    val profileImage = viewModel.mainViewModel.state.usernameUri
+    val username = viewModel.mainViewModel.username.collectAsState("").value
     val profileName = viewModel.profileName.collectAsState("").value
 
     Row(

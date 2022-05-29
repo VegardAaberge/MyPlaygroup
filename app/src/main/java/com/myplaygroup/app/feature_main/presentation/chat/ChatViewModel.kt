@@ -23,8 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val repository: MainRepository,
-    private val imageRepository: ImageRepository,
-    private val socketRepository: ChatSocketRepositoryImpl
+    private val socketRepository: ChatSocketRepositoryImpl,
+    private val imageRepository: ImageRepository
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -38,22 +38,14 @@ class ChatViewModel @Inject constructor(
             }
             is ChatScreenEvent.SendMessageTapped -> {
                 viewModelScope.launch {
-                    val username = mainViewModel.username.first()
-                    val receivers = if(username == "admin"){
-                        listOf<String>("meng", "vegard")
-                    }else{
-                        listOf<String>("admin")
-                    }
-
                     socketRepository.sendMessage(
                         message = state.newMessage,
-                        receivers = receivers
+                        receivers = listOf(mainViewModel.state.receiver)
                     ).collect{ collectInsertMessages(it) }
                 }
             }
             is ChatScreenEvent.ConnectToChat -> {
                 getMessages(true)
-                getProfileImages()
                 connectToChat()
             }
             is ChatScreenEvent.DisconnectFromChat -> {
@@ -63,19 +55,6 @@ class ChatViewModel @Inject constructor(
             }
             is ChatScreenEvent.ResendMessage -> {
                 Log.d(Constants.DEBUG_KEY, "ResendMessage")
-            }
-        }
-    }
-
-    private fun getProfileImages() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val profileImageResult = imageRepository.getProfileImage()
-            if(profileImageResult is Resource.Success){
-                state = state.copy(profileImage = profileImageResult.data)
-            }else if(profileImageResult is Resource.Error){
-                mainViewModel.setUIEvent(
-                    BaseViewModel.UiEvent.ShowSnackbar(profileImageResult.message!!)
-                )
             }
         }
     }

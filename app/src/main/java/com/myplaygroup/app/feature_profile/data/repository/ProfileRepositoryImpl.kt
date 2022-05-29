@@ -28,7 +28,6 @@ class ProfileRepositoryImpl @Inject constructor(
         phoneNumber: String,
         email: String,
         newPassword: String,
-        profileUri: Uri?
     ): Flow<Resource<Unit>> {
 
         val username = userSettingsManager.getFlow {

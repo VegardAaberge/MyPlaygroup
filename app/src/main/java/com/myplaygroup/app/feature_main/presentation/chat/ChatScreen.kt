@@ -34,11 +34,9 @@ fun ChatScreen(
 ) {
     viewModel.mainViewModel = mainViewModel
 
+    val username = mainViewModel.username.collectAsState(initial = Constants.NO_VALUE).value
     val messages = viewModel.state.messages
     val newMessage = viewModel.state.newMessage
-    val username = mainViewModel.username.collectAsState(
-        initial = Constants.NO_VALUE
-    ).value
     val profileImage = viewModel.state.profileImage
 
     val showProgressIndicator = viewModel.state.showProgressIndicator
@@ -74,10 +72,13 @@ fun ChatScreen(
                     .weight(1f)
             ){
                 items(messages){ message ->
+                    val isOwner = username == message.createdBy
                     MessageItem(
-                        isOwner = username == message.createdBy,
+                        isOwner = isOwner,
                         message = message,
-                        iconUri = profileImage,
+                        iconUri = if(isOwner) {
+                            mainViewModel.state.usernameUri
+                        } else mainViewModel.state.receiverUri,
                         resendMessage = {
                             viewModel.onEvent(ChatScreenEvent.ResendMessage(message))
                         }

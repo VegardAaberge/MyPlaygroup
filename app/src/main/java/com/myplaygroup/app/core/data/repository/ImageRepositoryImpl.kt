@@ -12,7 +12,9 @@ import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.core.util.FileUtils
 import com.myplaygroup.app.core.util.Resource
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -61,21 +63,20 @@ class ImageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getProfileImage(): Resource<Uri?> {
+    override suspend fun getProfileImage(
+        user: String
+    ): Resource<Uri?> {
         try {
-            val username = userSettingsManager.getFlow {
-                it.map { u -> u.username }
-            }.first()
-            var profileFile = FileUtils.getProfileFile(username)
+            var profileFile = FileUtils.getProfileFile(user)
 
             if(!profileFile.exists()){
-                val response = playgroupApi.getProfileImage(username)
+                val response = playgroupApi.getProfileImage(user)
                 val byteStream = response.byteStream()
                 val bytes = byteStream.readBytes()
 
-                FileUtils.saveProfileFile(bytes, username)
+                FileUtils.saveProfileFile(bytes, user)
 
-                profileFile = FileUtils.getProfileFile(username)
+                profileFile = FileUtils.getProfileFile(user)
 
                 Log.e(DEBUG_KEY, "Successfully downloaded the image")
             }

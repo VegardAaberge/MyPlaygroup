@@ -10,7 +10,6 @@ interface ProfileRepository {
         phoneNumber: String,
         email: String,
         newPassword: String,
-        profileUri: Uri?
     ) : Flow<Resource<Unit>>
 
     suspend fun editProfile(
