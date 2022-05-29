@@ -50,9 +50,10 @@ class MainRepositoryImpl @Inject constructor(
                 api.getMessages()
             },
             saveFetchResult = { messages ->
-                val comments = messages.map { it.toMessageEntity() }
-                dao.clearComments()
+                var comments = messages.map { it.toMessageEntity() }
+                dao.clearSyncedComments()
                 dao.insertMessages(comments)
+                comments = dao.getMessages()
                 comments.map { it.toMessage() }.sortedByDescending { it.created }
             },
             shouldFetch = {

@@ -18,8 +18,8 @@ interface MainDao {
         message: MessageEntity
     )
 
-    @Query("DELETE FROM messageentity")
-    fun clearComments()
+    @Query("DELETE FROM messageentity WHERE serverId != -1")
+    fun clearSyncedComments()
 
     @Query("SELECT * FROM messageentity ORDER BY created")
     suspend fun getMessages() : List<MessageEntity>
