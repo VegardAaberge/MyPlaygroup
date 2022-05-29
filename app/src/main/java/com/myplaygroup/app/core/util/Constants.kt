@@ -20,7 +20,7 @@ object Constants {
     const val BASE_URL = LOCALHOST_URL
     const val BASE_SOCKET_URL = LOCALHOST_SOCKET_URL
 
-    const val AUTHENTICATION_ERROR_MESSAGE = "Couldn't reach server: Failed to load token"
+    const val AUTHENTICATION_ERROR_MESSAGE = "Token was invalid, fetched new token"
 
     val IGNORE_AUTH_URLS = listOf("/api/v1/login", "/api/v1/reset-password/send", "/api/v1/reset-password/verify")
 }

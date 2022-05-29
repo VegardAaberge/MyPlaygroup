@@ -52,7 +52,7 @@ class ChatViewModel @Inject constructor(
                 }
             }
             is ChatScreenEvent.ConnectToChat -> {
-                getMessages()
+                getMessages(true)
                 getProfileImages()
                 connectToChat()
             }

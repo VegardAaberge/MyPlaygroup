@@ -17,7 +17,6 @@ import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.isActive
@@ -45,6 +44,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
         tryReconnect: Boolean
     ): Resource<Flow<Message>> {
         return try {
+            Log.d(Constants.DEBUG_KEY, "Init Session")
             socket = client.webSocketSession(
                 urlString = ChatSocketRepository.Endpoints.ChatSocket.url,
             ){
@@ -54,10 +54,13 @@ class ChatSocketRepositoryImpl @Inject constructor(
             }
 
             return if(socket?.isActive == true){
+                Log.d(Constants.DEBUG_KEY, "Observe Messages")
                 observeMessages()
             }else if(tryReconnect){
+                Log.d(Constants.DEBUG_KEY, "Reconnect Session")
                 tryReconnect(username)
             }else{
+                Log.d(Constants.DEBUG_KEY, "Failed to connect to websocket")
                 Resource.Error("Failed to connect")
             }
 
