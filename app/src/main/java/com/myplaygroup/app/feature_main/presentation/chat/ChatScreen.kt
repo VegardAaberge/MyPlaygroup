@@ -3,10 +3,7 @@ package com.myplaygroup.app.feature_main.presentation.chat
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
@@ -15,13 +12,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
+import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
+import com.myplaygroup.app.feature_main.presentation.chat.components.MessageBox
 import com.myplaygroup.app.feature_main.presentation.chat.components.MessageItem
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -61,7 +62,7 @@ fun ChatScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
@@ -84,35 +85,41 @@ fun ChatScreen(
                 }
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
+            Column(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                TextField(
-                    value = newMessage,
-                    placeholder = {
-                        Text(text = "Enter Message")
-                    },
-                    onValueChange = {
-                        viewModel.onEvent(ChatScreenEvent.EnteredNewMessage(it))
-                    },
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                )
-
-                IconButton(
-                    modifier = Modifier
-                        .width(50.dp),
-                    onClick = {
-                        viewModel.onEvent(ChatScreenEvent.SendMessageTapped)
-                    })
-                {
-                    Icon(
-                        imageVector = Icons.Filled.Send,
-                        contentDescription = "Send"
+                        .fillMaxWidth()
+                        .weight(1f, false)
+                ) {
+                    TextField(
+                        value = newMessage,
+                        placeholder = {
+                            Text(text = "Enter Message")
+                        },
+                        onValueChange = {
+                            viewModel.onEvent(ChatScreenEvent.EnteredNewMessage(it))
+                        },
+                        modifier = Modifier
+                            .weight(1f)
                     )
+
+                    IconButton(
+                        modifier = Modifier
+                            .width(50.dp),
+                        onClick = {
+                            viewModel.onEvent(ChatScreenEvent.SendMessageTapped)
+                        })
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Send,
+                            contentDescription = "Send"
+                        )
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(65.dp))
             }
         }
 
