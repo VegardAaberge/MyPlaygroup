@@ -140,4 +140,8 @@ dependencies {
     // Data Store
     implementation "com.google.crypto.tink:tink-android:1.6.1"
     implementation "androidx.datastore:datastore:1.0.0"
+
+    // Calendar
+    implementation "io.github.boguszpawlowski.composecalendar:composecalendar:0.5.1"
+    implementation "io.github.boguszpawlowski.composecalendar:kotlinx-datetime:0.5.1"
 }

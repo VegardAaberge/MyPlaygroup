@@ -100,7 +100,7 @@ private fun BottomNavigationScreen(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.ChatFragment.route
+        startDestination = Screen.HomeFragment.route
     ){
         composable(Screen.HomeFragment.route){
             HomeScreen(viewModel)
