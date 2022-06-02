@@ -1,9 +1,8 @@
 package com.myplaygroup.app.feature_profile.data.repository
 
 import android.content.Context
-import android.net.Uri
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
-import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.fetchNetworkResource

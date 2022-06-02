@@ -8,6 +8,7 @@ data class UserSettings (
     val refreshToken: String = NO_VALUE,
     val accessToken: String  = NO_VALUE,
     val username: String  = NO_VALUE,
+    val userRole: String  = NO_VALUE,
     val profileName: String  = NO_VALUE,
     val phoneNumber: String  = NO_VALUE,
     val email: String  = NO_VALUE

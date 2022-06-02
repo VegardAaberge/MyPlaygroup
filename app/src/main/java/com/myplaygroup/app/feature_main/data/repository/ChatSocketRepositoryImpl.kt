@@ -4,13 +4,11 @@ import android.content.Context
 import android.util.Log
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.settings.UserSettings
-import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
-import com.myplaygroup.app.core.util.fetchApi
-import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.local.MessageEntity
 import com.myplaygroup.app.feature_main.data.mapper.ToSendMessageRequest
@@ -30,7 +28,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import retrofit2.Response
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.ZoneOffset

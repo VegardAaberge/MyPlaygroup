@@ -3,7 +3,7 @@ package com.myplaygroup.app.core.data.repository
 import android.util.Log
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
-import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Constants.NO_VALUE

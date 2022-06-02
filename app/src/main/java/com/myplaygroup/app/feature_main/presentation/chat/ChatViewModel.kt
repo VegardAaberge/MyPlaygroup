@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource

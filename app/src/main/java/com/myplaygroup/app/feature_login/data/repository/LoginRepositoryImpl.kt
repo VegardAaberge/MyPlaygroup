@@ -1,13 +1,9 @@
 package com.myplaygroup.app.feature_login.data.repository
 
 import android.content.Context
-import android.net.Uri
-import android.util.Log
-import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
-import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
-import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.fetchNetworkResource
@@ -18,7 +14,6 @@ import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordRespons
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import java.io.IOException
 import javax.inject.Inject
 
@@ -45,7 +40,10 @@ class LoginRepositoryImpl @Inject constructor(
             },
             processFetch = { loginResponse ->
                 basicAuthInterceptor.accessToken = loginResponse.access_token
-                userSettingsManager.updateUsername(username)
+                userSettingsManager.updateUsernameAndRole(
+                    username = username,
+                    userRole = loginResponse.user_role,
+                )
                 userSettingsManager.updateTokens(
                     accessToken = loginResponse.access_token,
                     refreshToken = loginResponse.refresh_token,

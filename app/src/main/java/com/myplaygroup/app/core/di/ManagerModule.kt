@@ -1,9 +1,7 @@
 package com.myplaygroup.app.core.di
 
 import com.myplaygroup.app.core.data.settings.UserSettingsManagerImpl
-import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
-import com.myplaygroup.app.feature_login.data.repository.LoginRepositoryImpl
-import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

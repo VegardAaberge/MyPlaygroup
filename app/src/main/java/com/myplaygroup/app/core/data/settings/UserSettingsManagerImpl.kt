@@ -2,10 +2,9 @@ package com.myplaygroup.app.core.data.settings
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import com.myplaygroup.app.core.domain.Settings.UserSettingsManager
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,10 +30,11 @@ class UserSettingsManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUsername(username: String) {
+    override suspend fun updateUsernameAndRole(username: String, userRole: String) {
         dataStore.updateData {
             it.copy(
-                username = username
+                username = username,
+                userRole = userRole,
             )
         }
     }
