@@ -60,6 +60,9 @@ class AdminViewModel @Inject constructor(
                     UiEvent.ShowSnackbar("Logout tapped")
                 )
             }
+            is AdminScreenEvent.routeUpdated -> {
+                state = state.copy(currentRoute = event.route)
+            }
         }
     }
 
