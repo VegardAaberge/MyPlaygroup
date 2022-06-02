@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_admin.presentation.nav_drawer.NavDrawer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -34,6 +34,8 @@ class AdminViewModel @Inject constructor(
     var state by mutableStateOf(AdminState())
 
     init {
+        updateTitle(NavDrawer.OVERVIEW)
+
         viewModelScope.launch {
             loadProfileImage(username.first()){
                 state = state.copy(
@@ -61,9 +63,17 @@ class AdminViewModel @Inject constructor(
                 )
             }
             is AdminScreenEvent.routeUpdated -> {
-                state = state.copy(currentRoute = event.route)
+                updateTitle(event.route)
             }
         }
+    }
+
+    private fun updateTitle(route: String){
+        val currentNavItem = NavDrawer.items[route]
+        val newTitle = currentNavItem?.title ?: "Admin Panel"
+        state = state.copy(
+            title = newTitle
+        )
     }
 
     private fun loadProfileImage(

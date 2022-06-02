@@ -9,14 +9,12 @@ import com.myplaygroup.app.feature_admin.presentation.nav_drawer.NavDrawer
 
 @Composable
 fun AppBar(
-    route: String,
+    title: String,
     onNavigationIconClick: () -> Unit,
 ){
-    val currentPageTitle = NavDrawer.items[route]?.title ?: "Admin Panel"
-
     TopAppBar(
         title = {
-            Text(text = currentPageTitle)
+            Text(text = title)
         },
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary,

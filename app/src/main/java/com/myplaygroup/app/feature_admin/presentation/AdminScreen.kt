@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,13 +33,13 @@ fun AdminScreen(
     val scaffoldState = collectEventFlow(adminViewModel, navigator)
     val navController = rememberNavController()
 
-    val currentRoute = adminViewModel.state.currentRoute
+    val title = adminViewModel.state.title
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             AppBar(
-                route = currentRoute,
+                title = title,
                 onNavigationIconClick = {
                     scope.launch {
                         scaffoldState.drawerState.open()
@@ -83,7 +81,7 @@ fun AdminScreen(
             )
         }
     ) {
-        DrawerNavigation(navController, currentRoute)
+        DrawerNavigation(navController, title)
     }
 }
 
@@ -92,7 +90,7 @@ fun DrawerNavigation(
     navController: NavHostController,
     currentRoute: String
 ) {
-    NavHost(navController, startDestination = currentRoute) {
+    NavHost(navController, startDestination = NavDrawer.OVERVIEW) {
         composable(NavDrawer.OVERVIEW) {
             OverviewScreen()
         }
