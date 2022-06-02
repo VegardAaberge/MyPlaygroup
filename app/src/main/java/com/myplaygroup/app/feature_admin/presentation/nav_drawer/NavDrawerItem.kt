@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_admin.presentation
+package com.myplaygroup.app.feature_admin.presentation.nav_drawer
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

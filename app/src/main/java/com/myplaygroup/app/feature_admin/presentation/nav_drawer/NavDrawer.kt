@@ -1,8 +1,7 @@
-package com.myplaygroup.app.feature_admin.presentation
+package com.myplaygroup.app.feature_admin.presentation.nav_drawer
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.graphics.vector.ImageVector
 
 object NavDrawer{
 
