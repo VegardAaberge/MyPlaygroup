@@ -34,7 +34,6 @@ class MainRepositoryImpl @Inject constructor(
     private val mainDatabase: MainDatabase,
     private val app: Application,
     private val tokenRepository: TokenRepository,
-    @ApplicationContext private val context: Context
 ) : MainRepository {
 
     private val dao = mainDatabase.mainDao()

@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_main.data.local
+package com.myplaygroup.app.core.data.local
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

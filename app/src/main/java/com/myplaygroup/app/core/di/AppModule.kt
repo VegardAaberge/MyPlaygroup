@@ -15,6 +15,7 @@ import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.data.remote.TrustAllX509TrustManager
 import com.myplaygroup.app.core.data.settings.UserSettings
 import com.myplaygroup.app.core.data.settings.UserSettingsSerializer
+import com.myplaygroup.app.core.util.Constants.ADMIN_DATABASE_NAME
 import com.myplaygroup.app.core.util.Constants.BASE_URL
 import com.myplaygroup.app.core.util.Constants.DATASTORE_FILE
 import com.myplaygroup.app.core.util.Constants.KEYSET_NAME
@@ -22,6 +23,7 @@ import com.myplaygroup.app.core.util.Constants.LOCALHOST_URL
 import com.myplaygroup.app.core.util.Constants.MAIN_DATABASE_NAME
 import com.myplaygroup.app.core.util.Constants.MASTER_KEY_URI
 import com.myplaygroup.app.core.util.Constants.PREFERENCE_FILE
+import com.myplaygroup.app.feature_admin.data.local.AdminDatabase
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import dagger.Module
 import dagger.Provides
@@ -47,7 +49,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providesStockDatabase(app: Application): MainDatabase {
+    fun providesMainDatabase(app: Application): MainDatabase {
         return Room.databaseBuilder(
             app,
             MainDatabase::class.java,
@@ -57,7 +59,21 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideNoteDao(db: MainDatabase) = db.mainDao()
+    fun provideMainDao(db: MainDatabase) = db.mainDao()
+
+    @Provides
+    @Singleton
+    fun providesAdminDatabase(app: Application): AdminDatabase {
+        return Room.databaseBuilder(
+            app,
+            AdminDatabase::class.java,
+            ADMIN_DATABASE_NAME
+        ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAdminDao(db: AdminDatabase) = db.mainDao()
 
     @Singleton
     @Provides

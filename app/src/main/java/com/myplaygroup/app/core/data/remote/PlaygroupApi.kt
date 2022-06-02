@@ -1,5 +1,6 @@
 package com.myplaygroup.app.core.data.remote
 
+import com.myplaygroup.app.feature_admin.data.remote.DailyClassesResponse
 import com.myplaygroup.app.feature_login.data.requests.*
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
@@ -67,5 +68,6 @@ interface PlaygroupApi {
     @GET("api/v1/login/refresh_token")
     suspend fun refreshToken(): Response<RefreshTokenResponse>
 
-
+    @GET("api/v1/classes")
+    suspend fun getAllClasses(): Response<DailyClassesResponse>
 }
