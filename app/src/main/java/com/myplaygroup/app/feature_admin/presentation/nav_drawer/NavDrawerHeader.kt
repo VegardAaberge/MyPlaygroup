@@ -23,109 +23,28 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.myplaygroup.app.core.presentation.user_section.UserSection
+import com.myplaygroup.app.feature_main.presentation.settings.SettingsScreenEvent
 
 @Composable
 fun NavDrawerHeader(
     viewModel: AdminViewModel
 ) {
-    val adminUri = viewModel.state.adminUri
+    val profileImage = viewModel.state.adminUri
     val username = viewModel.username.collectAsState(initial = "").value
     val profileName = viewModel.profileName.collectAsState(initial = "").value
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    UserSection(
+        profileImage = profileImage,
+        username = username,
+        profileName = profileName,
+        editProfileEvent ={
+            viewModel.onEvent(AdminScreenEvent.EditProfileTapped)
+        },
+        editProfilePictureEvent = {
+            viewModel.onEvent(AdminScreenEvent.EditProfilePictureTapped)
+        },
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-    ) {
-        RoundImage(
-            image = rememberImagePainter(data = adminUri),
-            modifier = Modifier
-                .size(100.dp)
-                .clickable {
-                    viewModel.onEvent(AdminScreenEvent.EditProfilePictureTapped)
-                }
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        ProfileInfo(
-            header = username,
-            subHeader = profileName,
-            modifier = Modifier
-                .weight(1f)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        EditProfileArrow(
-            editProfileEvent = {
-                viewModel.onEvent(AdminScreenEvent.EditProfileTapped)
-            }
-        )
-    }
-}
-
-
-
-@Composable
-private fun RoundImage(
-    image: Painter,
-    modifier: Modifier
-){
-    Image(
-        painter = image,
-        contentDescription = null,
-        modifier = modifier
-            .aspectRatio(1f, matchHeightConstraintsFirst = true)
-            .border(
-                1.dp,
-                Color.LightGray,
-                CircleShape
-            )
-            .padding(3.dp)
-            .clip(CircleShape)
+            .padding(horizontal = 10.dp, vertical = 20.dp)
     )
-}
-
-@Composable
-private fun ProfileInfo(
-    header: String,
-    subHeader: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start,
-        modifier = modifier
-    ) {
-        Text(
-            text = header,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = subHeader)
-    }
-}
-
-@Composable
-private fun EditProfileArrow(
-    editProfileEvent: () -> Unit,
-    boxHeight: Dp = 100.dp,
-    boxWidth: Dp = 50.dp,
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = Modifier
-        .height(100.dp)
-        .width(50.dp)
-        .clickable {
-            editProfileEvent()
-        })
-    {
-        Icon(
-            imageVector = Icons.Default.ArrowForward,
-            contentDescription = "Edit Profile",
-            tint = Color.Black,
-            modifier = Modifier
-                .size(24.dp)
-                .align(Alignment.Center)
-        )
-    }
 }

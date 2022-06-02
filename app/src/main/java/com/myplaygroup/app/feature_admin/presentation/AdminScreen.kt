@@ -61,6 +61,7 @@ fun AdminScreen(
                                 builder = {
                                     launchSingleTop = true
                                     restoreState = true
+                                    popUpTo(NavDrawer.OVERVIEW)
                                 }
                             )
                         }
