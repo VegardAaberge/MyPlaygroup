@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -45,10 +46,19 @@ class AdminViewModel @Inject constructor(
     fun onEvent(event: AdminScreenEvent) {
         when(event){
             is AdminScreenEvent.EditProfileTapped -> {
-
+                setUIEvent(
+                    UiEvent.ShowSnackbar("Edit Profile tapped")
+                )
             }
             is AdminScreenEvent.EditProfilePictureTapped -> {
-
+                setUIEvent(
+                    UiEvent.ShowSnackbar("Profile picture tapped")
+                )
+            }
+            is AdminScreenEvent.logoutTapped -> {
+                setUIEvent(
+                    UiEvent.ShowSnackbar("Logout tapped")
+                )
             }
         }
     }

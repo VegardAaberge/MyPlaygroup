@@ -66,10 +66,10 @@ fun DrawerHeader(
 
 @Composable
 fun DrawerBody(
-    items: List<MenuItem>,
+    items: List<NavDrawerItem>,
     modifier: Modifier = Modifier,
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-    onItemClick: (MenuItem) -> Unit
+    onItemClick: (String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -80,13 +80,13 @@ fun DrawerBody(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        onItemClick(item)
+                        onItemClick(item.route)
                     }
                     .padding(16.dp)
             ) {
                 Icon(
                     imageVector = item.icon,
-                    contentDescription = item.contentDescription,
+                    contentDescription = null,
                     modifier = modifier.size(35.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
