@@ -106,7 +106,7 @@ class CreateProfileViewModel @Inject constructor(
             }
             is Resource.Error -> {
                 setUIEvent(
-                    UiEvent.ShowSnackbar("Create Profile: " + result.message!!)
+                    UiEvent.ShowSnackbar(result.message!!)
                 )
             }
             is Resource.Loading -> {

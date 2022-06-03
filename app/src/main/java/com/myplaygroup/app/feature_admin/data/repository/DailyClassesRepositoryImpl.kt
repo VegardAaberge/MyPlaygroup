@@ -49,9 +49,9 @@ class DailyClassesRepositoryImpl @Inject constructor(
                 fetchFromRemote && checkForInternetConnection(app)
             },
             onFetchError = { r ->
-                when(r.code()){
+                when(r.code){
                     403 -> tokenRepository.verifyRefreshTokenAndReturnMessage()
-                    else -> "Couldn't reach server: ${r.message()}"
+                    else -> "Couldn't reach server: ${r.message}"
                 }
             },
             onFetchException = { t ->

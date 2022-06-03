@@ -58,9 +58,9 @@ class LoginRepositoryImpl @Inject constructor(
                 loginResponse
             },
             onFetchError = { r ->
-                when(r.code()){
+                when(r.code){
                     403 -> "Wrong username or password"
-                    else -> "Couldn't reach server: ${r.message()}"
+                    else -> "Couldn't reach server: ${r.message}"
                 }
             },
             onFetchException = { t ->
@@ -85,7 +85,7 @@ class LoginRepositoryImpl @Inject constructor(
                 } else throw IOException()
             },
             processFetch = { r -> r },
-            onFetchError = { r -> "Couldn't reach server: ${r.message()}" },
+            onFetchError = { r -> "Couldn't reach server: ${r.message}" },
             onFetchException = { t ->
                 when(t){
                     is IOException -> "No Internet Connection"
@@ -113,7 +113,7 @@ class LoginRepositoryImpl @Inject constructor(
 
             },
             processFetch = { r -> r.message },
-            onFetchError = { r -> "Couldn't reach server: ${r.message()}" },
+            onFetchError = { r -> "Couldn't reach server: ${r.message}" },
             onFetchException = { t ->
                 when(t){
                     is IOException -> "No Internet Connection"

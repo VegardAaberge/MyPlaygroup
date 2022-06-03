@@ -1,7 +1,13 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.myplaygroup.app.core.util
 
 import android.util.Log
+import com.myplaygroup.app.core.data.remote.dto.ErrorResponse
 import kotlinx.coroutines.flow.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import retrofit2.Response
 import java.lang.Exception
 
@@ -9,7 +15,7 @@ inline fun <ResultType, RequestType> networkBoundResource(
     crossinline query: suspend () -> ResultType,
     crossinline fetch: suspend () -> Response<RequestType>,
     crossinline saveFetchResult: suspend (RequestType) -> ResultType,
-    crossinline onFetchError: suspend (Response<RequestType>) -> String,
+    crossinline onFetchError: suspend (ErrorResponse) -> String,
     crossinline onFetchException: suspend (Throwable) -> String,
     crossinline shouldFetch: (ResultType) -> Boolean = { true }
 ) = flow {
@@ -35,7 +41,7 @@ inline fun <ResultType, RequestType> networkBoundResource(
 inline fun <ResultType, RequestType> fetchNetworkResource(
     crossinline fetch: suspend () -> Response<RequestType>,
     crossinline processFetch: suspend (RequestType) -> ResultType,
-    crossinline onFetchError: suspend (Response<RequestType>) -> String,
+    crossinline onFetchError: suspend (ErrorResponse) -> String,
     crossinline onFetchException: suspend (Throwable) -> String,
 ) = flow {
 
@@ -54,7 +60,7 @@ inline fun <ResultType, RequestType> fetchNetworkResource(
 suspend inline fun <ResultType, RequestType> fetchApi(
     crossinline fetch: suspend () -> Response<RequestType>,
     crossinline processFetch: suspend (RequestType) -> ResultType,
-    crossinline onFetchError: suspend (Response<RequestType>) -> String,
+    crossinline onFetchError: suspend (ErrorResponse) -> String,
     crossinline onFetchException: suspend (Throwable) -> String,
 ) : Resource<ResultType> {
     return try {
@@ -66,9 +72,19 @@ suspend inline fun <ResultType, RequestType> fetchApi(
 
             Resource.Success(data = data)
         }else{
-            val localisedMessage = onFetchError(response)
+            val errorResponse = try {
+                val source = response.errorBody()!!.byteStream()
+                Json.decodeFromStream(source)
+            }catch (e: Exception){
+                ErrorResponse(
+                    code = response.code(),
+                    message = response.message(),
+                )
+            }
 
-            Log.e(Constants.DEBUG_KEY, "Code: ${response.code()} Error: ${response.message()} Localised: $localisedMessage")
+            val localisedMessage = onFetchError(errorResponse)
+
+            Log.e(Constants.DEBUG_KEY, "Code: $errorResponse Localised: $localisedMessage")
             Resource.Error(localisedMessage)
         }
     } catch (t: Throwable) {

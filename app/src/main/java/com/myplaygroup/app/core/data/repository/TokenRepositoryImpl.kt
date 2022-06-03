@@ -82,7 +82,7 @@ class TokenRepositoryImpl @Inject constructor(
             },
             onFetchError = { r ->
                 SetAccessToken(null)
-                "Couldn't reach server: ${r.message()}"
+                "Couldn't reach server: ${r.message}"
             },
             onFetchException = { t ->
                 when(t){
