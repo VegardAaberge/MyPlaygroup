@@ -2,7 +2,7 @@ package com.myplaygroup.app.feature_profile.data.repository
 
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
-import com.myplaygroup.app.feature_profile.data.model.AppUser
+import com.myplaygroup.app.core.data.model.AppUser
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

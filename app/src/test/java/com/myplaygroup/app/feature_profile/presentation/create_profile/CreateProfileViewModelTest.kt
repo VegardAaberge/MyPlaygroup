@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import com.google.common.truth.Truth
 import com.myplaygroup.app.core.data.repository.FakeImageRepository
 import com.myplaygroup.app.core.data.settings.FakeUserSettingsManager
+import com.myplaygroup.app.core.domain.settings.UserRole
 import com.myplaygroup.app.core.utility.MainCoroutineRule
 import com.myplaygroup.app.feature_profile.data.repository.FakeProfileRepository
 import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileUseCases
@@ -61,7 +62,7 @@ class CreateProfileViewModelTest {
 
         val username = "vegard"
         val password = "1234"
-        userSettingsManager.updateUsernameAndRole(username, "user")
+        userSettingsManager.updateUsernameAndRole(username, UserRole.USER.name)
 
         viewModel.state = CreateProfileState(
             password = password,
@@ -69,36 +70,30 @@ class CreateProfileViewModelTest {
         )
 
         viewModel.onEvent(CreateProfileScreenEvent.SaveProfile)
+        delay(10)
 
-        withContext(Dispatchers.IO) {
-            delay(10)
+        val appUser = profileRepository.users.first { u -> u.username == username }
 
-            val appUser = profileRepository.users.first { u -> u.username == username }
-
-            Truth.assertThat(viewModel.state.passwordError).isNotEmpty()
-            Truth.assertThat(appUser.password).isNotEqualTo(password)
-        }
+        Truth.assertThat(viewModel.state.passwordError).isNotEmpty()
+        Truth.assertThat(appUser.password).isNotEqualTo(password)
     }
 
     @Test
     fun `Save profile with correct password, returns data`() = runBlocking{
 
-        userSettingsManager.updateUsernameAndRole(username, "user")
+        userSettingsManager.updateUsernameAndRole(username, UserRole.USER.name)
 
         viewModel.onEvent(CreateProfileScreenEvent.SaveProfile)
+        delay(10)
 
-        withContext(Dispatchers.IO) {
-            delay(10)
+        val appUser = profileRepository.users.first { u -> u.username == username }
+        val storedUri = imageRepository.profileBitmaps[username]
 
-            val appUser = profileRepository.users.first { u -> u.username == username }
-            val storedUri = imageRepository.profileBitmaps[username]
-
-            Truth.assertThat(appUser.profileName).isEqualTo(profileName)
-            Truth.assertThat(appUser.password).isEqualTo(password)
-            Truth.assertThat(appUser.phoneNumber).isEqualTo(phoneNumber)
-            Truth.assertThat(appUser.email).isEqualTo(email)
-            Truth.assertThat(storedUri).isNotNull()
-            Truth.assertThat(viewModel.state.passwordError).isNull()
-        }
+        Truth.assertThat(appUser.profileName).isEqualTo(profileName)
+        Truth.assertThat(appUser.password).isEqualTo(password)
+        Truth.assertThat(appUser.phoneNumber).isEqualTo(phoneNumber)
+        Truth.assertThat(appUser.email).isEqualTo(email)
+        Truth.assertThat(storedUri).isNotNull()
+        Truth.assertThat(viewModel.state.passwordError).isNull()
     }
 }

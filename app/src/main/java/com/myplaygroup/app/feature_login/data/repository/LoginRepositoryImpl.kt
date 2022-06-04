@@ -50,9 +50,9 @@ class LoginRepositoryImpl @Inject constructor(
                 )
                 if(loginResponse.profile_created){
                     userSettingsManager.updateProfileInfo(
-                        profileName = loginResponse.profile_name,
-                        email = loginResponse.email,
-                        phoneNumber = loginResponse.phone_number,
+                        profileName = loginResponse.profile_name!!,
+                        email = loginResponse.email!!,
+                        phoneNumber = loginResponse.phone_number!!,
                     )
                 }
                 loginResponse
@@ -98,7 +98,7 @@ class LoginRepositoryImpl @Inject constructor(
     override suspend fun checkVerificationCode(
         code: String,
         token: String
-    ): Flow<Resource<String>> {
+    ): Flow<Resource<Unit>> {
 
         return fetchNetworkResource(
             fetch = {

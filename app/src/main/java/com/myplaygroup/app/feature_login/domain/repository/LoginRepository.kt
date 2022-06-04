@@ -11,5 +11,5 @@ interface LoginRepository {
 
     suspend fun sendEmailRequestForm(email: String): Flow<Resource<SendResetPasswordResponse>>
 
-    suspend fun checkVerificationCode(code: String, token: String): Flow<Resource<String>>
+    suspend fun checkVerificationCode(code: String, token: String): Flow<Resource<Unit>>
 }

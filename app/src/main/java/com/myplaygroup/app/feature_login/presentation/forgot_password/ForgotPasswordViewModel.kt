@@ -82,11 +82,11 @@ class ForgotPasswordViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectCodeRequest(result: Resource<String>) {
+    private suspend fun collectCodeRequest(result: Resource<Unit>) {
         when(result){
             is Resource.Success -> {
                 setUIEvent(
-                    UiEvent.ShowSnackbar(result.data!!)
+                    UiEvent.ShowSnackbar("Successful")
                 )
 
                 state = state.copy(
