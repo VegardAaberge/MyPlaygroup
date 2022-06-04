@@ -112,11 +112,11 @@ fun CreateProfileScreenBody(
 }
 
 @Composable
-fun TextFields(
+fun ColumnScope.TextFields(
     viewModel: CreateProfileViewModel
 ) {
     val isBusy = viewModel.isBusy.value
-    val profileName = viewModel.state.profileName
+    val state = viewModel.state
     val phoneNumber = viewModel.state.phoneNumber
     val email = viewModel.state.email
     val password = viewModel.state.password
@@ -127,64 +127,69 @@ fun TextFields(
         .padding(horizontal = 30.dp)
 
     ProfileField(
-        value = profileName,
+        value = state.profileName,
         enabled = !isBusy,
         placeholder = stringResource(id = R.string.profile_name_placeholder),
         label = stringResource(id = R.string.profile_name_label),
         onTextChange = {
             viewModel.onEvent(CreateProfileScreenEvent.EnteredProfileName(it))
         },
-        modifier = widthModifier
+        errorMessage = state.profileNameError,
+        modifier = widthModifier,
     )
 
     ProfileField(
-        value = phoneNumber,
+        value = state.phoneNumber,
         enabled = !isBusy,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
         placeholder = stringResource(id = R.string.phone_number_placeholder),
         label = stringResource(id = R.string.phone_number_label),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
         onTextChange = {
             viewModel.onEvent(CreateProfileScreenEvent.EnteredPhoneNumber(it))
         },
-        modifier = widthModifier
+        modifier = widthModifier,
+        errorMessage = state.profileNameError
     )
 
     ProfileField(
-        value = email,
+        value = state.email,
         enabled = !isBusy,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         placeholder = stringResource(id = R.string.email_placeholder),
         label = stringResource(id = R.string.email_label),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         onTextChange = {
             viewModel.onEvent(CreateProfileScreenEvent.EnteredEmail(it))
         },
-        modifier = widthModifier
+        modifier = widthModifier,
+        errorMessage = state.profileNameError
     )
 
     ProfileField(
-        value = password,
+        value = state.password,
         enabled = !isBusy,
-        isPassword = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         placeholder = stringResource(id = R.string.password_placeholder),
         label = stringResource(id = R.string.password_label),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        isPassword = true,
         onTextChange = {
             viewModel.onEvent(CreateProfileScreenEvent.EnteredPassword(it))
         },
-        modifier = widthModifier
+        modifier = widthModifier,
+        errorMessage = state.profileNameError
     )
 
     ProfileField(
-        value = repeatedPassword,
+        value = state.repeatedPassword,
         enabled = !isBusy,
-        isPassword = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         placeholder = stringResource(id = R.string.confirm_password_placeholder),
         label = stringResource(id = R.string.confirm_password_label),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        isPassword = true,
         onTextChange = {
             viewModel.onEvent(CreateProfileScreenEvent.EnteredRepeatedPassword(it))
         },
-        modifier = widthModifier
+        modifier = widthModifier,
+        errorMessage = state.profileNameError
     )
 }
 

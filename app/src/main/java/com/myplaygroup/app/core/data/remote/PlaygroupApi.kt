@@ -1,5 +1,6 @@
 package com.myplaygroup.app.core.data.remote
 
+import com.myplaygroup.app.core.data.remote.dto.SimpleResponse
 import com.myplaygroup.app.feature_admin.data.remote.DailyClassesResponse
 import com.myplaygroup.app.feature_login.data.requests.*
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse

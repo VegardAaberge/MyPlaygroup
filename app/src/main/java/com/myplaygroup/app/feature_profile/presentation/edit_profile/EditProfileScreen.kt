@@ -70,50 +70,51 @@ fun EditProfileScreen(
 }
 
 @Composable
-fun TextFields(
+fun ColumnScope.TextFields(
     viewModel: EditProfileViewModel
 ) {
     val isBusy = viewModel.isBusy.value
-    val profileName = viewModel.state.profileName
-    val phoneNumber = viewModel.state.phoneNumber
-    val email = viewModel.state.email
+    val state = viewModel.state
 
     val widthModifier = Modifier
         .width(400.dp)
         .padding(horizontal = 30.dp)
 
     ProfileField(
-        value = profileName,
+        value = state.profileName,
         enabled = !isBusy,
         placeholder = stringResource(id = R.string.profile_name_placeholder),
         label = stringResource(id = R.string.profile_name_label),
         onTextChange = {
             viewModel.onEvent(EditProfileScreenEvent.EnteredProfileName(it))
         },
-        modifier = widthModifier
+        modifier = widthModifier,
+        errorMessage = state.profileNameError
     )
 
     ProfileField(
-        value = phoneNumber,
+        value = state.phoneNumber,
         enabled = !isBusy,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
         placeholder = stringResource(id = R.string.phone_number_placeholder),
         label = stringResource(id = R.string.phone_number_label),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
         onTextChange = {
             viewModel.onEvent(EditProfileScreenEvent.EnteredPhoneNumber(it))
         },
-        modifier = widthModifier
+        modifier = widthModifier,
+        errorMessage = state.phoneNumberError
     )
 
     ProfileField(
-        value = email,
+        value = state.email,
         enabled = !isBusy,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         placeholder = stringResource(id = R.string.email_placeholder),
         label = stringResource(id = R.string.email_label),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         onTextChange = {
             viewModel.onEvent(EditProfileScreenEvent.EnteredEmail(it))
         },
-        modifier = widthModifier
+        modifier = widthModifier,
+        errorMessage = state.emailError
     )
 }

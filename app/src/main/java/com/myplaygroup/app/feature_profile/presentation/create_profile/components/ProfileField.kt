@@ -1,10 +1,12 @@
 package com.myplaygroup.app.feature_profile.presentation.create_profile.components
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -12,15 +14,16 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ProfileField(
+fun ColumnScope.ProfileField(
     value: String,
     enabled: Boolean,
     placeholder: String,
     label: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    isPassword: Boolean = false,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    isPassword: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    errorMessage: String? = null,
 )
 {
     OutlinedTextField(
@@ -36,7 +39,16 @@ fun ProfileField(
             backgroundColor = Color.White
         ),
         modifier = modifier,
+        isError = errorMessage != null
     )
+
+    if(errorMessage != null){
+        Text(
+            text = errorMessage,
+            color = MaterialTheme.colors.error,
+            modifier = Modifier.align(Alignment.End)
+        )
+    }
 
     Spacer(modifier = Modifier.height(10.dp))
 }

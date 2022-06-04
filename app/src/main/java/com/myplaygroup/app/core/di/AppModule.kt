@@ -25,6 +25,7 @@ import com.myplaygroup.app.core.util.Constants.MASTER_KEY_URI
 import com.myplaygroup.app.core.util.Constants.PREFERENCE_FILE
 import com.myplaygroup.app.feature_admin.data.local.AdminDatabase
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
+import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,6 +56,12 @@ class AppModule {
             MainDatabase::class.java,
             MAIN_DATABASE_NAME
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNoteUseCases() : ProfileUseCases {
+        return ProfileUseCases()
     }
 
     @Singleton
