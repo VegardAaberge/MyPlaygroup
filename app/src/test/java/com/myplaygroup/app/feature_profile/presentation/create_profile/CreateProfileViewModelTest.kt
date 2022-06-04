@@ -70,10 +70,14 @@ class CreateProfileViewModelTest {
 
         viewModel.onEvent(CreateProfileScreenEvent.SaveProfile)
 
-        val appUser = profileRepository.users.first { u -> u.username == username }
+        withContext(Dispatchers.IO) {
+            delay(10)
 
-        Truth.assertThat(viewModel.state.passwordError).isNotEmpty()
-        Truth.assertThat(appUser.password).isNotEqualTo(password)
+            val appUser = profileRepository.users.first { u -> u.username == username }
+
+            Truth.assertThat(viewModel.state.passwordError).isNotEmpty()
+            Truth.assertThat(appUser.password).isNotEqualTo(password)
+        }
     }
 
     @Test
