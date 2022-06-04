@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.myplaygroup.app.core.domain.settings.UserRole
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.destinations.AdminScreenDestination
 import com.myplaygroup.app.destinations.CreateProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
@@ -45,10 +47,14 @@ class LoginViewModel @Inject constructor(
             is Resource.Success -> {
 
                 if(result.data!!.profile_created){
+                    val destination = if(result.data.user_role == UserRole.ADMIN.name){
+                        AdminScreenDestination
+                    }else MainScreenDestination
+
                     setUIEvent(
                         UiEvent.PopAndNavigateTo(
                             popRoute = LoginScreenDestination.route,
-                            destination = MainScreenDestination
+                            destination = destination
                         )
                     )
                 }else{
