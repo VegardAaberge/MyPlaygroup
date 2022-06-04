@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_profile.presentation.create_profile
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -88,7 +89,7 @@ class CreateProfileViewModel @Inject constructor(
             val username = userSettingsManager.getFlow { x -> x.map { u -> u.username } }.first()
 
             state.profileBitmap?.let {
-                val response = imageRepository.storeProfileImage(it)
+                val response = imageRepository.storeProfileImage(username, it)
                 when(response){
                     is Resource.Success -> {
                         setUIEvent(
@@ -116,7 +117,7 @@ class CreateProfileViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectCreateProfile(result: Resource<Unit>){
+    private fun collectCreateProfile(result: Resource<Unit>){
         when (result) {
             is Resource.Success -> {
                 setUIEvent(

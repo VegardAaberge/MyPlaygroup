@@ -23,13 +23,13 @@ import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
     private val playgroupApi: PlaygroupApi,
-    private val userSettingsManager: UserSettingsManager,
     @ApplicationContext private val context: Context,
 ) : ImageRepository {
 
     override suspend fun storeProfileImage(
+        username: String,
         bitmap: Bitmap
-    ) : Resource<String> {
+    ) : Resource<Unit> {
 
         try {
             // Get the bytes from the bitmap
@@ -37,9 +37,6 @@ class ImageRepositoryImpl @Inject constructor(
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             val bytes = outputStream.toByteArray()
 
-            val username = userSettingsManager.getFlow {
-                it.map { u -> u.username }
-            }.first()
             val profileFile = FileUtils.saveProfileFile(bytes, username)
 
             val profileUri = Uri.fromFile(profileFile)
@@ -51,7 +48,7 @@ class ImageRepositoryImpl @Inject constructor(
             val response = playgroupApi.uploadProfileImage(data_multi_part)
 
             return if(response.isSuccessful && response.code() == 200 && response.body() != null){
-                Resource.Success(response.body()!!.message)
+                Resource.Success()
             }else{
                 Resource.Error("Failed to upload profile image")
             }
