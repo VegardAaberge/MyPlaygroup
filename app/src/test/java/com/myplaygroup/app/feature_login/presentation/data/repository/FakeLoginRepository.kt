@@ -16,12 +16,13 @@ class FakeLoginRepository : LoginRepository {
         const val HAS_PROFILE = "HAS_PROFILE"
         const val NO_PROFILE = "NO_PROFILE"
         const val PASSWORD = "b11111111B"
+        const val INCORRECT_USERNAME_PASSWORD = "Incorrect username or password"
     }
 
     private var users = mutableListOf<AppUser>(
         AppUser(
             username = ADMIN,
-            password = "b11111111B",
+            password = PASSWORD,
             appUserRole = UserRole.ADMIN,
             profileCreated = true,
             profileName = "Playgroup",
@@ -30,7 +31,7 @@ class FakeLoginRepository : LoginRepository {
         ),
         AppUser(
             username = HAS_PROFILE,
-            password = "b11111111B",
+            password = PASSWORD,
             appUserRole = UserRole.USER,
             profileCreated = true,
             profileName = "Vegard",
@@ -39,7 +40,7 @@ class FakeLoginRepository : LoginRepository {
         ),
         AppUser(
             username = NO_PROFILE,
-            password = "b11111111B",
+            password = PASSWORD,
             appUserRole = UserRole.USER,
             profileCreated = false
         )
@@ -52,12 +53,12 @@ class FakeLoginRepository : LoginRepository {
         return flow {
             val currentUser = users.firstOrNull { x -> x.username == username }
             if(currentUser == null){
-                emit(Resource.Error("Incorrect password"));
+                emit(Resource.Error(INCORRECT_USERNAME_PASSWORD));
                 return@flow
             }
 
             if (currentUser.password != password) {
-                emit(Resource.Error("Incorrect password"));
+                emit(Resource.Error(INCORRECT_USERNAME_PASSWORD));
             } else {
                 emit(
                     Resource.Success(

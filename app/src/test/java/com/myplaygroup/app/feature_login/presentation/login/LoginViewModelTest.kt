@@ -3,6 +3,10 @@ package com.myplaygroup.app.feature_login.presentation.login
 import com.google.common.truth.Truth
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.utility.MainCoroutineRule
+import com.myplaygroup.app.destinations.AdminScreenDestination
+import com.myplaygroup.app.destinations.CreateProfileScreenDestination
+import com.myplaygroup.app.destinations.LoginScreenDestination
+import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.feature_login.presentation.data.repository.FakeLoginRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,7 +43,10 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginScreenEvent.LoginTapped)
 
         val event = viewModel.eventChannelFlow.first()
-        Truth.assertThat(event).isInstanceOf(BaseViewModel.UiEvent.ShowSnackbar::class.java)
+
+        Truth.assertThat(event).isEqualTo(
+            BaseViewModel.UiEvent.ShowSnackbar(FakeLoginRepository.INCORRECT_USERNAME_PASSWORD)
+        )
     }
 
     @Test
@@ -53,7 +60,10 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginScreenEvent.LoginTapped)
 
         val event = viewModel.eventChannelFlow.first()
-        Truth.assertThat(event).isInstanceOf(BaseViewModel.UiEvent.ShowSnackbar::class.java)
+
+        Truth.assertThat(event).isEqualTo(
+            BaseViewModel.UiEvent.ShowSnackbar(FakeLoginRepository.INCORRECT_USERNAME_PASSWORD)
+        )
     }
 
     @Test
@@ -67,7 +77,13 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginScreenEvent.LoginTapped)
 
         val event = viewModel.eventChannelFlow.first()
-        Truth.assertThat(event).isInstanceOf(BaseViewModel.UiEvent.NavigateTo::class.java)
+
+        Truth.assertThat(event).isEqualTo(
+            BaseViewModel.UiEvent.PopAndNavigateTo(
+                popRoute = LoginScreenDestination.route,
+                destination = AdminScreenDestination
+            )
+        )
     }
 
     @Test
@@ -81,7 +97,13 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginScreenEvent.LoginTapped)
 
         val event = viewModel.eventChannelFlow.first()
-        Truth.assertThat(event).isInstanceOf(BaseViewModel.UiEvent.NavigateTo::class.java)
+
+        Truth.assertThat(event).isEqualTo(
+            BaseViewModel.UiEvent.PopAndNavigateTo(
+                popRoute = LoginScreenDestination.route,
+                destination = MainScreenDestination
+            )
+        )
     }
 
     @Test
@@ -95,6 +117,11 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginScreenEvent.LoginTapped)
 
         val event = viewModel.eventChannelFlow.first()
-        Truth.assertThat(event).isInstanceOf(BaseViewModel.UiEvent.NavigateTo::class.java)
+
+        Truth.assertThat(event).isEqualTo(
+            BaseViewModel.UiEvent.NavigateTo(
+                destination = CreateProfileScreenDestination
+            )
+        )
     }
 }
