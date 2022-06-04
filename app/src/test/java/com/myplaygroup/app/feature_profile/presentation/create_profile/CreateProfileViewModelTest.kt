@@ -84,7 +84,7 @@ class CreateProfileViewModelTest {
         viewModel.onEvent(CreateProfileScreenEvent.SaveProfile)
 
         withContext(Dispatchers.IO) {
-            delay(100)
+            delay(10)
 
             val appUser = profileRepository.users.first { u -> u.username == username }
             val storedUri = imageRepository.profileBitmaps[username]
