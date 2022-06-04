@@ -23,15 +23,12 @@ class ProfileRepositoryImpl @Inject constructor(
 ) : ProfileRepository {
 
     override suspend fun createProfile(
+        username: String,
         profileName: String,
         phoneNumber: String,
         email: String,
         newPassword: String,
     ): Flow<Resource<Unit>> {
-
-        val username = userSettingsManager.getFlow {
-            it.map { u -> u.username }
-        }.first()
 
         return fetchNetworkResource(
             fetch = {
@@ -68,14 +65,11 @@ class ProfileRepositoryImpl @Inject constructor(
     }
 
     override suspend fun editProfile(
+        username: String,
         profileName: String,
         phoneNumber: String,
         email: String
     ): Flow<Resource<Unit>> {
-
-        val username = userSettingsManager.getFlow {
-            it.map { u -> u.username }
-        }.first()
 
         return fetchNetworkResource(
             fetch = {

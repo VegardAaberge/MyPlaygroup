@@ -8,6 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +26,16 @@ fun ProfileImage(
     profileBitmap: Bitmap?,
     takePicture: () -> Unit,
     imageSize: Dp = 200.dp,
+    profileBitmapError: String?,
 ) {
+    val drawColor = if(profileBitmapError == null){
+        Color.LightGray
+    }else MaterialTheme.colors.error
+
     Box(
         modifier = Modifier
             .size(imageSize)
-            .background(Color.LightGray, shape = CircleShape)
+            .background(drawColor, shape = CircleShape)
             .padding(2.dp)
             .background(Color.White, shape = CircleShape)
             .clickable(
@@ -56,7 +62,7 @@ fun ProfileImage(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_person_100),
                     contentDescription = "Missing Image",
-                    tint = Color.LightGray,
+                    tint = drawColor,
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -88,7 +94,8 @@ fun ProfileImage(
 @Composable
 fun DefaultPreview() {
     ProfileImage(
+        profileBitmap = null,
         takePicture = {},
-        profileBitmap = null
+        profileBitmapError = "Set the profile image"
     )
 }

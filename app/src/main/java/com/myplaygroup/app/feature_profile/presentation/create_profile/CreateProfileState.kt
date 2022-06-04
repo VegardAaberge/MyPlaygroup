@@ -14,13 +14,6 @@ data class CreateProfileState(
     val email: String = "",
     val emailError: String? = null,
     val takePictureMode: Boolean = false,
-    val profileBitmap: Bitmap? = null
-){
-    fun isFilledIn() : Boolean {
-        return profileName.isNotEmpty()
-                && (phoneNumber.isNotEmpty() || email.isNotEmpty())
-                && password.isNotEmpty()
-                && repeatedPassword.isNotEmpty()
-                && profileBitmap != null
-    }
-}
+    val profileBitmap: Bitmap? = null,
+    val profileBitmapError: String? = null
+)

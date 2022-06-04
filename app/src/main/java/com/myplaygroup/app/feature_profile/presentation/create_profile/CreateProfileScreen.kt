@@ -60,8 +60,7 @@ fun CreateProfileScreenBody(
 
     val focusManager = LocalFocusManager.current
     val isBusy = viewModel.isBusy.value
-    val profileBitmap = viewModel.state.profileBitmap
-    val isFilledIn = viewModel.state.isFilledIn()
+    val state = viewModel.state
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -76,7 +75,7 @@ fun CreateProfileScreenBody(
                     onClick = {
                         viewModel.onEvent(CreateProfileScreenEvent.SaveProfile)
                     },
-                    enabled = !isBusy && isFilledIn,
+                    enabled = !isBusy,
                 ) {
                     Text(text = "Save")
                 }
@@ -91,13 +90,14 @@ fun CreateProfileScreenBody(
             }
         ) {
             ProfileImage(
-                profileBitmap = profileBitmap,
+                profileBitmap = state.profileBitmap,
                 takePicture = {
                     if(!isBusy){
                         focusManager.clearFocus()
                         viewModel.onEvent(CreateProfileScreenEvent.TakePicture)
                     }
-                }
+                },
+                profileBitmapError = state.profileBitmapError
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -117,10 +117,6 @@ fun ColumnScope.TextFields(
 ) {
     val isBusy = viewModel.isBusy.value
     val state = viewModel.state
-    val phoneNumber = viewModel.state.phoneNumber
-    val email = viewModel.state.email
-    val password = viewModel.state.password
-    val repeatedPassword = viewModel.state.repeatedPassword
 
     val widthModifier = Modifier
         .width(400.dp)
@@ -148,7 +144,7 @@ fun ColumnScope.TextFields(
             viewModel.onEvent(CreateProfileScreenEvent.EnteredPhoneNumber(it))
         },
         modifier = widthModifier,
-        errorMessage = state.profileNameError
+        errorMessage = state.phoneNumberError
     )
 
     ProfileField(
@@ -161,7 +157,7 @@ fun ColumnScope.TextFields(
             viewModel.onEvent(CreateProfileScreenEvent.EnteredEmail(it))
         },
         modifier = widthModifier,
-        errorMessage = state.profileNameError
+        errorMessage = state.emailError
     )
 
     ProfileField(
@@ -175,7 +171,7 @@ fun ColumnScope.TextFields(
             viewModel.onEvent(CreateProfileScreenEvent.EnteredPassword(it))
         },
         modifier = widthModifier,
-        errorMessage = state.profileNameError
+        errorMessage = state.passwordError
     )
 
     ProfileField(
@@ -189,7 +185,7 @@ fun ColumnScope.TextFields(
             viewModel.onEvent(CreateProfileScreenEvent.EnteredRepeatedPassword(it))
         },
         modifier = widthModifier,
-        errorMessage = state.profileNameError
+        errorMessage = state.repeatedPasswordError
     )
 }
 

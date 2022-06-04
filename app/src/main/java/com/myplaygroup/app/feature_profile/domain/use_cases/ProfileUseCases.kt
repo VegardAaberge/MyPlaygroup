@@ -7,5 +7,6 @@ data class ProfileUseCases (
     val phoneNumberValidator: PhoneNumberValidator = PhoneNumberValidator(),
     val passwordValidator: PasswordValidator = PasswordValidator(),
     val repeatedPasswordValidator: RepeatedPasswordValidator = RepeatedPasswordValidator(),
-    val email: EmailValidator = EmailValidator(),
+    val emailValidator: EmailValidator = EmailValidator(),
+    val profileBitmapValidator: ProfileBitmapValidator = ProfileBitmapValidator(),
 )

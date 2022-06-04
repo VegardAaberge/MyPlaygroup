@@ -8,15 +8,19 @@ import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
+import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
-    userSettingsManager: UserSettingsManager
+    private val userSettingsManager: UserSettingsManager,
+    private val profileUseCases: ProfileUseCases
 ) : BaseViewModel() {
 
     var state by mutableStateOf(EditProfileState())
@@ -45,23 +49,37 @@ class EditProfileViewModel @Inject constructor(
                 state = state.copy(email = event.email)
             }
             is EditProfileScreenEvent.SaveProfile -> {
+                submitData()
+            }
+        }
+    }
 
-                viewModelScope.launch {
+    private fun submitData() = viewModelScope.launch{
 
-                    if(!state.isFilledIn()){
-                        setUIEvent(
-                            UiEvent.ShowSnackbar("Please fill out all the fields")
-                        )
-                    }
+        val profileNameResult = profileUseCases.profileNameValidator(state.profileName)
+        val emailResult = profileUseCases.emailValidator(state.email)
+        val phoneNumberResult = profileUseCases.phoneNumberValidator(state.phoneNumber)
 
-                    launch(Dispatchers.IO) {
-                        profileRepository.editProfile(
-                            profileName = state.profileName,
-                            phoneNumber = state.phoneNumber,
-                            email = state.email,
-                        ).collect { collectCreateProfile(it) }
-                    }
-                }
+        val hasError = listOf(
+            profileNameResult, emailResult, phoneNumberResult
+        ).any { !it.successful }
+
+        state = state.copy(
+            profileNameError = profileNameResult.errorMessage,
+            emailError = emailResult.errorMessage,
+            phoneNumberError = phoneNumberResult.errorMessage,
+        )
+
+        if(!hasError){
+            val username = userSettingsManager.getFlow { x -> x.map { u -> u.username } }.first()
+
+            launch(Dispatchers.IO) {
+                profileRepository.editProfile(
+                    username = username,
+                    profileName = state.profileName,
+                    phoneNumber = state.phoneNumber,
+                    email = state.email,
+                ).collect { collectCreateProfile(it) }
             }
         }
     }

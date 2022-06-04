@@ -46,7 +46,7 @@ fun ColumnScope.ProfileField(
         Text(
             text = errorMessage,
             color = MaterialTheme.colors.error,
-            modifier = Modifier.align(Alignment.End)
+            modifier = modifier.align(Alignment.End)
         )
     }
 

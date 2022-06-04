@@ -9,6 +9,7 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
+import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class CreateProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val imageRepository : ImageRepository,
-    private val userSettingsManager: UserSettingsManager
+    private val userSettingsManager: UserSettingsManager,
+    private val profileUseCases: ProfileUseCases
 ) : BaseViewModel() {
 
     var state by mutableStateOf(CreateProfileState())
@@ -48,51 +50,68 @@ class CreateProfileViewModel @Inject constructor(
             is CreateProfileScreenEvent.TakePictureDone -> {
                 state = state.copy(
                     takePictureMode = false,
-                    profileBitmap = event.bitmap
+                    profileBitmap = event.bitmap,
+                    profileBitmapError = null
                 )
             }
             is CreateProfileScreenEvent.SaveProfile -> {
+                submitData()
+            }
+        }
+    }
 
-                viewModelScope.launch {
+    private fun submitData() = viewModelScope.launch{
 
-                    val username = userSettingsManager.getFlow { x -> x.map { u -> u.username } }.first()
-                    if(!state.isFilledIn()){
+        val profileBitmapResult = profileUseCases.profileBitmapValidator(state.profileBitmap)
+        val profileNameResult = profileUseCases.profileNameValidator(state.profileName)
+        val emailResult = profileUseCases.emailValidator(state.email)
+        val phoneNumberResult = profileUseCases.phoneNumberValidator(state.phoneNumber)
+        val passwordResult = profileUseCases.passwordValidator(state.password)
+        val repeatedPasswordResult = profileUseCases.repeatedPasswordValidator(
+            state.password, state.repeatedPassword
+        )
+
+        val hasError = listOf(
+            profileBitmapResult, profileNameResult, emailResult, phoneNumberResult, passwordResult, repeatedPasswordResult
+        ).any { !it.successful }
+
+        state = state.copy(
+            profileBitmapError = profileBitmapResult.errorMessage,
+            profileNameError = profileNameResult.errorMessage,
+            emailError = emailResult.errorMessage,
+            phoneNumberError = phoneNumberResult.errorMessage,
+            passwordError = passwordResult.errorMessage,
+            repeatedPasswordError = repeatedPasswordResult.errorMessage,
+        )
+
+        if(!hasError){
+            val username = userSettingsManager.getFlow { x -> x.map { u -> u.username } }.first()
+
+            state.profileBitmap?.let {
+                val response = imageRepository.storeProfileImage(it)
+                when(response){
+                    is Resource.Success -> {
                         setUIEvent(
-                            UiEvent.ShowSnackbar("Please fill out all the fields")
+                            UiEvent.ShowSnackbar("uploaded profile image")
                         )
                     }
-
-                    if(state.password != state.repeatedPassword){
+                    is Resource.Error -> {
                         setUIEvent(
-                            UiEvent.ShowSnackbar("The passwords do not match")
+                            UiEvent.ShowSnackbar(response.message!!)
                         )
                     }
-
-                    state.profileBitmap?.let {
-                        val response = imageRepository.storeProfileImage(it)
-                        when(response){
-                            is Resource.Success -> {
-                                setUIEvent(
-                                    UiEvent.ShowSnackbar("uploaded profile image")
-                                )
-                            }
-                            is Resource.Error -> {
-                                setUIEvent(
-                                    UiEvent.ShowSnackbar(response.message!!)
-                                )
-                            }
-                        }
-                    }
-
-                    launch(Dispatchers.IO) {
-                        profileRepository.createProfile(
-                            profileName = state.profileName,
-                            phoneNumber = state.phoneNumber,
-                            email = state.email,
-                            newPassword = state.password
-                        ).collect { collectCreateProfile(it) }
-                    }
+                    else -> { }
                 }
+            }
+
+            launch(Dispatchers.IO) {
+                profileRepository.createProfile(
+                    username = username,
+                    profileName = state.profileName,
+                    phoneNumber = state.phoneNumber,
+                    email = state.email,
+                    newPassword = state.password
+                ).collect { collectCreateProfile(it) }
             }
         }
     }
