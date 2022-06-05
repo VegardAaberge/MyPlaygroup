@@ -1,9 +1,15 @@
 package com.myplaygroup.app.feature_main.presentation.admin
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,16 +40,43 @@ fun AdminScreen(
     val scaffoldState = collectEventFlow(adminViewModel, navigator)
     val navController = rememberNavController()
 
+    val state = adminViewModel.state
     val title = adminViewModel.state.title
+    val actionButton = adminViewModel.state.actionButton
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            AppBar(
-                title = title,
-                onNavigationIconClick = {
-                    scope.launch {
-                        scaffoldState.drawerState.open()
+            TopAppBar(
+                title = {
+                    Text(text = title)
+                },
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onPrimary,
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Toggle drawer"
+                        )
+                    }
+                },
+                actions = {
+                    actionButton?.let {
+                        IconButton(
+                            onClick = actionButton.action,
+                        ) {
+                            Icon(
+                                imageVector = actionButton.icon,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             )
@@ -82,30 +115,31 @@ fun AdminScreen(
             )
         }
     ) {
-        DrawerNavigation(navController, title)
+        DrawerNavigation(navController, adminViewModel)
     }
 }
 
 @Composable
 fun DrawerNavigation(
     navController: NavHostController,
-    currentRoute: String
+    adminViewModel: AdminViewModel
 ) {
+
     NavHost(navController, startDestination = NavDrawer.OVERVIEW) {
         composable(NavDrawer.OVERVIEW) {
-            OverviewScreen()
+            OverviewScreen(adminViewModel)
         }
         composable(NavDrawer.CLASSES) {
-            ClassesScreen()
+            ClassesScreen(adminViewModel)
         }
         composable(NavDrawer.PLANS) {
-            PlansScreen()
+            PlansScreen(adminViewModel)
         }
         composable(NavDrawer.USERS) {
-            UsersScreen()
+            UsersScreen(adminViewModel)
         }
         composable(NavDrawer.CHAT) {
-            ChatScreen()
+            ChatScreen(adminViewModel)
         }
     }
 }

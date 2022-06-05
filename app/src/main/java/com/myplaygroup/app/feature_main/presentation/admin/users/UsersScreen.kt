@@ -7,11 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 
 @Composable
 fun UsersScreen(
+    adminViewModel: AdminViewModel,
     usersViewModel: UsersViewModel = hiltViewModel()
 ) {
+    adminViewModel.state = adminViewModel.state.copy(
+        actionButton = null
+    )
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
