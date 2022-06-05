@@ -39,6 +39,7 @@ class AdminViewModelTest {
         viewModel = AdminViewModel(
             userSettingsManager,
             imageRepository,
+            basicAuthInterceptor
         )
     }
 

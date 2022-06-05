@@ -52,7 +52,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun logout() = viewModelScope.launch {
+    private fun logout() = viewModelScope.launch {
         basicAuthInterceptor.accessToken = null
         userSettingsManager.clearData()
         repository.clearAllTables()
