@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 import java.util.*
 
+@Serializable
 @Entity
 data class DailyClassEntity(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    val serverId: Long = -1,
+    @PrimaryKey val id: Long,
     val cancelled: Boolean,
     val classType: String,
     val date: String,

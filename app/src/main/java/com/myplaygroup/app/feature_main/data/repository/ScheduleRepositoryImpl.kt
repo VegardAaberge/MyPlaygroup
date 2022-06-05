@@ -48,12 +48,10 @@ class ScheduleRepositoryImpl @Inject constructor(
             },
             saveFetchResult = { schedule ->
                 dao.clearMonthlyPlans()
-                val monthlyPlans = schedule.monthlyPlans.map { it.toMonthlyPlanEntity() }
-                dao.insertMonthlyPlans(monthlyPlans)
+                dao.insertMonthlyPlans(schedule.monthlyPlans)
 
                 dao.clearDailyClasses()
-                val dailyClasses = schedule.dailyClasses.map { it.toDailyClassEntity() }
-                dao.insertDailyClasses(dailyClasses)
+                dao.insertDailyClasses(schedule.dailyClasses)
 
                 val dailyClasses2 = dao.getDailyClasses().map { x -> x.toDailyClass() }
                 val monthlyPlans2 = dao.getMonthlyPlans().map { x -> x.toMonthlyPlan() }

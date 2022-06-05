@@ -36,17 +36,15 @@ class ChatRepositoryImpl @Inject constructor(
     ): Flow<Resource<List<Message>>> {
         return networkBoundResource(
             query = {
-                dao.getMessages().map { it.toMessage() }.sortedByDescending { it.created }
+                dao.getMessages().map { it.toMessage() }
             },
             fetch = {
                 api.getMessages()
             },
             saveFetchResult = { messages ->
-                var comments = messages.map { it.toMessageEntity() }
                 dao.clearSyncedComments()
-                dao.insertMessages(comments)
-                comments = dao.getMessages()
-                comments.map { it.toMessage() }.sortedByDescending { it.created }
+                dao.insertMessages(messages)
+                dao.getMessages().map { it.toMessage() }
             },
             shouldFetch = {
                 fetchFromRemote && checkForInternetConnection(app)

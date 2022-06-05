@@ -7,8 +7,7 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.core.data.mapper.toDailyClass
-import com.myplaygroup.app.core.data.mapper.toDailyClassEntity
-import com.myplaygroup.app.core.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import kotlinx.coroutines.flow.Flow
@@ -34,12 +33,10 @@ class DailyClassesRepositoryImpl @Inject constructor(
             fetch = {
                 api.getAllClasses()
             },
-            saveFetchResult = { dailyClassResponse ->
-                val dailyClasses = dailyClassResponse.map { it.toDailyClassEntity() }
+            saveFetchResult = { dailyClasses ->
                 dao.clearDailyClasses()
                 dao.insertDailyClasses(dailyClasses)
-                val classEntities = dao.getDailyClasses()
-                classEntities.map { it.toDailyClass() }
+                dao.getDailyClasses().map { it.toDailyClass() }
             },
             shouldFetch = {
                 fetchFromRemote && checkForInternetConnection(app)

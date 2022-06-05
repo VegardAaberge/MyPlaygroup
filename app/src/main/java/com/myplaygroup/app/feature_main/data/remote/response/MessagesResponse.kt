@@ -1,6 +1,6 @@
 package com.myplaygroup.app.feature_main.data.remote.response
 
-import com.myplaygroup.app.feature_main.data.remote.response.items.MessageItem
+import com.myplaygroup.app.feature_main.data.model.MessageEntity
 
 
-class MessagesResponse : ArrayList<MessageItem>()
+class MessagesResponse : ArrayList<MessageEntity>()

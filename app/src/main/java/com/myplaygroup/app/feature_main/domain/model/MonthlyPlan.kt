@@ -1,9 +1,12 @@
 package com.myplaygroup.app.feature_main.domain.model
 
-import com.myplaygroup.app.core.domain.model.DailyClass
-import com.myplaygroup.app.core.domain.model.MonthlyPlan
+import java.util.*
 
-data class UserSchedule (
-    val dailyClasses: List<DailyClass>,
-    val monthlyPlans: List<MonthlyPlan>,
+data class MonthlyPlan(
+    val id: Long = -1,
+    val clientId: String = UUID.randomUUID().toString(),
+    val kidName: String,
+    val paid: Boolean,
+    val planName: String,
+    val planPrice: Int
 )

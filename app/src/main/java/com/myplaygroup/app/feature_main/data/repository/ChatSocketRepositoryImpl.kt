@@ -14,7 +14,6 @@ import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.data.mapper.ToSendMessageRequest
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
-import com.myplaygroup.app.feature_main.data.remote.response.items.MessageItem
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.ChatSocketRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -89,10 +88,9 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 ?.map {
                     val json = (it as? Frame.Text)?.readText() ?: ""
                     Log.i(Constants.DEBUG_KEY, "ObserveMessages: " + json)
-                    val messageResponse = Json.decodeFromString<MessageItem>(json)
-                    val messageEntity = messageResponse.toMessageEntity()
+                    val messageEntity = Json.decodeFromString<MessageEntity>(json)
                     dao.insertMessage(messageEntity)
-                    sentMessages.removeAll { sm -> sm == messageEntity.id  }
+                    sentMessages.removeAll { sm -> sm == messageEntity.clientId  }
                     messageEntity.toMessage()
                 }
 
@@ -139,7 +137,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
 
             try {
                 dao.insertMessage(messageEntity)
-                sentMessages.add(messageEntity.id)
+                sentMessages.add(messageEntity.clientId)
                 emit(Resource.Success(messageEntity.toMessage(true)))
 
                 if(!checkForInternetConnection(context)){
@@ -157,7 +155,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 socket?.send(Frame.Text(sendMessageRequest))
 
                 withTimeout(30000){
-                    while (sentMessages.contains(messageEntity.id)){
+                    while (sentMessages.contains(messageEntity.clientId)){
                         delay(100)
                     }
                 }
@@ -167,7 +165,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 val errorMessage = e.localizedMessage ?: "Unknown error"
                 emit(Resource.Error(errorMessage, messageEntity.toMessage()))
             } finally {
-                sentMessages.removeAll { sm -> sm == messageEntity.id  }
+                sentMessages.removeAll { sm -> sm == messageEntity.clientId  }
                 emit(Resource.Loading(false))
             }
         }

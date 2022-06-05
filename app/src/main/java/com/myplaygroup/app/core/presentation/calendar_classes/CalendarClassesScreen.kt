@@ -14,7 +14,7 @@ import com.myplaygroup.app.core.presentation.calendar_classes.components.CustomD
 import com.myplaygroup.app.core.presentation.calendar_classes.components.MonthHeader
 import com.myplaygroup.app.core.presentation.calendar_classes.components.WeekHeader
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
-import com.myplaygroup.app.core.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import io.github.boguszpawlowski.composecalendar.CalendarState
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
@@ -76,7 +76,6 @@ fun CalendarClassesScreenPreview() {
         CalendarClassesScreen(
             classes = listOf(
                 DailyClass(
-                    id = "2",
                     cancelled = false,
                     classType = "Morning Group",
                     date = selectedDay,

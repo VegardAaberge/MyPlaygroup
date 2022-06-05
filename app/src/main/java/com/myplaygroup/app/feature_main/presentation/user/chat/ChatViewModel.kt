@@ -116,7 +116,7 @@ class ChatViewModel @Inject constructor(
     private fun observeMessages(result: Resource<Flow<Message>>) {
         result.data!!.onEach { message ->
             val newList = state.messages.toMutableList().apply {
-                removeIf { u -> u.id == message.id }
+                removeIf { u -> u.clientId == message.clientId }
                 add(0, message)
             }
             state = state.copy(
@@ -130,7 +130,7 @@ class ChatViewModel @Inject constructor(
             is Resource.Success -> {
                 val message = result.data!!
                 val newList = state.messages.toMutableList().apply {
-                    removeIf { u -> u.id == message.id }
+                    removeIf { u -> u.clientId == message.clientId }
                     add(0, message)
                 }
                 state = state.copy(
@@ -141,7 +141,7 @@ class ChatViewModel @Inject constructor(
             is Resource.Error -> {
                 val newMessages = result.data?.let {
                     state.messages.toMutableList().apply {
-                        val message = find { m -> m.id == it.id }
+                        val message = find { m -> m.clientId == it.clientId }
                         message?.let { it.isSending = false }
                     }
                 }

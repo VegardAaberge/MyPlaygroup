@@ -17,7 +17,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.myplaygroup.app.R
-import com.myplaygroup.app.core.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 
 @Composable
 fun CalendarCard(dailyClass: DailyClass) {

@@ -1,6 +1,6 @@
 package com.myplaygroup.app.feature_main.presentation.user.home
 
-import com.myplaygroup.app.core.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import java.time.LocalDate
 
 data class HomeState (

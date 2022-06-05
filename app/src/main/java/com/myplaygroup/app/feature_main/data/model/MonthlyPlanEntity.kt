@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 import java.util.*
 
+@Serializable
 @Entity
 data class MonthlyPlanEntity(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    val serverId: Long = -1,
+    @PrimaryKey val id: Long,
     val kidName: String,
     val paid: Boolean,
     val planName: String,
