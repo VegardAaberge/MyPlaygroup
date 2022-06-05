@@ -10,11 +10,11 @@ import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
-import com.myplaygroup.app.feature_main.data.local.MessageEntity
+import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.data.mapper.ToSendMessageRequest
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
-import com.myplaygroup.app.feature_main.data.remote.response.MessageResponse
+import com.myplaygroup.app.feature_main.data.remote.response.items.MessageItem
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.ChatSocketRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -89,7 +89,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 ?.map {
                     val json = (it as? Frame.Text)?.readText() ?: ""
                     Log.i(Constants.DEBUG_KEY, "ObserveMessages: " + json)
-                    val messageResponse = Json.decodeFromString<MessageResponse>(json)
+                    val messageResponse = Json.decodeFromString<MessageItem>(json)
                     val messageEntity = messageResponse.toMessageEntity()
                     dao.insertMessage(messageEntity)
                     sentMessages.removeAll { sm -> sm == messageEntity.id  }

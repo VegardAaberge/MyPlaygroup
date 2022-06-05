@@ -1,6 +1,6 @@
 package com.myplaygroup.app.feature_main.data.mapper
 
-import com.myplaygroup.app.feature_main.data.local.MessageEntity
+import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.domain.model.Message
 import java.time.LocalDateTime
 import java.time.ZoneOffset

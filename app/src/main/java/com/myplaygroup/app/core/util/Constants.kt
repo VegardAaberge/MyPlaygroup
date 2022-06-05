@@ -3,7 +3,6 @@ package com.myplaygroup.app.core.util
 object Constants {
 
     const val MAIN_DATABASE_NAME = "main_db"
-    const val ADMIN_DATABASE_NAME = "admin_db"
 
     const val DEBUG_KEY = "MyPlaygroupApp"
 

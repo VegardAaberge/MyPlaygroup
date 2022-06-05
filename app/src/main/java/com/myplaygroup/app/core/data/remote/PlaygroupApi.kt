@@ -1,12 +1,12 @@
 package com.myplaygroup.app.core.data.remote
 
-import com.myplaygroup.app.core.data.remote.responses.SimpleResponse
-import com.myplaygroup.app.feature_admin.data.remote.DailyClassesResponse
+import com.myplaygroup.app.feature_main.data.remote.response.SimpleResponse
+import com.myplaygroup.app.feature_main.data.remote.response.DailyClassesResponse
 import com.myplaygroup.app.feature_login.data.requests.*
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
 import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
-import com.myplaygroup.app.feature_main.data.local.MessageEntity
+import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.data.remote.request.SendMessageRequest
 import com.myplaygroup.app.feature_main.data.remote.response.MessagesResponse
 import com.myplaygroup.app.feature_main.data.remote.response.MonthlyPlansResponse

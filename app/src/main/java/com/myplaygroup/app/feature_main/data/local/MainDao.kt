@@ -4,9 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import com.myplaygroup.app.core.data.local.DailyClassEntity
-import com.myplaygroup.app.core.data.local.MonthlyPlanEntity
-import com.myplaygroup.app.core.domain.model.MonthlyPlan
+import com.myplaygroup.app.feature_main.data.model.DailyClassEntity
+import com.myplaygroup.app.feature_main.data.model.MessageEntity
+import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
 
 @Dao
 interface MainDao {
@@ -38,6 +38,11 @@ interface MainDao {
         messages: List<DailyClassEntity>
     )
 
+    @Insert(onConflict = REPLACE)
+    suspend fun insertDailyClass(
+        message: DailyClassEntity
+    )
+
     @Query("SELECT * FROM dailyclassentity ORDER BY date")
     suspend fun getDailyClasses() : List<DailyClassEntity>
 
@@ -50,6 +55,11 @@ interface MainDao {
     @Insert(onConflict = REPLACE)
     suspend fun insertMonthlyPlans(
         messages: List<MonthlyPlanEntity>
+    )
+
+    @Insert(onConflict = REPLACE)
+    suspend fun insertMonthlyClass(
+        message: DailyClassEntity
     )
 
     @Query("SELECT * FROM monthlyplanentity ORDER BY id")

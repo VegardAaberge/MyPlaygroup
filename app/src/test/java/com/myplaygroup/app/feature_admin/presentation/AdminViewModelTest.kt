@@ -11,7 +11,8 @@ import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
-import com.myplaygroup.app.feature_main.presentation.settings.SettingsScreenEvent
+import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
+import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

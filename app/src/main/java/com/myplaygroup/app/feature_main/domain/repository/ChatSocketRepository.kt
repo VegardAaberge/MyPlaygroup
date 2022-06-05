@@ -3,7 +3,7 @@ package com.myplaygroup.app.feature_main.domain.repository
 import com.myplaygroup.app.core.data.settings.UserSettings
 import com.myplaygroup.app.core.util.Constants.BASE_SOCKET_URL
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.data.local.MessageEntity
+import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.domain.model.Message
 import kotlinx.coroutines.flow.Flow
 

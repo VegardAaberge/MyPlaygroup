@@ -1,12 +1,12 @@
 package com.myplaygroup.app.feature_main.data.mapper
 
-import com.myplaygroup.app.feature_main.data.local.MessageEntity
-import com.myplaygroup.app.feature_main.data.remote.response.MessageResponse
+import com.myplaygroup.app.feature_main.data.model.MessageEntity
+import com.myplaygroup.app.feature_main.data.remote.response.items.MessageItem
 import com.myplaygroup.app.feature_main.data.remote.request.SendMessageRequest
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-fun MessageResponse.toMessageEntity() : MessageEntity {
+fun MessageItem.toMessageEntity() : MessageEntity {
     return MessageEntity(
         id = clientId,
         serverId = id,

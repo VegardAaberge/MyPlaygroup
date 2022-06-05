@@ -1,7 +1,7 @@
 package com.myplaygroup.app.feature_main.data.remote.response
 
-import com.myplaygroup.app.core.data.remote.responses.DailyClassItem
-import com.myplaygroup.app.core.data.remote.responses.MonthlyPlanItem
+import com.myplaygroup.app.feature_main.data.remote.response.items.DailyClassItem
+import com.myplaygroup.app.feature_main.data.remote.response.items.MonthlyPlanItem
 import kotlinx.serialization.Serializable
 
 @Serializable

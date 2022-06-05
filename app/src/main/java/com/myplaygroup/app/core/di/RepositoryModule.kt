@@ -4,8 +4,8 @@ import com.myplaygroup.app.core.data.repository.ImageRepositoryImpl
 import com.myplaygroup.app.core.data.repository.TokenRepositoryImpl
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.domain.repository.TokenRepository
-import com.myplaygroup.app.feature_admin.data.repository.DailyClassesRepositoryImpl
-import com.myplaygroup.app.feature_admin.domain.repository.DailyClassesRepository
+import com.myplaygroup.app.feature_main.data.repository.DailyClassesRepositoryImpl
+import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import com.myplaygroup.app.feature_login.data.repository.LoginRepositoryImpl
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
