@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MonthlyPlanItem(
-    val id: Int,
+    val id: Long,
     val kidName: String,
     val paid: Boolean,
     val planName: String,

@@ -14,6 +14,7 @@ import com.myplaygroup.app.core.domain.model.DailyClass
 import com.myplaygroup.app.feature_admin.presentation.classes.ClassesScreenEvent
 import com.myplaygroup.app.feature_admin.presentation.classes.ClassesState
 import com.myplaygroup.app.feature_main.data.remote.response.MonthlyPlansResponse
+import com.myplaygroup.app.feature_main.domain.model.UserSchedule
 import com.myplaygroup.app.feature_main.domain.repository.ScheduleRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,7 +50,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun collectMonthlySchedule(result: Resource<MonthlyPlansResponse>) = viewModelScope.launch(Dispatchers.Main) {
+    private fun collectMonthlySchedule(result: Resource<UserSchedule>) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
                 state = state.copy(
