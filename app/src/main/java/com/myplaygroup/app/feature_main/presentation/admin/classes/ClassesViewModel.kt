@@ -30,6 +30,9 @@ class ClassesViewModel @Inject constructor(
 
     fun onEvent(event: ClassesScreenEvent){
         when(event){
+            is ClassesScreenEvent.ToggleCreateClassesSection -> {
+                state = state.copy(isCreateVisible = !state.isCreateVisible)
+            }
             is ClassesScreenEvent.SelectedNewDate -> {
                 state = state.copy(
                     selectedDate = event.selectedDate
