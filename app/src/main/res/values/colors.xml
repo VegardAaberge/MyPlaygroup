@@ -7,4 +7,34 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="keynote_blue_1">#FF73BEF9</color>
+    <color name="keynote_blue_2">#FF489FF8</color>
+    <color name="keynote_blue_3">#FF3274B5</color>
+    <color name="keynote_blue_4">#FF1E4B7C</color>
+
+    <color name="keynote_cyan_1">#FF98F9EA</color>
+    <color name="keynote_cyan_2">#FF6CE3CF</color>
+    <color name="keynote_cyan_3">#FF4BA69D</color>
+    <color name="keynote_cyan_4">#FF357A76</color>
+
+    <color name="keynote_green_1">#FFA4F86A</color>
+    <color name="keynote_green_2">#FF81D653</color>
+    <color name="keynote_green_3">#FF54AF32</color>
+    <color name="keynote_green_4">#FF306F1D</color>
+
+    <color name="keynote_orange_1">#FFFEFC7E</color>
+    <color name="keynote_orange_2">#FFF6E359</color>
+    <color name="keynote_orange_3">#FFEFBD40</color>t
+    <color name="keynote_orange_4">#FFF09937</color>
+
+    <color name="keynote_red_1">#FFF09B91</color>
+    <color name="keynote_red_2">#FFEC6E57</color>
+    <color name="keynote_red_3">#FFDA3B26</color>
+    <color name="keynote_red_4">#FFA52A17</color>
+
+    <color name="keynote_pink_1">#FFF093C4</color>
+    <color name="keynote_pink_2">#FFDE68A5</color>
+    <color name="keynote_pink_3">#FFBB3979</color>
+    <color name="keynote_pink_4">#FF8C265D</color>
 </resources>
