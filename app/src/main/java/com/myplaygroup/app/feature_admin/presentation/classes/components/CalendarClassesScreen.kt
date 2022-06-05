@@ -2,10 +2,12 @@ package com.myplaygroup.app.feature_admin.presentation.classes.components
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -15,11 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.myplaygroup.app.R
+import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_admin.domain.model.DailyClass
+import io.github.boguszpawlowski.composecalendar.CalendarState
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.day.DayState
 import io.github.boguszpawlowski.composecalendar.header.MonthState
@@ -27,20 +34,20 @@ import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
 
 @Composable
-fun CalendarClassesScreen(classes: List<DailyClass>) {
-
-    val calendarState = rememberSelectableCalendarState(
-        initialSelectionMode = SelectionMode.Single,
-    )
-
+fun CalendarClassesScreen(
+    classes: List<DailyClass>,
+    calendarState: CalendarState<DynamicSelectionState>,
+    selectedDay: LocalDate?
+) {
     Column(
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -58,6 +65,22 @@ fun CalendarClassesScreen(classes: List<DailyClass>) {
             weekHeader = { WeekHeader(daysOfWeek = it) },
             monthHeader = { MonthHeader(monthState = it) },
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val selectedClasses = classes.filter { it.date == selectedDay }
+        if (selectedClasses.any()) {
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                LazyColumn {
+                    items(selectedClasses) { item ->
+                        CalendarCard(dailyClass = item)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -157,5 +180,94 @@ private fun WeekHeader(daysOfWeek: List<DayOfWeek>) {
                     .wrapContentHeight()
             )
         }
+    }
+}
+
+@Composable
+fun CalendarCard(dailyClass: DailyClass) {
+    Card(
+        backgroundColor = colorResource(id = R.color.keynote_orange_3),
+        shape = RoundedCornerShape(6.dp),
+        modifier = Modifier
+            .height(90.dp)
+            .padding(bottom = 12.dp)
+            .padding(horizontal = 10.dp)
+            .fillMaxWidth()
+            .clickable {  }
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+        ) {
+
+            Box(
+                contentAlignment = Alignment.CenterStart,
+                modifier = Modifier
+                    .weight(4f)
+                    .fillMaxWidth(),
+            ) {
+                Text(
+                    text = dailyClass.classType,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.h5
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .weight(3f)
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(modifier = Modifier
+                        .size(16.dp)
+                        .clip(CircleShape)
+                        .background(Color.Green)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = if(dailyClass.cancelled) "Cancelled" else "On going",
+                        color = Color.White,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+
+                Text(
+                    text = "${dailyClass.startTime} - ${dailyClass.endTime}",
+                    color = Color.White,
+                    style = MaterialTheme.typography.body1
+                )
+            }
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CalendarClassesScreenPreview() {
+    MyPlaygroupTheme {
+        val selectedDay = LocalDate.now().minusDays(1)
+
+        CalendarClassesScreen(
+            classes = listOf(
+                DailyClass(
+                    id = "2",
+                    cancelled = false,
+                    classType = "Morning Group",
+                    date = selectedDay,
+                    endTime = "11:30",
+                    startTime = "9:30"
+                )
+            ),
+            calendarState = rememberSelectableCalendarState(
+                initialSelectionMode = SelectionMode.Single,
+            ),
+            selectedDay = selectedDay
+        )
     }
 }

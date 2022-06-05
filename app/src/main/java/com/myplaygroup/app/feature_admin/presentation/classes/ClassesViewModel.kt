@@ -3,7 +3,6 @@ package com.myplaygroup.app.feature_admin.presentation.classes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
@@ -11,7 +10,6 @@ import com.myplaygroup.app.feature_admin.domain.model.DailyClass
 import com.myplaygroup.app.feature_admin.domain.repository.DailyClassesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +25,21 @@ class ClassesViewModel @Inject constructor(
             repository
                 .getAllDailyClasses(true)
                 .collect{ collectDailyClasses(it) }
+        }
+    }
+
+    fun onEvent(event: ClassesScreenEvent){
+        when(event){
+            is ClassesScreenEvent.SelectedNewDate -> {
+                state = state.copy(
+                    selectedDate = event.selectedDate
+                )
+            }
+            is ClassesScreenEvent.AddNewDateToCreate -> {
+                state = state.copy(
+                    datesToCreate = event.createDate
+                )
+            }
         }
     }
 
