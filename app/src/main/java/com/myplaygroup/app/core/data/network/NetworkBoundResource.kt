@@ -3,7 +3,7 @@
 package com.myplaygroup.app.core.util
 
 import android.util.Log
-import com.myplaygroup.app.core.data.remote.dto.ErrorResponse
+import com.myplaygroup.app.core.data.remote.responses.ErrorResponse
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json

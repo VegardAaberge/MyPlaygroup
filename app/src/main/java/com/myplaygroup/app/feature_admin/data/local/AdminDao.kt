@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.myplaygroup.app.feature_main.data.local.MessageEntity
+import com.myplaygroup.app.core.data.local.DailyClassEntity
 
 @Dao
 interface AdminDao {

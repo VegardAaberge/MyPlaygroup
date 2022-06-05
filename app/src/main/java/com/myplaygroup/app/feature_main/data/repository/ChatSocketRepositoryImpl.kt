@@ -14,7 +14,7 @@ import com.myplaygroup.app.feature_main.data.local.MessageEntity
 import com.myplaygroup.app.feature_main.data.mapper.ToSendMessageRequest
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
-import com.myplaygroup.app.feature_main.data.remote.MessageResponse
+import com.myplaygroup.app.feature_main.data.remote.response.MessageResponse
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.ChatSocketRepository
 import dagger.hilt.android.qualifiers.ApplicationContext

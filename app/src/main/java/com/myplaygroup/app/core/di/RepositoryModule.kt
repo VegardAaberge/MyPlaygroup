@@ -10,8 +10,10 @@ import com.myplaygroup.app.feature_login.data.repository.LoginRepositoryImpl
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.data.repository.ChatRepositoryImpl
+import com.myplaygroup.app.feature_main.data.repository.ScheduleRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.repository.ChatSocketRepository
 import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
+import com.myplaygroup.app.feature_main.domain.repository.ScheduleRepository
 import com.myplaygroup.app.feature_profile.data.repository.ProfileRepositoryImpl
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.Binds
@@ -38,7 +40,7 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindMainRepository(
+    abstract fun bindChatRepository(
         mainRepository: ChatRepositoryImpl
     ): ChatRepository
 
@@ -65,4 +67,10 @@ abstract class RepositoryModule {
     abstract fun bindDailyClassesRepository(
         dailyClassesRepository: DailyClassesRepositoryImpl
     ): DailyClassesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindScheduleRepository(
+        dailyClassesRepository: ScheduleRepositoryImpl
+    ): ScheduleRepository
 }

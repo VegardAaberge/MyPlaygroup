@@ -1,6 +1,4 @@
-package com.myplaygroup.app.core.data.remote.dto
-
-import java.time.LocalDateTime
+package com.myplaygroup.app.core.data.remote.responses
 
 
 @kotlinx.serialization.Serializable

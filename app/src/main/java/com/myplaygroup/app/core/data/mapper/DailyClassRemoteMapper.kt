@@ -1,7 +1,7 @@
-package com.myplaygroup.app.feature_admin.data.mapper
+package com.myplaygroup.app.core.data.mapper
 
-import com.myplaygroup.app.feature_admin.data.local.DailyClassEntity
-import com.myplaygroup.app.feature_admin.data.remote.DailyClassItem
+import com.myplaygroup.app.core.data.local.DailyClassEntity
+import com.myplaygroup.app.core.data.remote.responses.DailyClassItem
 
 fun DailyClassItem.toDailyClassEntity() : DailyClassEntity {
 

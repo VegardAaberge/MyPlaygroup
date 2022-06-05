@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.myplaygroup.app.core.data.local.Converters
+import com.myplaygroup.app.core.data.local.DailyClassEntity
 
 @Database(
     entities = [DailyClassEntity::class],

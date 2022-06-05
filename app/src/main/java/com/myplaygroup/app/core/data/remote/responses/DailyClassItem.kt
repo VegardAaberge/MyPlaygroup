@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_admin.data.remote
+package com.myplaygroup.app.core.data.remote.responses
 
 import kotlinx.serialization.Serializable
 

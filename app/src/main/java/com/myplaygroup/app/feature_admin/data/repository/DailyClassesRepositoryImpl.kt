@@ -7,8 +7,8 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_admin.data.local.AdminDatabase
-import com.myplaygroup.app.feature_admin.data.mapper.toDailyClass
-import com.myplaygroup.app.feature_admin.data.mapper.toDailyClassEntity
+import com.myplaygroup.app.core.data.mapper.toDailyClass
+import com.myplaygroup.app.core.data.mapper.toDailyClassEntity
 import com.myplaygroup.app.core.domain.model.DailyClass
 import com.myplaygroup.app.feature_admin.domain.repository.DailyClassesRepository
 import kotlinx.coroutines.flow.Flow

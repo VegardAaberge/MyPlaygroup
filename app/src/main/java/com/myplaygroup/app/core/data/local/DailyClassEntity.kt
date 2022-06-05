@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_admin.data.local
+package com.myplaygroup.app.core.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
