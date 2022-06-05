@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_admin.domain.model
+package com.myplaygroup.app.core.domain.model
 
 
 data class DailyClass(

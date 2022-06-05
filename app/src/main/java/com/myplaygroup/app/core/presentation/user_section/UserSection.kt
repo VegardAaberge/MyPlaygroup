@@ -8,6 +8,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.myplaygroup.app.core.presentation.user_section.components.EditProfileArrow
+import com.myplaygroup.app.core.presentation.user_section.components.ProfileInfo
+import com.myplaygroup.app.core.presentation.user_section.components.RoundImage
 
 
 @Composable

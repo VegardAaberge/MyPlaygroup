@@ -1,7 +1,7 @@
 package com.myplaygroup.app.feature_admin.data.mapper
 
 import com.myplaygroup.app.feature_admin.data.local.DailyClassEntity
-import com.myplaygroup.app.feature_admin.domain.model.DailyClass
+import com.myplaygroup.app.core.domain.model.DailyClass
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*

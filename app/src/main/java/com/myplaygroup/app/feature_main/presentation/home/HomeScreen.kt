@@ -1,13 +1,12 @@
 package com.myplaygroup.app.feature_main.presentation.home
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.core.presentation.calendar_classes.CalendarClassesScreen
+import com.myplaygroup.app.feature_admin.presentation.classes.ClassesScreenEvent
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
-import com.myplaygroup.app.feature_main.presentation.home.components.CalendarScreen
+import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
+import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 
 @Composable
 fun HomeScreen(
@@ -15,11 +14,19 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     viewModel.mainViewModel = mainViewModel
+    val state = viewModel.state
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CalendarScreen(viewModel.calendarFlow)
-    }
+    val calendarState = rememberSelectableCalendarState(
+        initialSelectionMode = SelectionMode.Single,
+        confirmSelectionChange = {
+            viewModel.onEvent(ClassesScreenEvent.SelectedNewDate(it.firstOrNull()))
+            true
+        }
+    )
+
+    CalendarClassesScreen(
+        selectedDay = state.selectedDate,
+        calendarState = calendarState,
+        classes = state.dailyClasses
+    )
 }

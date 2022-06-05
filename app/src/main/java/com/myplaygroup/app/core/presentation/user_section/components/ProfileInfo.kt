@@ -1,4 +1,4 @@
-package com.myplaygroup.app.core.presentation.user_section
+package com.myplaygroup.app.core.presentation.user_section.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

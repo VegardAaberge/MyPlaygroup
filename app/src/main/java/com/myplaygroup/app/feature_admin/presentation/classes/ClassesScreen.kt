@@ -1,14 +1,12 @@
 package com.myplaygroup.app.feature_admin.presentation.classes
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.core.presentation.calendar_classes.CalendarClassesScreen
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
-import com.myplaygroup.app.feature_admin.presentation.classes.components.CalendarClassesScreen
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 
