@@ -19,9 +19,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-
-): ViewModel() {
+class HomeViewModel @Inject constructor(): ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
 

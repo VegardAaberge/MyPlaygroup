@@ -2,12 +2,11 @@ package com.myplaygroup.app.feature_main.data.repository
 
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.domain.model.Message
-import com.myplaygroup.app.feature_main.domain.repository.MainRepository
+import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.time.LocalDateTime
 
-class FakeMainRepository : MainRepository {
+class FakeMainRepository : ChatRepository {
 
     var messages = mutableListOf<Message>(
         Message(

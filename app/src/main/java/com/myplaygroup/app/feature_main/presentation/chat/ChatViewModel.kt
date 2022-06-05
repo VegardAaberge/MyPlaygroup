@@ -12,7 +12,7 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.model.Message
-import com.myplaygroup.app.feature_main.domain.repository.MainRepository
+import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val repository: MainRepository,
+    private val repository: ChatRepository,
     private val socketRepository: ChatSocketRepositoryImpl,
     private val imageRepository: ImageRepository,
     private val userSettingsManager: UserSettingsManager

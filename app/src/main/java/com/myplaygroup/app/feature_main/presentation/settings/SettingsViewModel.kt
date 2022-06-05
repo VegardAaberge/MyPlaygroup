@@ -10,7 +10,7 @@ import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
-import com.myplaygroup.app.feature_main.domain.repository.MainRepository
+import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
 import com.myplaygroup.app.feature_main.presentation.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val basicAuthInterceptor: BasicAuthInterceptor,
     private val imageRepository: ImageRepository,
-    private val repository: MainRepository,
+    private val repository: ChatRepository,
     private val userSettingsManager: UserSettingsManager
 ) : ViewModel() {
 
