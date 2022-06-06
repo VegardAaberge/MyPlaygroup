@@ -38,10 +38,8 @@ class ClassesViewModel @Inject constructor(
                     selectedDate = event.selectedDate
                 )
             }
-            is ClassesScreenEvent.AddNewDateToCreate -> {
-                state = state.copy(
-                    datesToCreate = event.createDate
-                )
+            is ClassesScreenEvent.GenerateClassesTapped -> {
+                state = state.copy(isCreateVisible = false)
             }
         }
     }
