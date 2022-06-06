@@ -52,7 +52,9 @@ fun ClassesScreen(
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                CreateClassesSection {
+                CreateClassesSection(
+                    weekdays = state.weekdays
+                ) {
                     viewModel.onEvent(ClassesScreenEvent.GenerateClassesTapped)
                 }
             }

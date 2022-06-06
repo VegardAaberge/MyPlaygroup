@@ -6,4 +6,8 @@ sealed class ClassesScreenEvent {
     object ToggleCreateClassesSection : ClassesScreenEvent()
     object GenerateClassesTapped : ClassesScreenEvent()
     data class SelectedNewDate(val selectedDate: LocalDate?) : ClassesScreenEvent()
+    data class SelectedNewWeekDay(
+        val dayOfWeek: DayOfWeek,
+        val isSet : Boolean
+    ) : ClassesScreenEvent()
 }

@@ -11,10 +11,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
+import com.myplaygroup.app.feature_main.presentation.admin.classes.DayOfWeek
+import com.myplaygroup.app.feature_main.presentation.admin.classes.DayOfWeek.*
+import java.util.*
 
 @Composable
 fun CreateClassesSection(
-    generate: () -> Unit
+    weekdays: EnumMap<DayOfWeek, Boolean>,
+    generate: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -54,16 +58,16 @@ fun CreateClassesSection(
                 .fillMaxWidth()
         ) {
             Column {
-                LabelledCheckbox("Mon", true)
-                LabelledCheckbox("Thu", true)
+                LabelledCheckbox(MON.name, weekdays[MON] ?: false)
+                LabelledCheckbox(THU.name, weekdays[THU] ?: false)
             }
             Column {
-                LabelledCheckbox("Tue", true)
-                LabelledCheckbox("Fri", true)
+                LabelledCheckbox(TUE.name, weekdays[TUE] ?: false)
+                LabelledCheckbox(FRI.name, weekdays[FRI] ?: false)
             }
             Column {
-                LabelledCheckbox("Wed", true)
-                LabelledCheckbox("Sat", false)
+                LabelledCheckbox(WED.name, weekdays[WED] ?: false)
+                LabelledCheckbox(SAT.name, weekdays[SAT] ?: false)
             }
         }
 
@@ -159,7 +163,9 @@ fun LabeledClassTime(
 @Composable
 fun CreateClassesSectionPreview() {
     MyPlaygroupTheme {
-        CreateClassesSection {
+        CreateClassesSection(
+            weekdays = EnumMap(DayOfWeek::class.java)
+        ){
 
         }
     }

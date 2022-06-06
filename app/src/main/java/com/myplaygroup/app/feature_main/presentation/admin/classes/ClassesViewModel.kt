@@ -11,6 +11,7 @@ import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +22,8 @@ class ClassesViewModel @Inject constructor(
     var state by mutableStateOf(ClassesState())
 
     init {
+        initWeekdays()
+
         viewModelScope.launch(Dispatchers.IO) {
             repository
                 .getAllDailyClasses(true)
@@ -38,10 +41,34 @@ class ClassesViewModel @Inject constructor(
                     selectedDate = event.selectedDate
                 )
             }
+            is ClassesScreenEvent.SelectedNewWeekDay -> {
+                setWeekdays(event.dayOfWeek, event.isSet)
+            }
             is ClassesScreenEvent.GenerateClassesTapped -> {
                 state = state.copy(isCreateVisible = false)
             }
         }
+    }
+
+    private fun initWeekdays(){
+        val weekdays = state.weekdays
+        weekdays.put(DayOfWeek.MON, true)
+        weekdays.put(DayOfWeek.TUE, true)
+        weekdays.put(DayOfWeek.WED, true)
+        weekdays.put(DayOfWeek.THU, true)
+        weekdays.put(DayOfWeek.FRI, true)
+        weekdays.put(DayOfWeek.SAT, false)
+        state = state.copy(
+            weekdays = weekdays
+        )
+    }
+
+    private fun setWeekdays(dayOfWeek: DayOfWeek, isSet: Boolean){
+        val weekdays = state.weekdays
+        weekdays.put(dayOfWeek, isSet)
+        state = state.copy(
+            weekdays = weekdays
+        )
     }
 
     private fun collectDailyClasses(result: Resource<List<DailyClass>>) = viewModelScope.launch(Dispatchers.Main) {
