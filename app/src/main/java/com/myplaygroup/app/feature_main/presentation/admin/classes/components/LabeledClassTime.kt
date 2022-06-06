@@ -11,19 +11,26 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.myplaygroup.app.core.presentation.components.BasicTextField
+import com.myplaygroup.app.core.presentation.components.ReadonlyTextField
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun LabeledClassTime(
     title: String,
     classTime: LocalTime,
     modifier: Modifier = Modifier,
-    timeChanged: (LocalTime) -> Unit
+    timeChanged: (LocalTime) -> Unit,
+    basicWidth: Dp? = null,
 ){
     val context = LocalContext.current
-    val time = "${classTime.hour}:${classTime.minute}"
+    val time = classTime.format(DateTimeFormatter.ofPattern("HH:mm"))
 
     val timePickerDialog = TimePickerDialog(
         context,
@@ -32,17 +39,13 @@ fun LabeledClassTime(
         }, classTime.hour, classTime.minute, false
     )
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
-            .width(200.dp)
-            .clickable {
-                timePickerDialog.show()
-            },
-
-    ) {
-        Text(text = "$title:")
-        Text(text = time)
+    if(basicWidth != null){
+        BasicTextField(label = title, fieldValue = time, modifier = modifier, width = basicWidth) {
+            timePickerDialog.show()
+        }
+    }else{
+        ReadonlyTextField(label = title, fieldValue = time, modifier = modifier) {
+            timePickerDialog.show()
+        }
     }
 }

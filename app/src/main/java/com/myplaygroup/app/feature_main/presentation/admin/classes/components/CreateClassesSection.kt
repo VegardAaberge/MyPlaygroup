@@ -44,7 +44,8 @@ fun CreateClassesSection(
             title = "Start Time",
             classTime = startTime,
             timeChanged = startTimeChanged,
-            modifier = Modifier.padding(start = 16.dp)
+            modifier = Modifier.padding(start = 16.dp),
+            basicWidth = 130.dp
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -54,6 +55,7 @@ fun CreateClassesSection(
             classTime = endTime,
             timeChanged = endTimeChanged,
             modifier = Modifier.padding(start = 16.dp),
+            basicWidth = 130.dp
         )
 
         Spacer(modifier = Modifier.height(10.dp))
