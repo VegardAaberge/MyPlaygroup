@@ -20,6 +20,7 @@ import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -77,11 +78,12 @@ fun CalendarClassesScreenPreview() {
         CalendarClassesScreen(
             classes = listOf(
                 DailyClass(
-                    cancelled = false,
                     classType = "Morning Group",
                     date = selectedDay,
                     endTime = LocalTime.of(11, 30),
                     startTime = LocalTime.of(9, 30),
+                    cancelled = false,
+                    dayOfWeek = DayOfWeek.MONDAY,
                 )
             ),
             calendarState = rememberSelectableCalendarState(

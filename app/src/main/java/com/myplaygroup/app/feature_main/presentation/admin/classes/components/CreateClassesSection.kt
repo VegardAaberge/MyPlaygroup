@@ -9,9 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
-import com.myplaygroup.app.feature_main.domain.enums.DayOfWeek
-import com.myplaygroup.app.feature_main.domain.enums.DayOfWeek.*
+import com.myplaygroup.app.feature_main.domain.model.DailyClassType
+import java.time.DayOfWeek
+import java.time.DayOfWeek.*
 import java.time.LocalTime
 import java.util.*
 
@@ -67,16 +67,16 @@ fun CreateClassesSection(
                 .fillMaxWidth()
         ) {
             Column {
-                LabelledCheckbox(MON.name, weekdays[MON] ?: false, weekdayChanged)
-                LabelledCheckbox(THU.name, weekdays[THU] ?: false, weekdayChanged)
+                LabelledCheckbox(MONDAY, weekdays[MONDAY] ?: false, weekdayChanged)
+                LabelledCheckbox(THURSDAY, weekdays[THURSDAY] ?: false, weekdayChanged)
             }
             Column {
-                LabelledCheckbox(TUE.name, weekdays[TUE] ?: false, weekdayChanged)
-                LabelledCheckbox(FRI.name, weekdays[FRI] ?: false, weekdayChanged)
+                LabelledCheckbox(TUESDAY, weekdays[TUESDAY] ?: false, weekdayChanged)
+                LabelledCheckbox(FRIDAY, weekdays[FRIDAY] ?: false, weekdayChanged)
             }
             Column {
-                LabelledCheckbox(WED.name, weekdays[WED] ?: false, weekdayChanged)
-                LabelledCheckbox(SAT.name, weekdays[SAT] ?: false, weekdayChanged)
+                LabelledCheckbox(WEDNESDAY, weekdays[WEDNESDAY] ?: false, weekdayChanged)
+                LabelledCheckbox(SATURDAY, weekdays[SATURDAY] ?: false, weekdayChanged)
             }
         }
 
@@ -93,7 +93,7 @@ fun CreateClassesSection(
 
 @Composable
 fun LabelledCheckbox(
-    title: String,
+    dayOfWeek: DayOfWeek,
     isChecked: Boolean,
     weekdayChanged: (DayOfWeek) -> Unit,
     modifier: Modifier = Modifier
@@ -105,12 +105,12 @@ fun LabelledCheckbox(
         Checkbox(
             checked = isChecked,
             onCheckedChange = {
-                weekdayChanged(DayOfWeek.valueOf(title))
+                weekdayChanged(dayOfWeek)
             },
             enabled = true,
             colors = CheckboxDefaults.colors()
         )
-        Text(text = title)
+        Text(text = dayOfWeek.name.take(3))
     }
 }
 

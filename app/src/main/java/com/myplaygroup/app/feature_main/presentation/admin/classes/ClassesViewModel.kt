@@ -1,21 +1,19 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
-import com.myplaygroup.app.feature_main.domain.enums.DayOfWeek
+import com.myplaygroup.app.feature_main.domain.model.DailyClassType
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.DateTimeException
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -78,12 +76,12 @@ class ClassesViewModel @Inject constructor(
 
     private fun initWeekdays(){
         val weekdays = state.weekdays
-        weekdays.put(DayOfWeek.MON, true)
-        weekdays.put(DayOfWeek.TUE, true)
-        weekdays.put(DayOfWeek.WED, true)
-        weekdays.put(DayOfWeek.THU, true)
-        weekdays.put(DayOfWeek.FRI, true)
-        weekdays.put(DayOfWeek.SAT, false)
+        weekdays.put(DayOfWeek.MONDAY, true)
+        weekdays.put(DayOfWeek.TUESDAY, true)
+        weekdays.put(DayOfWeek.WEDNESDAY, true)
+        weekdays.put(DayOfWeek.THURSDAY, true)
+        weekdays.put(DayOfWeek.FRIDAY, true)
+        weekdays.put(DayOfWeek.SATURDAY, false)
         state = state.copy(
             weekdays = weekdays
         )
@@ -99,7 +97,7 @@ class ClassesViewModel @Inject constructor(
     }
 
     private fun createDailyClasses(){
-        val weekOrdinals = state.weekdays.filter { x -> x.value }.keys.map { x -> x.ordinal }
+        val weekDays = state.weekdays.filter { x -> x.value }
         val currentYear = state.calendarState!!.monthState.currentMonth.year
         val currentMonth = state.calendarState!!.monthState.currentMonth.month.value
 
@@ -107,11 +105,12 @@ class ClassesViewModel @Inject constructor(
         try {
             (1..31).forEach {
                 val date = LocalDate.of(currentYear, currentMonth, it)
-                if(date.dayOfWeek.ordinal in weekOrdinals){
+                if(date.dayOfWeek in weekDays){
                     dailyClasses.add(DailyClass(
                         classType = state.dailyClassType.name,
                         startTime = state.startTime,
                         endTime = state.endTime,
+                        dayOfWeek = date.dayOfWeek,
                         date = date,
                     ))
                 }

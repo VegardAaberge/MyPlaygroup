@@ -21,11 +21,12 @@ fun DailyClassEntity.toDailyClass() : DailyClass {
 
     return DailyClass(
         id = id,
-        cancelled = cancelled,
         classType = classType,
         date = parsedDate,
-        startTime = parsedStartTime,
         endTime = parsedEndTime,
+        startTime = parsedStartTime,
+        cancelled = cancelled,
+        dayOfWeek = dayOfWeek,
     )
 }
 
@@ -40,6 +41,7 @@ fun DailyClass.toDailyClassEntity() : DailyClassEntity {
         classType = classType,
         date = date.format(dateFormat),
         endTime = endTime.format(timeFormat),
-        startTime = startTime.format(timeFormat)
+        startTime = startTime.format(timeFormat),
+        dayOfWeek = dayOfWeek,
     )
 }

@@ -3,7 +3,7 @@ package com.myplaygroup.app.feature_main.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
-import java.util.*
+import java.time.DayOfWeek
 
 @Serializable
 @Entity
@@ -13,5 +13,6 @@ data class DailyClassEntity(
     val classType: String,
     val date: String,
     val endTime: String,
-    val startTime: String
+    val startTime: String,
+    val dayOfWeek: DayOfWeek
 )
