@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_main.presentation.admin.classes
+package com.myplaygroup.app.feature_main.domain.enums
 
 enum class DayOfWeek {
     MON,

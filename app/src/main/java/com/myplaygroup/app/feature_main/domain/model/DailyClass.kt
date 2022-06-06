@@ -1,11 +1,14 @@
 package com.myplaygroup.app.feature_main.domain.model
 
+import java.time.LocalDate
+import java.time.LocalTime
+
 
 data class DailyClass(
     val id: Long = -1L,
-    val cancelled: Boolean,
     val classType: String,
     val date: java.time.LocalDate,
-    val endTime: String,
-    val startTime: String
+    val endTime: LocalTime,
+    val startTime: LocalTime,
+    val cancelled: Boolean = false,
 )

@@ -6,6 +6,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.calendar_classes.CalendarClassesScreen
@@ -32,8 +33,6 @@ fun ClassesScreen(
 
     val scaffoldState = collectEventFlow(viewModel = viewModel)
 
-    val state = viewModel.state;
-
     val calendarState = rememberSelectableCalendarState(
         initialSelectionMode = SelectionMode.Single,
         confirmSelectionChange = {
@@ -41,23 +40,22 @@ fun ClassesScreen(
             true
         }
     )
+    LaunchedEffect(key1 = calendarState){
+        viewModel.state = viewModel.state.copy(
+            calendarState = calendarState,
+        )
+    }
+    val state = viewModel.state
 
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Column() {
-            AnimatedVisibility(
-                visible = state.isCreateVisible,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically()
-            ) {
-                CreateClassesSection(
-                    weekdays = state.weekdays
-                ) {
-                    viewModel.onEvent(ClassesScreenEvent.GenerateClassesTapped)
-                }
-            }
+        Column {
+            CreateClassesAnimatedSection(
+                state = state,
+                viewModel = viewModel
+            )
 
             CalendarClassesScreen(
                 selectedDay = state.selectedDate,
@@ -65,5 +63,40 @@ fun ClassesScreen(
                 classes = state.dailyClasses
             )
         }
+    }
+}
+
+@Composable
+private fun CreateClassesAnimatedSection(
+    state: ClassesState,
+    viewModel: ClassesViewModel
+) {
+
+    AnimatedVisibility(
+        visible = state.isCreateVisible,
+        enter = fadeIn() + slideInVertically(),
+        exit = fadeOut() + slideOutVertically()
+    ) {
+        CreateClassesSection(
+            classType = state.dailyClassType,
+            weekdays = state.weekdays,
+            startTime = state.startTime,
+            endTime = state.endTime,
+            classChanged = {
+                viewModel.onEvent(ClassesScreenEvent.ClassChanged(it))
+            },
+            weekdayChanged = {
+                viewModel.onEvent(ClassesScreenEvent.WeekdayChanged(it))
+            },
+            startTimeChanged = {
+                viewModel.onEvent(ClassesScreenEvent.StartTimeChanged(it))
+            },
+            endTimeChanged = {
+                viewModel.onEvent(ClassesScreenEvent.EndTimeChanged(it))
+            },
+            generate = {
+                viewModel.onEvent(ClassesScreenEvent.GenerateClassesTapped)
+            }
+        )
     }
 }

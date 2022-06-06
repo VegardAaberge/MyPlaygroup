@@ -21,6 +21,7 @@ import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 import java.time.LocalDate
+import java.time.LocalTime
 
 @Composable
 fun CalendarClassesScreen(
@@ -79,8 +80,8 @@ fun CalendarClassesScreenPreview() {
                     cancelled = false,
                     classType = "Morning Group",
                     date = selectedDay,
-                    endTime = "11:30",
-                    startTime = "9:30"
+                    endTime = LocalTime.of(11, 30),
+                    startTime = LocalTime.of(9, 30),
                 )
             ),
             calendarState = rememberSelectableCalendarState(

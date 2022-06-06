@@ -8,16 +8,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
-import com.myplaygroup.app.feature_main.presentation.admin.classes.DayOfWeek
-import com.myplaygroup.app.feature_main.presentation.admin.classes.DayOfWeek.*
+import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
+import com.myplaygroup.app.feature_main.domain.enums.DayOfWeek
+import com.myplaygroup.app.feature_main.domain.enums.DayOfWeek.*
+import java.time.LocalTime
 import java.util.*
 
 @Composable
 fun CreateClassesSection(
+    classType: DailyClassType,
+    startTime: LocalTime,
+    endTime: LocalTime,
     weekdays: EnumMap<DayOfWeek, Boolean>,
+    classChanged: (DailyClassType) -> Unit,
+    startTimeChanged: (LocalTime) -> Unit,
+    endTimeChanged: (LocalTime) -> Unit,
+    weekdayChanged: (DayOfWeek) -> Unit,
     generate: () -> Unit,
 ) {
     Column(
@@ -27,7 +34,9 @@ fun CreateClassesSection(
             .fillMaxWidth(),
     ) {
         LabeledRadioGroup(
-            options = listOf("Morning", "Evening"),
+            options = listOf(DailyClassType.MORNING.name, DailyClassType.EVENING.name),
+            classType = classType,
+            classChanged = classChanged,
             modifier = Modifier.padding(start = 14.dp)
         )
 
@@ -35,8 +44,8 @@ fun CreateClassesSection(
 
         LabeledClassTime(
             title = "Start Time",
-            initalHour = 9,
-            initialMinute = 30,
+            classTime = startTime,
+            timeChanged = startTimeChanged,
             modifier = Modifier.padding(start = 16.dp)
         )
 
@@ -44,9 +53,9 @@ fun CreateClassesSection(
 
         LabeledClassTime(
             title = "End Time",
-            initalHour = 11,
-            initialMinute = 30,
-            modifier = Modifier.padding(start = 16.dp)
+            classTime = endTime,
+            timeChanged = endTimeChanged,
+            modifier = Modifier.padding(start = 16.dp),
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -58,16 +67,16 @@ fun CreateClassesSection(
                 .fillMaxWidth()
         ) {
             Column {
-                LabelledCheckbox(MON.name, weekdays[MON] ?: false)
-                LabelledCheckbox(THU.name, weekdays[THU] ?: false)
+                LabelledCheckbox(MON.name, weekdays[MON] ?: false, weekdayChanged)
+                LabelledCheckbox(THU.name, weekdays[THU] ?: false, weekdayChanged)
             }
             Column {
-                LabelledCheckbox(TUE.name, weekdays[TUE] ?: false)
-                LabelledCheckbox(FRI.name, weekdays[FRI] ?: false)
+                LabelledCheckbox(TUE.name, weekdays[TUE] ?: false, weekdayChanged)
+                LabelledCheckbox(FRI.name, weekdays[FRI] ?: false, weekdayChanged)
             }
             Column {
-                LabelledCheckbox(WED.name, weekdays[WED] ?: false)
-                LabelledCheckbox(SAT.name, weekdays[SAT] ?: false)
+                LabelledCheckbox(WED.name, weekdays[WED] ?: false, weekdayChanged)
+                LabelledCheckbox(SAT.name, weekdays[SAT] ?: false, weekdayChanged)
             }
         }
 
@@ -85,18 +94,19 @@ fun CreateClassesSection(
 @Composable
 fun LabelledCheckbox(
     title: String,
-    defaultChecked: Boolean,
+    isChecked: Boolean,
+    weekdayChanged: (DayOfWeek) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        val isChecked = remember { mutableStateOf(defaultChecked) }
-
         Checkbox(
-            checked = isChecked.value,
-            onCheckedChange = { isChecked.value = it },
+            checked = isChecked,
+            onCheckedChange = {
+                weekdayChanged(DayOfWeek.valueOf(title))
+            },
             enabled = true,
             colors = CheckboxDefaults.colors()
         )
@@ -107,9 +117,10 @@ fun LabelledCheckbox(
 @Composable
 fun LabeledRadioGroup(
     options: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    classType: DailyClassType,
+    classChanged: (DailyClassType) -> Unit
 ){
-    var selected by remember { mutableStateOf(options.first()) }
     Row(modifier = modifier) {
         options.forEach { option ->
             Row(
@@ -117,10 +128,10 @@ fun LabeledRadioGroup(
                 modifier = Modifier
                     .weight(1f, false)
                     .clickable {
-                        selected = option
+                        classChanged(DailyClassType.valueOf(option))
                     },
             ) {
-                RadioButton(selected = selected == option, onClick = null)
+                RadioButton(selected = classType.name == option, onClick = null)
                 Text(text = option)
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -131,18 +142,18 @@ fun LabeledRadioGroup(
 @Composable
 fun LabeledClassTime(
     title: String,
-    initalHour: Int,
-    initialMinute: Int,
-    modifier: Modifier = Modifier
+    classTime: LocalTime,
+    modifier: Modifier = Modifier,
+    timeChanged: (LocalTime) -> Unit
 ){
     val context = LocalContext.current
+    val time = "${classTime.hour}:${classTime.minute}"
 
-    val time = remember { mutableStateOf("$initalHour:$initialMinute") }
     val timePickerDialog = TimePickerDialog(
         context,
         {_, hour : Int, minute: Int ->
-            time.value = "$hour:$minute"
-        }, initalHour, initialMinute, false
+            timeChanged(LocalTime.of(hour, minute))
+        }, classTime.hour, classTime.minute, false
     )
 
     Row(
@@ -155,18 +166,6 @@ fun LabeledClassTime(
             },
     ) {
         Text(text = "$title:")
-        Text(text = time.value)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CreateClassesSectionPreview() {
-    MyPlaygroupTheme {
-        CreateClassesSection(
-            weekdays = EnumMap(DayOfWeek::class.java)
-        ){
-
-        }
+        Text(text = time)
     }
 }
