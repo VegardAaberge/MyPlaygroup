@@ -71,6 +71,9 @@ class ClassesViewModel @Inject constructor(
                 state = state.copy(isCreateVisible = false)
                 createDailyClasses()
             }
+            is ClassesScreenEvent.ClassSelected -> {
+                state = state.copy(selectedClass = event.dailyClass)
+            }
         }
     }
 

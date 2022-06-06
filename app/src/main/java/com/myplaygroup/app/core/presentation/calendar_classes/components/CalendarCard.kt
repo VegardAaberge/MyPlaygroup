@@ -20,7 +20,10 @@ import com.myplaygroup.app.R
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
 
 @Composable
-fun CalendarCard(dailyClass: DailyClass) {
+fun CalendarCard(
+    dailyClass: DailyClass,
+    cardSelected: (DailyClass) -> Unit
+) {
     Card(
         backgroundColor = colorResource(id = R.color.keynote_orange_3),
         shape = RoundedCornerShape(6.dp),
@@ -29,7 +32,9 @@ fun CalendarCard(dailyClass: DailyClass) {
             .padding(bottom = 12.dp)
             .padding(horizontal = 10.dp)
             .fillMaxWidth()
-            .clickable {  }
+            .clickable {
+                cardSelected(dailyClass)
+            }
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)

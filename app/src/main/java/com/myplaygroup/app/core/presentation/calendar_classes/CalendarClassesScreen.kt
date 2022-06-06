@@ -28,7 +28,8 @@ import java.time.LocalTime
 fun CalendarClassesScreen(
     classes: List<DailyClass>,
     calendarState: CalendarState<DynamicSelectionState>,
-    selectedDay: LocalDate?
+    selectedDay: LocalDate?,
+    cardSelected: (DailyClass) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -60,7 +61,10 @@ fun CalendarClassesScreen(
             ) {
                 LazyColumn {
                     items(selectedClasses) { item ->
-                        CalendarCard(dailyClass = item)
+                        CalendarCard(
+                            dailyClass = item,
+                            cardSelected = cardSelected,
+                        )
                     }
                 }
             }
@@ -89,7 +93,8 @@ fun CalendarClassesScreenPreview() {
             calendarState = rememberSelectableCalendarState(
                 initialSelectionMode = SelectionMode.Single,
             ),
-            selectedDay = selectedDay
+            selectedDay = selectedDay,
+            cardSelected = {  }
         )
     }
 }

@@ -1,13 +1,11 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes.components
 
-import android.app.TimePickerDialog
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.myplaygroup.app.feature_main.domain.model.DailyClassType
 import java.time.DayOfWeek
@@ -91,81 +89,8 @@ fun CreateClassesSection(
     }
 }
 
-@Composable
-fun LabelledCheckbox(
-    dayOfWeek: DayOfWeek,
-    isChecked: Boolean,
-    weekdayChanged: (DayOfWeek) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-    ) {
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = {
-                weekdayChanged(dayOfWeek)
-            },
-            enabled = true,
-            colors = CheckboxDefaults.colors()
-        )
-        Text(text = dayOfWeek.name.take(3))
-    }
-}
 
-@Composable
-fun LabeledRadioGroup(
-    options: List<String>,
-    modifier: Modifier = Modifier,
-    classType: DailyClassType,
-    classChanged: (DailyClassType) -> Unit
-){
-    Row(modifier = modifier) {
-        options.forEach { option ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .weight(1f, false)
-                    .clickable {
-                        classChanged(DailyClassType.valueOf(option))
-                    },
-            ) {
-                RadioButton(selected = classType.name == option, onClick = null)
-                Text(text = option)
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-    }
-}
 
-@Composable
-fun LabeledClassTime(
-    title: String,
-    classTime: LocalTime,
-    modifier: Modifier = Modifier,
-    timeChanged: (LocalTime) -> Unit
-){
-    val context = LocalContext.current
-    val time = "${classTime.hour}:${classTime.minute}"
 
-    val timePickerDialog = TimePickerDialog(
-        context,
-        {_, hour : Int, minute: Int ->
-            timeChanged(LocalTime.of(hour, minute))
-        }, classTime.hour, classTime.minute, false
-    )
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
-            .width(130.dp)
-            .clickable {
-                timePickerDialog.show()
-            },
-    ) {
-        Text(text = "$title:")
-        Text(text = time)
-    }
-}
+

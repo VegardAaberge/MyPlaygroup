@@ -125,7 +125,7 @@ fun DrawerNavigation(
     adminViewModel: AdminViewModel
 ) {
 
-    NavHost(navController, startDestination = NavDrawer.OVERVIEW) {
+    NavHost(navController, startDestination = NavDrawer.CLASSES) {
         composable(NavDrawer.OVERVIEW) {
             OverviewScreen(adminViewModel)
         }

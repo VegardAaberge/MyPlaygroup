@@ -15,6 +15,7 @@ data class ClassesState (
     val isCreateVisible: Boolean = false,
     val dailyClasses: List<DailyClass> = emptyList(),
     val selectedDate: LocalDate? = null,
+    val selectedClass: DailyClass? = null,
 
     val dailyClassType: DailyClassType = DailyClassType.MORNING,
     val startTime: LocalTime = LocalTime.of(9, 30),

@@ -27,6 +27,9 @@ fun HomeScreen(
     CalendarClassesScreen(
         selectedDay = state.selectedDate,
         calendarState = calendarState,
-        classes = state.dailyClasses
+        classes = state.dailyClasses,
+        cardSelected = {
+
+        }
     )
 }

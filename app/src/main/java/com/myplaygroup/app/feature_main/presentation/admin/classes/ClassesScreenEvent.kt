@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes
 
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.model.DailyClassType
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -13,4 +14,5 @@ sealed class ClassesScreenEvent {
     class WeekdayChanged(val dayOfWeek: DayOfWeek) : ClassesScreenEvent()
     class StartTimeChanged(val startTime: LocalTime) : ClassesScreenEvent()
     class EndTimeChanged(val endTime: LocalTime) : ClassesScreenEvent()
+    class ClassSelected(val dailyClass: DailyClass) : ClassesScreenEvent()
 }
