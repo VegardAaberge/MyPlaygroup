@@ -19,6 +19,7 @@ sealed class ClassesScreenEvent {
     data class SubmitSelectedClassTapped(
         val startTime: LocalTime,
         val endTime: LocalTime,
-        val classDate: LocalDate
+        val classDate: LocalDate,
+        val cancelled: Boolean
     ) : ClassesScreenEvent()
 }

@@ -24,7 +24,7 @@ import java.time.LocalDateTime
 @Composable
 fun CustomDay(
     state: DayState<DynamicSelectionState>,
-    dailyClass: DailyClass?,
+    dailyClasses: List<DailyClass>,
     modifier: Modifier = Modifier,
 ) {
     val date = state.date
@@ -32,13 +32,15 @@ fun CustomDay(
 
     val isSelected = selectionState.isDateSelected(date)
 
-    val classColor = if(dailyClass != null){
+    val classColor = if(dailyClasses.any()){
         if(state.date.dayOfYear < LocalDateTime.now().dayOfYear){
+            Color.LightGray
+        } else if(dailyClasses.all { x -> x.cancelled }){
             Color.LightGray
         } else MaterialTheme.colors.primary
     }else Color.Unspecified
 
-    val textColor =  if(dailyClass != null){
+    val textColor =  if(dailyClasses.any()){
         Color.White
     }
     else if(state.isCurrentDay){

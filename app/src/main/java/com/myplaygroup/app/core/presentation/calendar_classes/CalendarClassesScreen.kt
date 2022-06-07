@@ -44,7 +44,7 @@ fun CalendarClassesScreen(
             dayContent = { dayState ->
                 CustomDay(
                     state = dayState,
-                    dailyClass = classes.firstOrNull { it.date == dayState.date },
+                    dailyClasses = classes.filter { it.date == dayState.date },
                 )
             },
             weekHeader = { WeekHeader(daysOfWeek = it) },

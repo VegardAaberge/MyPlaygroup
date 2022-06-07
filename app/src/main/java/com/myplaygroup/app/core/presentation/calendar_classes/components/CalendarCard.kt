@@ -34,9 +34,9 @@ fun CalendarCard(
 ) {
     val classEnded = dailyClass.date < LocalDate.now()
     val statusText = when {
-        dailyClass.cancelled -> "Scheduled"
+        dailyClass.cancelled -> "Cancelled"
         classEnded -> "Completed"
-        else -> "On going"
+        else -> "Scheduled"
     }
 
     val statusColor = when {

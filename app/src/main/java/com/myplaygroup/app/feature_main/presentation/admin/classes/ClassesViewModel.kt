@@ -72,22 +72,30 @@ class ClassesViewModel @Inject constructor(
                 }
             }
             is ClassesScreenEvent.SubmitSelectedClassTapped -> {
+
                 state.selectedClass?.let { selectedClass ->
 
-                    val dailyClasses = state.dailyClasses
-                    val newDailyClass = selectedClass.copy(
-                        startTime = event.startTime,
-                        endTime = event.endTime,
-                        date = event.classDate,
-                        modified = true
-                    )
+                    val shouldDelete = selectedClass.id == -1L && event.cancelled
+                    val newDailyClasses = state.dailyClasses.toMutableList()
 
-                    if (Collections.replaceAll(dailyClasses, selectedClass, newDailyClass)) {
-                        state = state.copy(
-                            dailyClasses = dailyClasses,
-                            selectedClass = null
+                    if(shouldDelete){
+                        newDailyClasses.remove(selectedClass)
+                    }else{
+                        val newDailyClass = selectedClass.copy(
+                            startTime = event.startTime,
+                            endTime = event.endTime,
+                            date = event.classDate,
+                            cancelled = event.cancelled,
+                            modified = true
                         )
+
+                        Collections.replaceAll(newDailyClasses, selectedClass, newDailyClass)
                     }
+
+                    state = state.copy(
+                        dailyClasses = newDailyClasses,
+                        selectedClass = null
+                    )
                 }
             }
         }
