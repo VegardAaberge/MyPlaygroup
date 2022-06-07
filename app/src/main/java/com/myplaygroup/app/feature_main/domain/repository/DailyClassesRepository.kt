@@ -10,7 +10,7 @@ interface DailyClassesRepository {
         fetchFromRemote: Boolean
     ) : Flow<Resource<List<DailyClass>>>
 
-    fun createDailyClasses(
+    fun uploadDailyClasses(
         unsyncedClasses: List<DailyClass>
     ): Flow<Resource<List<DailyClass>>>
 }

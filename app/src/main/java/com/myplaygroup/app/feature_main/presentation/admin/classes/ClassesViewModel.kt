@@ -67,7 +67,7 @@ class ClassesViewModel @Inject constructor(
                 val unsyncedClasses = getUnsyncedDailyClasses()
                 viewModelScope.launch(Dispatchers.IO) {
                     repository
-                        .createDailyClasses(unsyncedClasses)
+                        .uploadDailyClasses(unsyncedClasses)
                         .collect{ collectDailyClasses(it) }
                 }
             }
