@@ -86,7 +86,7 @@ fun CalendarClassesScreenPreview() {
                     date = selectedDay,
                     endTime = LocalTime.of(11, 30),
                     startTime = LocalTime.of(9, 30),
-                    cancelled = false,
+                    cancelled = true,
                     dayOfWeek = DayOfWeek.MONDAY,
                 )
             ),
