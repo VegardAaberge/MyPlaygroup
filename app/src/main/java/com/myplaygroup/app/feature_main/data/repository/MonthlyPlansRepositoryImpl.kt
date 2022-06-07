@@ -9,52 +9,37 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
-import com.myplaygroup.app.feature_main.domain.model.UserSchedule
-import com.myplaygroup.app.feature_main.domain.repository.ScheduleRepository
+import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
+import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
+import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 import javax.inject.Inject
 
-class ScheduleRepositoryImpl @Inject constructor(
-    private val api: PlaygroupApi,
+class MonthlyPlansRepositoryImpl @Inject constructor(
     private val mainDatabase: MainDatabase,
-    private val app: Application,
     private val tokenRepository: TokenRepository,
-) : ScheduleRepository {
+    private val api: PlaygroupApi,
+    private val app: Application
+) : MonthlyPlansRepository {
 
-    private val dao = mainDatabase.mainDao()
+    val dao = mainDatabase.mainDao()
 
-    override suspend fun getUsersMonthlyPlans(
+    override fun getAllMonthlyPlans(
         fetchFromRemote: Boolean
-    ): Flow<Resource<UserSchedule>> {
+    ): Flow<Resource<List<MonthlyPlan>>> {
 
         return networkBoundResource(
             query = {
-                val dailyClasses = dao.getDailyClasses().map { x -> x.toDailyClass() }
-                val monthlyPlans = dao.getMonthlyPlans().map { x -> x.toMonthlyPlan() }
-
-                UserSchedule(
-                    dailyClasses = dailyClasses,
-                    monthlyPlans = monthlyPlans
-                )
+                dao.getMonthlyPlans().map { x -> x.toMonthlyPlan() }
             },
             fetch = {
-                api.getSchedule()
+                api.getMonthlyPlans()
             },
-            saveFetchResult = { schedule ->
+            saveFetchResult = { monthlyPlans ->
                 dao.clearMonthlyPlans()
-                dao.insertMonthlyPlans(schedule.monthlyPlans)
-
-                dao.clearDailyClasses()
-                dao.insertDailyClasses(schedule.dailyClasses)
-
-                val dailyClasses2 = dao.getDailyClasses().map { x -> x.toDailyClass() }
-                val monthlyPlans2 = dao.getMonthlyPlans().map { x -> x.toMonthlyPlan() }
-
-                UserSchedule(
-                    dailyClasses = dailyClasses2,
-                    monthlyPlans = monthlyPlans2
-                )
+                dao.insertMonthlyPlans(monthlyPlans)
+                dao.getMonthlyPlans().map { it.toMonthlyPlan() }
             },
             shouldFetch = {
                 fetchFromRemote && checkForInternetConnection(app)

@@ -20,16 +20,6 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromHealth(list: List<DayOfWeek>) : String {
-        return fromList(list.map { x -> x.name })
-    }
-
-    @TypeConverter
-    fun toDayOfWeek(value: String) : List<DayOfWeek> {
-        return toList(value).map { x -> enumValueOf(x) }
-    }
-
-    @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return value?.let { Date(it) }
     }

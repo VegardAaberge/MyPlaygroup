@@ -5,7 +5,7 @@ import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MonthlyPlansResponse(
+data class ScheduleResponse(
     val dailyClasses: List<DailyClassEntity>,
     val monthlyPlans: List<MonthlyPlanEntity>,
     val userCredit: Int,

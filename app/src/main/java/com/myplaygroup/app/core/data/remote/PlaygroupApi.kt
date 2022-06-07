@@ -1,17 +1,14 @@
 package com.myplaygroup.app.core.data.remote
 
-import com.myplaygroup.app.feature_main.data.remote.response.SimpleResponse
-import com.myplaygroup.app.feature_main.data.remote.response.DailyClassesResponse
 import com.myplaygroup.app.feature_login.data.requests.*
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
 import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
 import com.myplaygroup.app.feature_main.data.model.DailyClassEntity
 import com.myplaygroup.app.feature_main.data.model.MessageEntity
+import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
 import com.myplaygroup.app.feature_main.data.remote.request.SendMessageRequest
-import com.myplaygroup.app.feature_main.data.remote.response.MessagesResponse
-import com.myplaygroup.app.feature_main.data.remote.response.MonthlyPlansResponse
-import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.data.remote.response.*
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
 import com.myplaygroup.app.feature_profile.data.responses.ProfileResponse
 import okhttp3.MultipartBody
@@ -73,7 +70,7 @@ interface PlaygroupApi {
     suspend fun refreshToken(): Response<RefreshTokenResponse>
 
     @GET("api/v1/classes")
-    suspend fun getAllClasses(): Response<DailyClassesResponse>
+    suspend fun getAllClasses(): Response<List<DailyClassEntity>>
 
     @POST("api/v1/classes")
     suspend fun createDailyClasses(
@@ -81,5 +78,8 @@ interface PlaygroupApi {
     ): Response<List<DailyClassEntity>>
 
     @GET("api/v1/schedule")
-    suspend fun getSchedule(): Response<MonthlyPlansResponse>
+    suspend fun getSchedule(): Response<ScheduleResponse>
+
+    @GET("api/v1/plans")
+    suspend fun getMonthlyPlans() : Response<List<MonthlyPlanEntity>>
 }

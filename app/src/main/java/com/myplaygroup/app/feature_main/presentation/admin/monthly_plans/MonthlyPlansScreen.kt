@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.presentation.admin.monthly_plans
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,6 +41,9 @@ fun MonthlyPlanScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
+                        .clickable {
+
+                        }
                 )
                 if(i < state.monthlyPlans.size){
                     Divider(modifier = Modifier.padding(

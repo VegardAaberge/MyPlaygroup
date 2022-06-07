@@ -2,6 +2,7 @@ package com.myplaygroup.app.core.data.mapper
 
 import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
+import java.time.DayOfWeek
 
 fun MonthlyPlanEntity.toMonthlyPlan() : MonthlyPlan {
 
@@ -10,7 +11,7 @@ fun MonthlyPlanEntity.toMonthlyPlan() : MonthlyPlan {
         kidName = kidName,
         paid = paid,
         planName = planName,
-        daysOfWeek = daysOfWeek,
+        daysOfWeek = daysOfWeek.map { x -> enumValueOf<DayOfWeek>(x) },
         planPrice = planPrice
     )
 }
@@ -22,7 +23,7 @@ fun MonthlyPlan.toMonthlyPlanEntity() : MonthlyPlanEntity {
         kidName = kidName,
         paid = paid,
         planName = planName,
-        daysOfWeek = daysOfWeek,
+        daysOfWeek = daysOfWeek.map { x -> x.name },
         planPrice = planPrice
     )
 }

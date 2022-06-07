@@ -10,9 +10,9 @@ import java.util.*
 @Entity
 data class MonthlyPlanEntity(
     @PrimaryKey val id: Long,
-    val kidName: String,
     val paid: Boolean,
     val planName: String,
-    val daysOfWeek: List<DayOfWeek>,
-    val planPrice: Int
+    val daysOfWeek: List<String>,
+    val planPrice: Long,
+    val kidName: String,
 )

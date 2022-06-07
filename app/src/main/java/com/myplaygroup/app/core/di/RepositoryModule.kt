@@ -4,16 +4,10 @@ import com.myplaygroup.app.core.data.repository.ImageRepositoryImpl
 import com.myplaygroup.app.core.data.repository.TokenRepositoryImpl
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.domain.repository.TokenRepository
-import com.myplaygroup.app.feature_main.data.repository.DailyClassesRepositoryImpl
-import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import com.myplaygroup.app.feature_login.data.repository.LoginRepositoryImpl
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
-import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
-import com.myplaygroup.app.feature_main.data.repository.ChatRepositoryImpl
-import com.myplaygroup.app.feature_main.data.repository.ScheduleRepositoryImpl
-import com.myplaygroup.app.feature_main.domain.repository.ChatSocketRepository
-import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
-import com.myplaygroup.app.feature_main.domain.repository.ScheduleRepository
+import com.myplaygroup.app.feature_main.data.repository.*
+import com.myplaygroup.app.feature_main.domain.repository.*
 import com.myplaygroup.app.feature_profile.data.repository.ProfileRepositoryImpl
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.Binds
@@ -67,6 +61,12 @@ abstract class RepositoryModule {
     abstract fun bindDailyClassesRepository(
         dailyClassesRepository: DailyClassesRepositoryImpl
     ): DailyClassesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMonthlyPlansRepository(
+        monthlyPlansRepository: MonthlyPlansRepositoryImpl
+    ): MonthlyPlansRepository
 
     @Binds
     @Singleton
