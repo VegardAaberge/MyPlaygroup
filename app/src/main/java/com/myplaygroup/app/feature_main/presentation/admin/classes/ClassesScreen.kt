@@ -26,21 +26,9 @@ fun ClassesScreen(
     adminViewModel: AdminViewModel,
     viewModel: ClassesViewModel = hiltViewModel(),
 ) {
-    adminViewModel.state = adminViewModel.state.copy(
-        actionButtons = listOf(
-            AdminState.ActionButton(
-                action = {
-                    viewModel.onEvent(ClassesScreenEvent.UploadCreatedClasses)
-                },
-                icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
-            ),
-            AdminState.ActionButton(
-                action = {
-                    viewModel.onEvent(ClassesScreenEvent.ToggleCreateClassesSection)
-                },
-                icon = Icons.Default.DateRange
-            )
-        )
+    CreateToolbarActionItems(
+        viewModel = viewModel,
+        adminViewModel = adminViewModel
     )
 
     val scaffoldState = collectEventFlow(viewModel = viewModel)
@@ -90,6 +78,36 @@ fun ClassesScreen(
             }
         }
     }
+}
+
+@Composable
+private fun CreateToolbarActionItems(
+    viewModel: ClassesViewModel,
+    adminViewModel: AdminViewModel
+){
+    val actionButtons = mutableListOf<AdminState.ActionButton>()
+    if(viewModel.getUnsyncedDailyClasses().any()){
+        actionButtons.add(
+            AdminState.ActionButton(
+                action = {
+                    viewModel.onEvent(ClassesScreenEvent.UploadCreatedClasses)
+                },
+                icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+            ),
+        )
+    }
+    actionButtons.add(
+        AdminState.ActionButton(
+            action = {
+                viewModel.onEvent(ClassesScreenEvent.ToggleCreateClassesSection)
+            },
+            icon = Icons.Default.DateRange
+        )
+    )
+
+    adminViewModel.state = adminViewModel.state.copy(
+        actionButtons = actionButtons
+    )
 }
 
 @Composable

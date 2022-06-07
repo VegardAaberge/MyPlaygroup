@@ -64,7 +64,7 @@ class ClassesViewModel @Inject constructor(
                 createDailyClasses()
             }
             is ClassesScreenEvent.UploadCreatedClasses -> {
-                val unsyncedClasses = state.dailyClasses.filter { x -> x.id == -1L || x.modified }
+                val unsyncedClasses = getUnsyncedDailyClasses()
                 viewModelScope.launch(Dispatchers.IO) {
                     repository
                         .createDailyClasses(unsyncedClasses)
@@ -78,7 +78,8 @@ class ClassesViewModel @Inject constructor(
                     val newDailyClass = selectedClass.copy(
                         startTime = event.startTime,
                         endTime = event.endTime,
-                        date = event.classDate
+                        date = event.classDate,
+                        modified = true
                     )
 
                     if (Collections.replaceAll(dailyClasses, selectedClass, newDailyClass)) {
@@ -90,6 +91,10 @@ class ClassesViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getUnsyncedDailyClasses() : List<DailyClass> {
+        return state.dailyClasses.filter { x -> x.id == -1L || x.modified }
     }
 
     private fun initWeekdays(){
