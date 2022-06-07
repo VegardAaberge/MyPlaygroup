@@ -1,15 +1,10 @@
 package com.myplaygroup.app.feature_main.presentation.admin
 
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,7 +19,7 @@ import com.myplaygroup.app.feature_main.presentation.admin.classes.ClassesScreen
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawerBody
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import com.myplaygroup.app.feature_main.presentation.admin.overview.OverviewScreen
-import com.myplaygroup.app.feature_main.presentation.admin.plans.PlansScreen
+import com.myplaygroup.app.feature_main.presentation.admin.monthly_plans.MonthlyPlanScreen
 import com.myplaygroup.app.feature_main.presentation.admin.users.UsersScreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -125,7 +120,7 @@ fun DrawerNavigation(
     adminViewModel: AdminViewModel
 ) {
 
-    NavHost(navController, startDestination = NavDrawer.CLASSES) {
+    NavHost(navController, startDestination = NavDrawer.PLANS) {
         composable(NavDrawer.OVERVIEW) {
             OverviewScreen(adminViewModel)
         }
@@ -133,7 +128,7 @@ fun DrawerNavigation(
             ClassesScreen(adminViewModel)
         }
         composable(NavDrawer.PLANS) {
-            PlansScreen(adminViewModel)
+            MonthlyPlanScreen(adminViewModel)
         }
         composable(NavDrawer.USERS) {
             UsersScreen(adminViewModel)
