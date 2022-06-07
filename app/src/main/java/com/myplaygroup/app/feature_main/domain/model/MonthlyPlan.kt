@@ -9,5 +9,6 @@ data class MonthlyPlan(
     val kidName: String,
     val paid: Boolean,
     val planName: String,
+    val daysOfWeek: List<DayOfWeek>,
     val planPrice: Int
 )

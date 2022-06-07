@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.DayOfWeek
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +24,7 @@ class MonthlyPlansViewModel @Inject constructor(
                     kidName = "emma",
                     paid = true,
                     planName = "Evening v2",
+                    daysOfWeek = listOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY),
                     planPrice = 790
                 ),
                 MonthlyPlan(
@@ -30,6 +32,7 @@ class MonthlyPlansViewModel @Inject constructor(
                     kidName = "ellie",
                     paid = false,
                     planName = "Evening v2",
+                    daysOfWeek = listOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY),
                     planPrice = 790
                 )
             )

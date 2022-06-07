@@ -10,6 +10,7 @@ fun MonthlyPlanEntity.toMonthlyPlan() : MonthlyPlan {
         kidName = kidName,
         paid = paid,
         planName = planName,
+        daysOfWeek = daysOfWeek,
         planPrice = planPrice
     )
 }
@@ -21,6 +22,7 @@ fun MonthlyPlan.toMonthlyPlanEntity() : MonthlyPlanEntity {
         kidName = kidName,
         paid = paid,
         planName = planName,
+        daysOfWeek = daysOfWeek,
         planPrice = planPrice
     )
 }

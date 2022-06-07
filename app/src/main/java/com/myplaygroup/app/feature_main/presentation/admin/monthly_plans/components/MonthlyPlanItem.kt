@@ -51,7 +51,9 @@ fun MonthlyPlanItem(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "M, W, F",
+                    text = monthlyPlan.daysOfWeek
+                        .map { x -> x.name.take(1) }
+                        .joinToString(", "),
                     fontWeight = FontWeight.Light,
                     color = MaterialTheme.colors.onBackground
                 )
@@ -89,6 +91,11 @@ fun SelectedClassDialogPreview() {
                 id = -1,
                 kidName = "emma",
                 paid = true,
+                daysOfWeek = listOf(
+                    DayOfWeek.MONDAY,
+                    DayOfWeek.WEDNESDAY,
+                    DayOfWeek.FRIDAY
+                ),
                 planName = "Evening v2",
                 planPrice = 790
             ),
