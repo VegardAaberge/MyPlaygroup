@@ -42,7 +42,7 @@ fun AdminScreen(
 
     val state = adminViewModel.state
     val title = adminViewModel.state.title
-    val actionButton = adminViewModel.state.actionButton
+    val actionButtons = adminViewModel.state.actionButtons
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -68,7 +68,7 @@ fun AdminScreen(
                     }
                 },
                 actions = {
-                    actionButton?.let {
+                    actionButtons.forEach { actionButton ->
                         IconButton(
                             onClick = actionButton.action,
                         ) {

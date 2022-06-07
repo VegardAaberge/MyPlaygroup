@@ -18,7 +18,7 @@ fun OverviewScreen(
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     adminViewModel.state = adminViewModel.state.copy(
-        actionButton = null
+        actionButtons = listOf()
     )
 
     Box(

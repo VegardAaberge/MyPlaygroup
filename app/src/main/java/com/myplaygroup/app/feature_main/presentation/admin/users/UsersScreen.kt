@@ -15,7 +15,7 @@ fun UsersScreen(
     usersViewModel: UsersViewModel = hiltViewModel()
 ) {
     adminViewModel.state = adminViewModel.state.copy(
-        actionButton = null
+        actionButtons = listOf()
     )
 
     Box(

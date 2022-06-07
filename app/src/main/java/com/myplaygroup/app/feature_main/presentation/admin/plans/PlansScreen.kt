@@ -15,7 +15,7 @@ fun PlansScreen(
     plansViewModel: PlansViewModel = hiltViewModel()
 ) {
     adminViewModel.state = adminViewModel.state.copy(
-        actionButton = null
+        actionButtons = listOf()
     )
 
     Box(

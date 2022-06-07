@@ -42,22 +42,7 @@ class ClassesViewModel @Inject constructor(
                 state = state.copy(isCreateVisible = !state.isCreateVisible)
             }
             is ClassesScreenEvent.SelectedNewDate -> {
-                state = state.copy(
-                    selectedDate = event.selectedDate
-                )
-            }
-            is ClassesScreenEvent.ClassChanged -> {
-                val startTime = if (event.type == DailyClassType.MORNING) {
-                    LocalTime.of(9, 30)
-                } else LocalTime.of(17, 30)
-
-                val endTime = startTime.plusHours(2)
-
-                state = state.copy(
-                    startTime = startTime,
-                    endTime = endTime,
-                    dailyClassType = event.type
-                )
+                state = state.copy(selectedDate = event.selectedDate)
             }
             is ClassesScreenEvent.StartTimeChanged -> {
                 state = state.copy(startTime = event.startTime)
@@ -65,17 +50,28 @@ class ClassesViewModel @Inject constructor(
             is ClassesScreenEvent.EndTimeChanged -> {
                 state = state.copy(endTime = event.endTime)
             }
+            is ClassesScreenEvent.ClassSelected -> {
+                state = state.copy(selectedClass = event.dailyClass)
+            }
             is ClassesScreenEvent.WeekdayChanged -> {
                 setWeekdays(event.dayOfWeek)
+            }
+            is ClassesScreenEvent.ClassChanged -> {
+                setDailyClassType(event.type)
             }
             is ClassesScreenEvent.GenerateClassesTapped -> {
                 state = state.copy(isCreateVisible = false)
                 createDailyClasses()
             }
-            is ClassesScreenEvent.ClassSelected -> {
-                state = state.copy(selectedClass = event.dailyClass)
+            is ClassesScreenEvent.UploadCreatedClasses -> {
+                val unsyncedClasses = state.dailyClasses.filter { x -> x.id == -1L || x.modified }
+                viewModelScope.launch(Dispatchers.IO) {
+                    repository
+                        .createDailyClasses(unsyncedClasses)
+                        .collect{ collectDailyClasses(it) }
+                }
             }
-            is ClassesScreenEvent.SelectedClassChanged -> {
+            is ClassesScreenEvent.SubmitSelectedClassTapped -> {
                 state.selectedClass?.let { selectedClass ->
 
                     val dailyClasses = state.dailyClasses
@@ -115,6 +111,20 @@ class ClassesViewModel @Inject constructor(
         weekdays.put(dayOfWeek, !currentValue)
         state = state.copy(
             weekdays = weekdays
+        )
+    }
+
+    private fun setDailyClassType(type: DailyClassType){
+        val startTime = if (type == DailyClassType.MORNING) {
+            LocalTime.of(9, 30)
+        } else LocalTime.of(17, 30)
+
+        val endTime = startTime.plusHours(2)
+
+        state = state.copy(
+            startTime = startTime,
+            endTime = endTime,
+            dailyClassType = type
         )
     }
 

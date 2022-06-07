@@ -56,7 +56,9 @@ class DailyClassesRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun createDailyClasses(): Flow<Resource<Unit>> {
+    override fun createDailyClasses(
+        unsyncedClasses: List<DailyClass>
+    ): Flow<Resource<List<DailyClass>>> {
         TODO("Not yet implemented")
     }
 }
