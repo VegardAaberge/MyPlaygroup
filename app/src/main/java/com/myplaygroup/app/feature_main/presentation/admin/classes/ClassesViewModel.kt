@@ -16,6 +16,7 @@ import java.time.DateTimeException
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,8 +36,8 @@ class ClassesViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: ClassesScreenEvent){
-        when(event){
+    fun onEvent(event: ClassesScreenEvent) {
+        when (event) {
             is ClassesScreenEvent.ToggleCreateClassesSection -> {
                 state = state.copy(isCreateVisible = !state.isCreateVisible)
             }
@@ -46,7 +47,7 @@ class ClassesViewModel @Inject constructor(
                 )
             }
             is ClassesScreenEvent.ClassChanged -> {
-                val startTime = if(event.type == DailyClassType.MORNING){
+                val startTime = if (event.type == DailyClassType.MORNING) {
                     LocalTime.of(9, 30)
                 } else LocalTime.of(17, 30)
 
@@ -73,6 +74,24 @@ class ClassesViewModel @Inject constructor(
             }
             is ClassesScreenEvent.ClassSelected -> {
                 state = state.copy(selectedClass = event.dailyClass)
+            }
+            is ClassesScreenEvent.SelectedClassChanged -> {
+                state.selectedClass?.let { selectedClass ->
+
+                    val dailyClasses = state.dailyClasses
+                    val newDailyClass = selectedClass.copy(
+                        startTime = event.startTime,
+                        endTime = event.endTime,
+                        date = event.classDate
+                    )
+
+                    if (Collections.replaceAll(dailyClasses, selectedClass, newDailyClass)) {
+                        state = state.copy(
+                            dailyClasses = dailyClasses,
+                            selectedClass = null
+                        )
+                    }
+                }
             }
         }
     }

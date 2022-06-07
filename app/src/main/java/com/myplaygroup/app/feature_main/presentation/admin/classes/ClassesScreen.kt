@@ -81,7 +81,12 @@ fun ClassesScreen(
 
             if(state.selectedClass != null) {
                 SelectedClassDialog(
-                    selectedClass = state.selectedClass
+                    selectedClass = state.selectedClass,
+                    submit = { startTime, endTime, classDate ->
+                        viewModel.onEvent(
+                            ClassesScreenEvent.SelectedClassChanged(startTime, endTime, classDate)
+                        )
+                    }
                 )
             }
         }

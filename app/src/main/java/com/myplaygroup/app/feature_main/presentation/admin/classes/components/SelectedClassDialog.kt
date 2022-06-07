@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,8 +25,19 @@ import java.time.LocalTime
 
 @Composable
 fun SelectedClassDialog(
-    selectedClass: DailyClass
+    selectedClass: DailyClass,
+    submit: (LocalTime, LocalTime, LocalDate) -> Unit
 ) {
+    var startTime by remember {
+        mutableStateOf(selectedClass.startTime)
+    }
+    var endTime by remember {
+        mutableStateOf(selectedClass.endTime)
+    }
+    var classDate by remember {
+        mutableStateOf(selectedClass.date)
+    }
+
     Dialog(
         onDismissRequest = {
 
@@ -61,9 +72,9 @@ fun SelectedClassDialog(
 
             LabeledClassTime(
                 title = "Start Time",
-                classTime = selectedClass.startTime,
+                classTime = startTime,
                 timeChanged = {
-
+                    startTime = it
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -72,9 +83,9 @@ fun SelectedClassDialog(
 
             LabeledClassTime(
                 title = "End Time",
-                classTime = selectedClass.endTime,
+                classTime = endTime,
                 timeChanged = {
-
+                    endTime = it
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -83,16 +94,16 @@ fun SelectedClassDialog(
 
             LabeledClassDate(
                 title = "Class Date",
-                classDate = selectedClass.date,
+                classDate = classDate,
                 timeChanged = {
-
+                    classDate = it
                 },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Button(
                 onClick = {
-
+                    submit(startTime, endTime, classDate)
                 }
             ) {
                 Text(text = "Submit")
@@ -112,6 +123,8 @@ fun SelectedClassDialogPreview() {
             endTime = LocalTime.now().plusHours(2),
             startTime = LocalTime.now(),
             dayOfWeek = DayOfWeek.MONDAY
-        ))
+        )){ a, b, c ->
+
+        }
     }
 }
