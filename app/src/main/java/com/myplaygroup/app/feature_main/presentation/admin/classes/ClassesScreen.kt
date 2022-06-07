@@ -10,6 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.calendar_classes.CalendarClassesScreen
@@ -67,14 +69,21 @@ fun ClassesScreen(
             )
 
             if(state.selectedClass != null) {
-                SelectedClassDialog(
-                    selectedClass = state.selectedClass,
-                    submit = { startTime, endTime, classDate, cancelled ->
-                        viewModel.onEvent(
-                            ClassesScreenEvent.SubmitSelectedClassTapped(startTime, endTime, classDate, cancelled)
-                        )
-                    }
-                )
+                Dialog(
+                    onDismissRequest = {
+                        viewModel.onEvent(ClassesScreenEvent.DialogDismissed)
+                    },
+                    properties = DialogProperties()
+                ) {
+                    SelectedClassDialog(
+                        selectedClass = state.selectedClass,
+                        submit = { startTime, endTime, classDate, cancelled ->
+                            viewModel.onEvent(
+                                ClassesScreenEvent.SubmitSelectedClassTapped(startTime, endTime, classDate, cancelled)
+                            )
+                        }
+                    )
+                }
             }
         }
     }

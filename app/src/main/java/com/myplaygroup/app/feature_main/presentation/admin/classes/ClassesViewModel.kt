@@ -53,6 +53,9 @@ class ClassesViewModel @Inject constructor(
             is ClassesScreenEvent.ClassSelected -> {
                 state = state.copy(selectedClass = event.dailyClass)
             }
+            is ClassesScreenEvent.DialogDismissed -> {
+                state = state.copy(selectedClass = null)
+            }
             is ClassesScreenEvent.WeekdayChanged -> {
                 setWeekdays(event.dayOfWeek)
             }

@@ -10,6 +10,7 @@ sealed class ClassesScreenEvent {
     object ToggleCreateClassesSection : ClassesScreenEvent()
     object GenerateClassesTapped : ClassesScreenEvent()
     object UploadCreatedClasses : ClassesScreenEvent()
+    object DialogDismissed : ClassesScreenEvent()
     data class SelectedNewDate(val selectedDate: LocalDate?) : ClassesScreenEvent()
     data class ClassChanged(val type: DailyClassType) : ClassesScreenEvent()
     data class WeekdayChanged(val dayOfWeek: DayOfWeek) : ClassesScreenEvent()

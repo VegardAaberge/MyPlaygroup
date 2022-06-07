@@ -42,112 +42,103 @@ fun SelectedClassDialog(
         mutableStateOf(selectedClass.cancelled)
     }
 
-    Dialog(
-        onDismissRequest = {
-
-        },
-        properties = DialogProperties(
-
-        )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier
+            .width(400.dp)
+            .background(Color.White, RoundedCornerShape(10.dp))
+            .border(1.dp, color = Color.Black, RoundedCornerShape(10.dp))
+            .padding(16.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly,
+
+        Text(
+            text = selectedClass.classType,
+            style = MaterialTheme.typography.h4
+        )
+
+        BasicTextField(
+            label = "Day of week",
+            width = 170.dp,
+            fieldValue = selectedClass.dayOfWeek.name
+                .lowercase()
+                .replaceFirstChar { x -> x.uppercase() },
             modifier = Modifier
-                .width(400.dp)
-                .background(Color.White, RoundedCornerShape(10.dp))
-                .border(1.dp, color = Color.Black, RoundedCornerShape(10.dp))
-                .padding(16.dp)
-        ){
+                .padding(vertical = 5.dp)
+                .align(Alignment.Start)
+        )
 
+        LabeledClassTime(
+            title = "Start Time",
+            classTime = startTime,
+            timeChanged = {
+                startTime = it
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        LabeledClassTime(
+            title = "End Time",
+            classTime = endTime,
+            timeChanged = {
+                endTime = it
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        LabeledClassDate(
+            title = "Class Date",
+            classDate = classDate,
+            timeChanged = {
+                classDate = it
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
+        ) {
             Text(
-                text = selectedClass.classType,
-                style = MaterialTheme.typography.h4
+                text = if (selectedClass.id == -1L) {
+                    "Delete"
+                } else "Cancelled"
             )
-
-            BasicTextField(
-                label = "Day of week",
-                width = 170.dp,
-                fieldValue = selectedClass.dayOfWeek.name
-                    .lowercase()
-                    .replaceFirstChar { x -> x.uppercase() },
-                modifier = Modifier
-                    .padding(vertical = 5.dp)
-                    .align(Alignment.Start)
-            )
-
-            LabeledClassTime(
-                title = "Start Time",
-                classTime = startTime,
-                timeChanged = {
-                    startTime = it
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            LabeledClassTime(
-                title = "End Time",
-                classTime = endTime,
-                timeChanged = {
-                    endTime = it
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            LabeledClassDate(
-                title = "Class Date",
-                classDate = classDate,
-                timeChanged = {
-                    classDate = it
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = if(selectedClass.id == -1L){
-                        "Delete"
-                    } else "Cancelled"
-                )
-                Switch(
-                    colors =SwitchDefaults.colors(
-                        checkedThumbColor = colorResource(id = R.color.keynote_red_2),
-                        uncheckedThumbColor = colorResource(id = R.color.keynote_red_2),
-                        uncheckedTrackColor = Color.LightGray
-                    ),
-                    onCheckedChange = {
-                        cancelled = !cancelled
-                    },
-                    checked = cancelled
-                )
-            }
-
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = if(cancelled && selectedClass.id == -1L){
-                        MaterialTheme.colors.error
-                    } else MaterialTheme.colors.primary,
+            Switch(
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = colorResource(id = R.color.keynote_red_2),
+                    uncheckedThumbColor = colorResource(id = R.color.keynote_red_2),
+                    uncheckedTrackColor = Color.LightGray
                 ),
-                onClick = {
-                    submit(startTime, endTime, classDate, cancelled)
-                }
-            ) {
-                Text(
-                    text = if(cancelled && selectedClass.id == -1L){
-                        "Delete"
-                    } else "Update"
-                )
+                onCheckedChange = {
+                    cancelled = !cancelled
+                },
+                checked = cancelled
+            )
+        }
+
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = if (cancelled && selectedClass.id == -1L) {
+                    MaterialTheme.colors.error
+                } else MaterialTheme.colors.primary,
+            ),
+            onClick = {
+                submit(startTime, endTime, classDate, cancelled)
             }
+        ) {
+            Text(
+                text = if (cancelled && selectedClass.id == -1L) {
+                    "Delete"
+                } else "Update"
+            )
         }
     }
 }
