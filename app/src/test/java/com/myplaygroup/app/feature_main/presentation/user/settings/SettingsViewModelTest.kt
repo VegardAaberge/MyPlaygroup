@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_main.presentation.settings
+package com.myplaygroup.app.feature_main.presentation.user.settings
 
 import com.google.common.truth.Truth
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
@@ -13,8 +13,6 @@ import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
 import com.myplaygroup.app.feature_main.data.repository.FakeMainRepository
 import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
-import com.myplaygroup.app.feature_main.presentation.user.settings.SettingsScreenEvent
-import com.myplaygroup.app.feature_main.presentation.user.settings.SettingsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

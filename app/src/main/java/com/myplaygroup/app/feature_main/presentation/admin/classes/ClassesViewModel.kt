@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.domain.model.DailyClassType
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.DailyClassType
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,8 +27,6 @@ class ClassesViewModel @Inject constructor(
     var state by mutableStateOf(ClassesState())
 
     init {
-        initWeekdays()
-
         viewModelScope.launch(Dispatchers.IO) {
             repository
                 .getAllDailyClasses(true)
@@ -106,19 +104,6 @@ class ClassesViewModel @Inject constructor(
 
     fun getUnsyncedDailyClasses() : List<DailyClass> {
         return state.dailyClasses.filter { x -> x.id == -1L || x.modified }
-    }
-
-    private fun initWeekdays(){
-        val weekdays = state.weekdays
-        weekdays.put(DayOfWeek.MONDAY, true)
-        weekdays.put(DayOfWeek.TUESDAY, true)
-        weekdays.put(DayOfWeek.WEDNESDAY, true)
-        weekdays.put(DayOfWeek.THURSDAY, true)
-        weekdays.put(DayOfWeek.FRIDAY, true)
-        weekdays.put(DayOfWeek.SATURDAY, false)
-        state = state.copy(
-            weekdays = weekdays
-        )
     }
 
     private fun setWeekdays(dayOfWeek: DayOfWeek){

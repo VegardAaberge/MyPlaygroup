@@ -22,7 +22,7 @@ class FakeDailyClassesRepository : DailyClassesRepository {
             dayOfWeek = DayOfWeek.MONDAY
         ),
         DailyClass(
-            id =-1,
+            id = 2,
             classType = DailyClassType.EVENING.name,
             date = LocalDate.now().plusDays(1),
             endTime = LocalTime.of(19, 30),
@@ -39,7 +39,14 @@ class FakeDailyClassesRepository : DailyClassesRepository {
 
     override fun uploadDailyClasses(unsyncedClasses: List<DailyClass>): Flow<Resource<List<DailyClass>>> {
         return flow {
-            dailyClasses.addAll(unsyncedClasses)
+            val startIndex = dailyClasses.maxOf { x -> x.id } + 1
+
+            unsyncedClasses.indices.forEach { index ->
+                dailyClasses.add(
+                    unsyncedClasses[index].copy(id = index + startIndex)
+                )
+            }
+
             emit(Resource.Success(dailyClasses))
         }
     }
