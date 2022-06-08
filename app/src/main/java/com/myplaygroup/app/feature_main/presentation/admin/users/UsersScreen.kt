@@ -47,10 +47,10 @@ fun UsersScreen(
                     appUser = appUser,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
                         .clickable {
 
                         }
+                        .padding(16.dp)
                 )
                 if(i < state.appUsers.size){
                     Divider(modifier = Modifier.padding(

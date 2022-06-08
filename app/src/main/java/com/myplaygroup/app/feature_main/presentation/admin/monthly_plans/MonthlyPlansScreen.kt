@@ -47,10 +47,11 @@ fun MonthlyPlanScreen(
                     monthlyPlan = monthlyPlan,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
                         .clickable {
 
                         }
+                        .padding(16.dp)
+
                 )
                 if(i < state.monthlyPlans.size){
                     Divider(modifier = Modifier.padding(
