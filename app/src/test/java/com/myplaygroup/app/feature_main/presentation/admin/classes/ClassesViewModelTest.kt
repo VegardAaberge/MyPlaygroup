@@ -51,14 +51,6 @@ class ClassesViewModelTest {
         Truth.assertThat(viewModel.state.dailyClasses).isEqualTo(dailyClassesRepository.dailyClasses)
     }
 
-    /*
-    fun onEvent(event: ClassesScreenEvent) {
-            is ClassesScreenEvent.GenerateClassesTapped -> {
-            is ClassesScreenEvent.UploadCreatedClasses -> {
-            is ClassesScreenEvent.SubmitSelectedClassTapped -> {
-    }
-    */
-
     @Test
     fun `Generate classes tapped, classes created`() = runBlocking{
 
@@ -105,7 +97,6 @@ class ClassesViewModelTest {
         viewModel.state = viewModel.state.copy(
             dailyClasses = exisistingDailyClasses
         )
-        val dailyClassesSize = viewModel.state.dailyClasses.size
 
         viewModel.onEvent(ClassesScreenEvent.UploadCreatedClasses)
         delay(10)
@@ -115,7 +106,7 @@ class ClassesViewModelTest {
         val syncedDailyClassesSize = dailyClasses.filter { x -> x.id != -1L }.size
 
         Truth.assertThat(unsyncedDailyClasses).isEqualTo(0)
-        Truth.assertThat(syncedDailyClassesSize).isEqualTo(dailyClassesSize)
+        Truth.assertThat(syncedDailyClassesSize).isEqualTo(viewModel.state.dailyClasses.size)
     }
 
     @Test
