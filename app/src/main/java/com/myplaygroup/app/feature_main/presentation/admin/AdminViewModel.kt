@@ -40,7 +40,7 @@ class AdminViewModel @Inject constructor(
     var state by mutableStateOf(AdminState())
 
     init {
-        updateTitle(NavDrawer.OVERVIEW)
+        updateTitle(NavDrawer.CHAT)
 
         viewModelScope.launch {
             loadProfileImage(username.first()){
