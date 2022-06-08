@@ -64,6 +64,12 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindUsersRepository(
+        usersRepository: UsersRepositoryImpl
+    ): UsersRepository
+
+    @Binds
+    @Singleton
     abstract fun bindMonthlyPlansRepository(
         monthlyPlansRepository: MonthlyPlansRepositoryImpl
     ): MonthlyPlansRepository

@@ -16,10 +16,10 @@ import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_admin.presentation.NavDrawerHeader
 import com.myplaygroup.app.feature_main.presentation.admin.chat.ChatScreen
 import com.myplaygroup.app.feature_main.presentation.admin.classes.ClassesScreen
-import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawerBody
-import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
-import com.myplaygroup.app.feature_main.presentation.admin.overview.OverviewScreen
 import com.myplaygroup.app.feature_main.presentation.admin.monthly_plans.MonthlyPlanScreen
+import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
+import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawerBody
+import com.myplaygroup.app.feature_main.presentation.admin.overview.OverviewScreen
 import com.myplaygroup.app.feature_main.presentation.admin.users.UsersScreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -120,7 +120,7 @@ fun DrawerNavigation(
     adminViewModel: AdminViewModel
 ) {
 
-    NavHost(navController, startDestination = NavDrawer.PLANS) {
+    NavHost(navController, startDestination = NavDrawer.USERS) {
         composable(NavDrawer.OVERVIEW) {
             OverviewScreen(adminViewModel)
         }

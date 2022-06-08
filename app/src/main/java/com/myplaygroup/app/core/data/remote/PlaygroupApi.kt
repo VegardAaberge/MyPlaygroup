@@ -1,14 +1,18 @@
 package com.myplaygroup.app.core.data.remote
 
-import com.myplaygroup.app.feature_login.data.requests.*
+import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
+import com.myplaygroup.app.feature_login.data.requests.VerifyCodeRequest
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
 import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
+import com.myplaygroup.app.feature_main.data.model.AppUserEntity
 import com.myplaygroup.app.feature_main.data.model.DailyClassEntity
 import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
 import com.myplaygroup.app.feature_main.data.remote.request.SendMessageRequest
-import com.myplaygroup.app.feature_main.data.remote.response.*
+import com.myplaygroup.app.feature_main.data.remote.response.MessagesResponse
+import com.myplaygroup.app.feature_main.data.remote.response.ScheduleResponse
+import com.myplaygroup.app.feature_main.data.remote.response.SimpleResponse
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
 import com.myplaygroup.app.feature_profile.data.responses.ProfileResponse
 import okhttp3.MultipartBody
@@ -82,4 +86,7 @@ interface PlaygroupApi {
 
     @GET("api/v1/plans")
     suspend fun getMonthlyPlans() : Response<List<MonthlyPlanEntity>>
+
+    @GET("api/v1/users")
+    suspend fun getAppUsers() : Response<List<AppUserEntity>>
 }

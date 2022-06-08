@@ -12,6 +12,7 @@ object Constants {
     const val DATASTORE_FILE = "user.pb"
 
     const val NO_VALUE = "{NO_VALUE}"
+    const val NULL = "null"
 
     const val LOCALHOST_URL = "https://192.168.50.91:8080"
     const val SERVER_URL = "https://vegardaaberge.no:8080"
