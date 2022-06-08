@@ -6,19 +6,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.data.repository.MonthlyPlansRepositoryImpl
-import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
-import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
+import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
 import javax.inject.Inject
 
 @HiltViewModel
 class MonthlyPlansViewModel @Inject constructor(
-    private val repository: MonthlyPlansRepositoryImpl
+    private val repository: MonthlyPlansRepository
 ) : BaseViewModel() {
 
     var state by mutableStateOf(MonthlyPlansState())
