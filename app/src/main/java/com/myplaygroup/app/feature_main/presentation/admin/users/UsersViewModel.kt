@@ -33,6 +33,9 @@ class UsersViewModel @Inject constructor(
             is UsersScreenEvent.CreateUserDialog -> {
                 state = state.copy(showCreateUser = event.show)
             }
+            is UsersScreenEvent.CreateUser -> {
+                state = state.copy(createErrorMessage = "Method is not implemented")
+            }
         }
     }
 
@@ -52,5 +55,9 @@ class UsersViewModel @Inject constructor(
                 state = state.copy(isLoading = result.isLoading)
             }
         }
+    }
+
+    fun getUnsyncedUsers() : List<AppUser> {
+        return state.appUsers.filter { x -> x.id == -1L || x.modified }
     }
 }

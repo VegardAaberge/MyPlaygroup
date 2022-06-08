@@ -8,5 +8,6 @@ data class AppUser(
     val profileCreated: Boolean,
     val profileName: String,
     val userCredit: Long,
-    val username: String
+    val username: String,
+    val modified: Boolean = false
 )

@@ -7,18 +7,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
+import com.myplaygroup.app.feature_main.presentation.admin.users.components.ShowAlertDialog
 import com.plcoding.stockmarketapp.presentation.company_listings.components.UserItem
 
 @Composable
@@ -67,7 +70,12 @@ fun UsersScreen(
                 },
                 properties = DialogProperties()
             ) {
-                Text(text = "Popup")
+                ShowAlertDialog(
+                    createErrorMessage = state.createErrorMessage,
+                    createUser = {
+                        viewModel.onEvent(UsersScreenEvent.CreateUser(it))
+                    }
+                )
             }
         }
     }
@@ -78,14 +86,27 @@ private fun CreateToolbarActionItems(
     viewModel: UsersViewModel,
     adminViewModel: AdminViewModel
 ){
-    adminViewModel.state = adminViewModel.state.copy(
-        actionButtons = listOf(
+    val actionButtons = mutableListOf<AdminState.ActionButton>()
+    if(viewModel.getUnsyncedUsers().any()){
+        actionButtons.add(
             AdminState.ActionButton(
-                icon = Icons.Default.Add,
                 action = {
-                    viewModel.onEvent(UsersScreenEvent.CreateUserDialog(true))
-                }
-            )
+                    viewModel.onEvent(UsersScreenEvent.UploadAppUsers)
+                },
+                icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+            ),
         )
+    }
+    actionButtons.add(
+        AdminState.ActionButton(
+            action = {
+                viewModel.onEvent(UsersScreenEvent.CreateUserDialog(true))
+            },
+            icon = Icons.Default.Add
+        )
+    )
+
+    adminViewModel.state = adminViewModel.state.copy(
+        actionButtons = actionButtons
     )
 }

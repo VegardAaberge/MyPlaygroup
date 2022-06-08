@@ -6,5 +6,6 @@ data class UsersState (
     val appUsers: List<AppUser> = emptyList(),
     val showCreateUser: Boolean = false,
 
+    val createErrorMessage: String? = null,
     val isLoading: Boolean = false
 )
