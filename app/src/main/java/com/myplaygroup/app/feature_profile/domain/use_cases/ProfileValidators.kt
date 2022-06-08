@@ -2,7 +2,7 @@ package com.myplaygroup.app.feature_profile.domain.use_cases
 
 import com.myplaygroup.app.feature_profile.domain.use_cases.validators.*
 
-data class ProfileUseCases (
+data class ProfileValidators (
     val profileNameValidator: ProfileNameValidator = ProfileNameValidator(),
     val phoneNumberValidator: PhoneNumberValidator = PhoneNumberValidator(),
     val passwordValidator: PasswordValidator = PasswordValidator(),

@@ -8,6 +8,7 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
+import com.myplaygroup.app.feature_main.data.model.AppUserEntity
 import com.myplaygroup.app.feature_main.domain.model.AppUser
 import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +24,7 @@ class UsersRepositoryImpl @Inject constructor(
 
     val dao = mainDatabase.mainDao()
 
-    override fun getAllUsers(
+    override suspend fun getAllUsers(
         fetchFromRemote: Boolean
     ): Flow<Resource<List<AppUser>>> {
 
@@ -55,5 +56,18 @@ class UsersRepositoryImpl @Inject constructor(
                 }
             }
         )
+    }
+
+    override suspend fun addUserToDatabase(username: String): Resource<AppUser> {
+        return try {
+            val appUser = AppUserEntity(
+                username = username
+            )
+            dao.insertAppUser(appUser)
+            Resource.Success(appUser.toAppUser())
+        } catch (t: Throwable) {
+            t.printStackTrace()
+            Resource.Error(t.localizedMessage ?: "Unknown error")
+        }
     }
 }

@@ -3,17 +3,18 @@ package com.myplaygroup.app.feature_main.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
+import java.util.*
 
 @Serializable
 @Entity
 data class AppUserEntity(
-    @PrimaryKey val id: Long,
+    @PrimaryKey val clientId: String = UUID.randomUUID().toString(),
+    val id: Long = -1,
     val username: String,
-    val locked: Boolean,
-    val userCredit: Long,
-    val profileCreated: Boolean,
-    val profileName: String?,
-    val email: String?,
-    val phoneNumber: String?,
-
+    val locked: Boolean = false,
+    val userCredit: Long = 0,
+    val profileCreated: Boolean = false,
+    val profileName: String? = null,
+    val email: String? = null,
+    val phoneNumber: String? = null
 )

@@ -1,6 +1,5 @@
 package com.myplaygroup.app.feature_profile.presentation.create_profile
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +9,7 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
-import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileUseCases
+import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileValidators
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -23,7 +22,7 @@ class CreateProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val imageRepository : ImageRepository,
     private val userSettingsManager: UserSettingsManager,
-    private val profileUseCases: ProfileUseCases
+    private val profileUseCases: ProfileValidators
 ) : BaseViewModel() {
 
     var state by mutableStateOf(CreateProfileState())

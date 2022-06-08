@@ -8,7 +8,7 @@ import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
-import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileUseCases
+import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileValidators
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class EditProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val userSettingsManager: UserSettingsManager,
-    private val profileUseCases: ProfileUseCases
+    private val profileUseCases: ProfileValidators
 ) : BaseViewModel() {
 
     var state by mutableStateOf(EditProfileState())

@@ -1,7 +1,10 @@
 package com.myplaygroup.app.feature_main.domain.model
 
+import java.util.*
+
 data class AppUser(
-    val id: Long,
+    val clientId: String = UUID.randomUUID().toString(),
+    val id: Long = -1,
     val email: String,
     val locked: Boolean,
     val phoneNumber: String,

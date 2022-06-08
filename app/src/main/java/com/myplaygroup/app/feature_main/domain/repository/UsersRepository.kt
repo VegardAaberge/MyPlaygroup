@@ -6,7 +6,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface UsersRepository {
 
-    fun getAllUsers(
+    suspend fun getAllUsers(
         fetchFromRemote: Boolean
     ) : Flow<Resource<List<AppUser>>>
+
+    suspend fun addUserToDatabase(
+        username: String
+    ) : Resource<AppUser>
 }

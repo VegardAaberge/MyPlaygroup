@@ -67,9 +67,14 @@ interface MainDao {
         users: List<AppUserEntity>
     )
 
+    @Insert(onConflict = REPLACE)
+    suspend fun insertAppUser(
+        user: AppUserEntity
+    )
+
     @Query("SELECT * FROM appuserentity ORDER BY id")
     suspend fun getAppUsers() : List<AppUserEntity>
 
-    @Query("DELETE FROM appuserentity")
+    @Query("DELETE FROM appuserentity WHERE id != -1")
     fun clearAppUsers()
 }
