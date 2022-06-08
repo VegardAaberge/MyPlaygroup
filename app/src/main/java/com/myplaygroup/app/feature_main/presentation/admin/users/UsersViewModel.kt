@@ -28,6 +28,14 @@ class UsersViewModel @Inject constructor(
         }
     }
 
+    fun onEvent(event: UsersScreenEvent) {
+        when (event) {
+            is UsersScreenEvent.CreateUserDialog -> {
+                state = state.copy(showCreateUser = event.show)
+            }
+        }
+    }
+
     private fun collectAppUsers(result: Resource<List<AppUser>>) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {

@@ -1,7 +1,8 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -71,7 +72,7 @@ fun ClassesScreen(
             if(state.selectedClass != null) {
                 Dialog(
                     onDismissRequest = {
-                        viewModel.onEvent(ClassesScreenEvent.DialogDismissed)
+                        viewModel.onEvent(ClassesScreenEvent.ClassSelected(null))
                     },
                     properties = DialogProperties()
                 ) {

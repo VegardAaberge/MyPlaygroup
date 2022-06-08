@@ -28,6 +28,14 @@ class MonthlyPlansViewModel @Inject constructor(
         }
     }
 
+    fun onEvent(event: MonthlyPlansScreenEvent) {
+        when (event) {
+            is MonthlyPlansScreenEvent.CreateMonthlyPlanDialog -> {
+                state = state.copy(showCreateMonthlyPlan = event.show)
+            }
+        }
+    }
+
     private fun collectMonthlyPlans(result: Resource<List<MonthlyPlan>>) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {

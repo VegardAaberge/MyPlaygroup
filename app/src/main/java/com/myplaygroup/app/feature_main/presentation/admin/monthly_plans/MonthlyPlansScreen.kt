@@ -7,11 +7,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.plcoding.stockmarketapp.presentation.company_listings.components.MonthlyPlanItem
 
@@ -20,11 +26,12 @@ fun MonthlyPlanScreen(
     adminViewModel: AdminViewModel,
     viewModel: MonthlyPlansViewModel = hiltViewModel()
 ) {
-    val scaffoldState = collectEventFlow(viewModel = viewModel)
-
-    adminViewModel.state = adminViewModel.state.copy(
-        actionButtons = listOf()
+    CreateToolbarActionItems(
+        viewModel = viewModel,
+        adminViewModel = adminViewModel
     )
+
+    val scaffoldState = collectEventFlow(viewModel = viewModel)
     val state = viewModel.state
 
     Scaffold(
@@ -52,5 +59,33 @@ fun MonthlyPlanScreen(
                 }
             }
         }
+
+        if(state.showCreateMonthlyPlan){
+            Dialog(
+                onDismissRequest = {
+                    viewModel.onEvent(MonthlyPlansScreenEvent.CreateMonthlyPlanDialog(false))
+                },
+                properties = DialogProperties()
+            ) {
+                Text(text = "Popup")
+            }
+        }
     }
+}
+
+@Composable
+private fun CreateToolbarActionItems(
+    viewModel: MonthlyPlansViewModel,
+    adminViewModel: AdminViewModel
+){
+    adminViewModel.state = adminViewModel.state.copy(
+        actionButtons = listOf(
+            AdminState.ActionButton(
+                icon = Icons.Default.Add,
+                action = {
+                    viewModel.onEvent(MonthlyPlansScreenEvent.CreateMonthlyPlanDialog(true))
+                }
+            )
+        )
+    )
 }
