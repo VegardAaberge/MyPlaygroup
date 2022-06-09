@@ -11,8 +11,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
-import com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.components.ParameterItem
+import com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -37,10 +38,35 @@ fun EditParametersScreen(
             modifier = Modifier.fillMaxSize()
         ){
             items(state.parameterItems.size){ i ->
-                val parameterItems = state.parameterItems[i]
-                ParameterItem(
-                    parameterItems = parameterItems
-                )
+                val item = state.parameterItems[i]
+
+                when(item.type){
+                    ParameterDisplayType.INFO -> {
+                        InfoParamItem(item)
+                    }
+                    ParameterDisplayType.STRING, ParameterDisplayType.NUMBER -> {
+                        TextParamItem(item){
+
+                        }
+                    }
+                    ParameterDisplayType.DATE -> {
+                        DateParamItem(item){
+
+                        }
+                    }
+                    ParameterDisplayType.SWITCH -> {
+                        SwitchParamItem(item){
+
+                        }
+                    }
+                    ParameterDisplayType.TIME -> {
+                        TimeParamItem(item){
+
+                        }
+                    }
+                }
+
+
                 if(i < state.parameterItems.size){
                     Divider(modifier = Modifier.padding(
                         horizontal = 16.dp

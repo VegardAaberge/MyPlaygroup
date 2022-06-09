@@ -1,5 +1,8 @@
 package com.myplaygroup.app.feature_main.domain.interactors
 
+import com.myplaygroup.app.core.data.mapper.toAppUser
+import com.myplaygroup.app.core.data.mapper.toDailyClass
+import com.myplaygroup.app.core.data.mapper.toMonthlyPlan
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.local.MainDao
 import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.*
@@ -17,7 +20,7 @@ class EditParametersInteractor @Inject constructor(
 
         val parameterItems = when(type){
             ParametersType.CLASSES -> {
-                val dailyClass = dao.getDailyClassById(id)
+                val dailyClass = dao.getDailyClassById(id).toDailyClass()
 
                 listOf(
                     ParameterItem(INFO, dailyClass::classType.name, dailyClass.classType),
@@ -29,23 +32,23 @@ class EditParametersInteractor @Inject constructor(
                 )
             }
             ParametersType.PLANS -> {
-                val monthlyPlan = dao.getMonthlyPlanById(id)
+                val monthlyPlan = dao.getMonthlyPlanById(id).toMonthlyPlan()
 
                 listOf(
                     ParameterItem(INFO, monthlyPlan::planName.name, monthlyPlan.planName),
                     ParameterItem(INFO, monthlyPlan::month.name, monthlyPlan.month),
-                    ParameterItem(NUMBER, monthlyPlan::kidName.name, monthlyPlan.planPrice),
-                    ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.daysOfWeek),
                     ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
+                    ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice),
+                    ParameterItem(STRING, monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek),
                 )
             }
             ParametersType.USERS -> {
-                val appUser = dao.getAppUserById(id)
+                val appUser = dao.getAppUserById(id).toAppUser()
 
                 listOf(
                     ParameterItem(INFO, appUser::username.name, appUser.username),
                     ParameterItem(STRING, appUser::phoneNumber.name, appUser.phoneNumber ?: ""),
-                    ParameterItem(SWITCH, appUser::profileName.name, appUser.profileName ?: ""),
+                    ParameterItem(STRING, appUser::profileName.name, appUser.profileName ?: ""),
                     ParameterItem(SWITCH, appUser::profileCreated.name, appUser.profileCreated ?: ""),
                     ParameterItem(SWITCH, appUser::locked.name, appUser.locked ?: ""),
                 )

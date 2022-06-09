@@ -115,7 +115,6 @@ class ClassesViewModelTest {
         val startTime = LocalTime.of(17, 30)
         val endTime = LocalTime.of(19, 30)
         val classDate = LocalDate.of(2022, 12, 1)
-        val cancelled = true
 
         val selectedClass = viewModel.state.dailyClasses.first { x -> x.id == 1L }
 
@@ -127,7 +126,7 @@ class ClassesViewModelTest {
             startTime = startTime,
             endTime = endTime,
             classDate = classDate,
-            delete = cancelled,
+            delete = false,
         ))
 
         val changedClass = viewModel.state.dailyClasses.first { x -> x.id == 1L }
@@ -135,7 +134,6 @@ class ClassesViewModelTest {
         Truth.assertThat(changedClass.startTime).isEqualTo(startTime)
         Truth.assertThat(changedClass.endTime).isEqualTo(endTime)
         Truth.assertThat(changedClass.date).isEqualTo(classDate)
-        Truth.assertThat(changedClass.cancelled).isEqualTo(cancelled)
         Truth.assertThat(viewModel.state.selectedClass).isEqualTo(null)
     }
 
