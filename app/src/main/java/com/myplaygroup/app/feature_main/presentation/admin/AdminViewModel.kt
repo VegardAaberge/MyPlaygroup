@@ -14,6 +14,7 @@ import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
+import com.myplaygroup.app.feature_main.domain.use_cases.MainDaoUseCases
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,8 @@ import javax.inject.Inject
 class AdminViewModel @Inject constructor(
     private val userSettingsManager: UserSettingsManager,
     private val imageRepository: ImageRepository,
-    private val basicAuthInterceptor: BasicAuthInterceptor
+    private val basicAuthInterceptor: BasicAuthInterceptor,
+    private val mainDaoUseCases: MainDaoUseCases
 ) : BaseViewModel() {
 
     val username = userSettingsManager.getFlow {
@@ -75,7 +77,7 @@ class AdminViewModel @Inject constructor(
     private fun logout() = viewModelScope.launch {
         basicAuthInterceptor.accessToken = null
         userSettingsManager.clearData()
-        //repository.clearAllTables()
+        mainDaoUseCases.clearAllTables()
 
         setUIEvent(
             UiEvent.PopAndNavigateTo(

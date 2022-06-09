@@ -8,14 +8,9 @@ import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
-import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -62,12 +57,5 @@ class ChatRepositoryImpl @Inject constructor(
                 }
             }
         )
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    override fun clearAllTables() {
-        GlobalScope.launch(Dispatchers.IO) {
-            mainDatabase.clearAllTables()
-        }
     }
 }

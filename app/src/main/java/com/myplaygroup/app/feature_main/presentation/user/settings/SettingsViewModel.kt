@@ -3,14 +3,14 @@ package com.myplaygroup.app.feature_main.presentation.user.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
-import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.ImageRepository
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
-import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
+import com.myplaygroup.app.feature_main.domain.use_cases.MainDaoUseCases
 import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -22,8 +22,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val basicAuthInterceptor: BasicAuthInterceptor,
     private val imageRepository: ImageRepository,
-    private val repository: ChatRepository,
-    private val userSettingsManager: UserSettingsManager
+    private val userSettingsManager: UserSettingsManager,
+    private val daoUseCases: MainDaoUseCases
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel
@@ -55,7 +55,7 @@ class SettingsViewModel @Inject constructor(
     private fun logout() = viewModelScope.launch {
         basicAuthInterceptor.accessToken = null
         userSettingsManager.clearData()
-        repository.clearAllTables()
+        daoUseCases.clearAllTables()
 
         mainViewModel.setUIEvent(
             BaseViewModel.UiEvent.PopAndNavigateTo(

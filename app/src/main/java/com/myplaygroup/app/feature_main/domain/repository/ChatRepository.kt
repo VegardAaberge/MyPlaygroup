@@ -9,6 +9,4 @@ interface ChatRepository {
     suspend fun getChatMessages(
         fetchFromRemote: Boolean
     ) : Flow<Resource<List<Message>>>
-
-    fun clearAllTables()
 }
