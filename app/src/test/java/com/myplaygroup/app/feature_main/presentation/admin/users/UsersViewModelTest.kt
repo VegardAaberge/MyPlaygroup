@@ -3,6 +3,7 @@ package com.myplaygroup.app.feature_main.presentation.admin.users
 import com.google.common.truth.Truth
 import com.myplaygroup.app.core.utility.MainCoroutineRule
 import com.myplaygroup.app.feature_main.data.repository.FakeUsersRepository
+import com.myplaygroup.app.feature_main.domain.interactors.MainValidationInteractors
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -22,7 +23,10 @@ class UsersViewModelTest {
     @Before
     fun setUp() {
         usersRepository = FakeUsersRepository()
-        viewModel = UsersViewModel(usersRepository)
+        viewModel = UsersViewModel(
+            usersRepository,
+            MainValidationInteractors()
+        )
     }
 
     @Test

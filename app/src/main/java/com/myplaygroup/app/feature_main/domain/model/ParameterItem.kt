@@ -1,6 +1,6 @@
 package com.myplaygroup.app.feature_main.domain.model
 
-import com.myplaygroup.app.feature_main.domain.interactors.enums.ParameterDisplayType
+import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType
 
 data class ParameterItem(
     val type: ParameterDisplayType,

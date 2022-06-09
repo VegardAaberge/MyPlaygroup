@@ -70,10 +70,10 @@ class UsersRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun unsyncedUsers(unsyncedClasses: List<AppUser>): Flow<Resource<List<AppUser>>> {
+    override suspend fun registerUsers(users: List<AppUser>): Flow<Resource<List<AppUser>>> {
         return fetchNetworkResource(
             fetch = {
-                val entitiesToUpload = unsyncedClasses.map { x -> x.clientId }
+                val entitiesToUpload = users.map { x -> x.clientId }
                 val userEntities = dao.getAppUsersByClientId(entitiesToUpload)
                 val registerRequests = userEntities.map { x -> RegistrationRequest(
                     username = x.username,

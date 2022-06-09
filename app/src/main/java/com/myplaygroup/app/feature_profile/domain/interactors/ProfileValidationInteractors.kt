@@ -1,9 +1,9 @@
-package com.myplaygroup.app.feature_profile.domain.use_cases
+package com.myplaygroup.app.feature_profile.domain.interactors
 
-import com.myplaygroup.app.feature_profile.domain.use_cases.validators.*
+import com.myplaygroup.app.core.domain.validation.*
 import javax.inject.Inject
 
-class ProfileValidators @Inject constructor() {
+class ProfileValidationInteractors @Inject constructor() {
     val profileNameValidator: ProfileNameValidator = ProfileNameValidator()
     val phoneNumberValidator: PhoneNumberValidator = PhoneNumberValidator()
     val passwordValidator: PasswordValidator = PasswordValidator()

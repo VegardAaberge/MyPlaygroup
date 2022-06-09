@@ -1,6 +1,4 @@
-package com.myplaygroup.app.feature_profile.domain.use_cases.validators
-
-import com.myplaygroup.app.feature_profile.domain.use_cases.ValidationResult
+package com.myplaygroup.app.core.domain.validation
 
 class PhoneNumberValidator {
     operator fun invoke(phoneNumber: String) : ValidationResult {

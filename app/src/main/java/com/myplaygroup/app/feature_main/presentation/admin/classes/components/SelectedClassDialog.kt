@@ -16,7 +16,7 @@ import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.BasicTextField
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
-import com.myplaygroup.app.feature_main.domain.model.DailyClassType
+import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime

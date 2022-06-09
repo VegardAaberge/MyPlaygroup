@@ -14,7 +14,7 @@ interface UsersRepository {
         username: String
     ) : Resource<AppUser>
 
-    fun unsyncedUsers(
-        unsyncedClasses: List<AppUser>
+    suspend fun registerUsers(
+        users: List<AppUser>
     ): Flow<Resource<List<AppUser>>>
 }

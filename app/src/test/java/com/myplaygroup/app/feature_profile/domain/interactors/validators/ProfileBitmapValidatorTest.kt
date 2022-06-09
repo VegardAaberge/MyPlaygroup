@@ -1,8 +1,8 @@
-package com.myplaygroup.app.feature_profile.domain.use_cases.validators
+package com.myplaygroup.app.feature_profile.domain.interactors.validators
 
 import android.graphics.Bitmap
 import com.google.common.truth.Truth
-import org.junit.Assert.*
+import com.myplaygroup.app.core.domain.validation.ProfileBitmapValidator
 
 import org.junit.Before
 import org.junit.Test

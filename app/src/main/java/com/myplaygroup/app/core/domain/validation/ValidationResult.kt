@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_profile.domain.use_cases
+package com.myplaygroup.app.core.domain.validation
 
 data class ValidationResult(
     val successful: Boolean,

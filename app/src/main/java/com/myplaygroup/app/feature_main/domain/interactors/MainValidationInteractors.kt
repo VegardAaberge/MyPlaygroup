@@ -1,8 +1,8 @@
 package com.myplaygroup.app.feature_main.domain.interactors
 
-import com.myplaygroup.app.feature_main.domain.interactors.validators.UsernameValidator
+import com.myplaygroup.app.core.domain.validation.UsernameValidator
 import javax.inject.Inject
 
-class MainValidatorsInteractors @Inject constructor(){
+class MainValidationInteractors @Inject constructor(){
     val usernameValidator: UsernameValidator = UsernameValidator()
 }

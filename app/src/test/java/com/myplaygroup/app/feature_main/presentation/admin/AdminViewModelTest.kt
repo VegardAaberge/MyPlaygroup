@@ -11,6 +11,8 @@ import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
+import com.myplaygroup.app.feature_main.domain.interactors.FakeMainDaoInteractor
+import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -28,17 +30,20 @@ class AdminViewModelTest {
     lateinit var basicAuthInterceptor: BasicAuthInterceptor
     lateinit var imageRepository: FakeImageRepository
     lateinit var userSettingsManager: FakeUserSettingsManager
+    lateinit var mainDaoInteractor: FakeMainDaoInteractor
 
     @Before
     fun setUp() {
         basicAuthInterceptor = BasicAuthInterceptor()
         imageRepository = FakeImageRepository()
         userSettingsManager = FakeUserSettingsManager()
+        mainDaoInteractor = FakeMainDaoInteractor()
 
         viewModel = AdminViewModel(
             userSettingsManager,
             imageRepository,
-            basicAuthInterceptor
+            basicAuthInterceptor,
+            mainDaoInteractor
         )
     }
 

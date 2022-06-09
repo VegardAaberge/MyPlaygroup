@@ -1,6 +1,4 @@
-package com.myplaygroup.app.feature_main.domain.interactors.validators
-
-import com.myplaygroup.app.feature_profile.domain.use_cases.ValidationResult
+package com.myplaygroup.app.core.domain.validation
 
 class UsernameValidator {
     operator fun invoke(username: String) : ValidationResult {

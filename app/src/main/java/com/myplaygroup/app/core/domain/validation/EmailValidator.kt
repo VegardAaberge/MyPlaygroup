@@ -1,7 +1,6 @@
-package com.myplaygroup.app.feature_profile.domain.use_cases.validators
+package com.myplaygroup.app.core.domain.validation
 
 import androidx.core.util.PatternsCompat
-import com.myplaygroup.app.feature_profile.domain.use_cases.ValidationResult
 
 class EmailValidator(
 

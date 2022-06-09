@@ -2,8 +2,8 @@ package com.myplaygroup.app.feature_main.domain.interactors
 
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.local.MainDao
-import com.myplaygroup.app.feature_main.domain.interactors.enums.ParameterDisplayType.*
-import com.myplaygroup.app.feature_main.domain.interactors.enums.ParametersType
+import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.*
+import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 import javax.inject.Inject
 

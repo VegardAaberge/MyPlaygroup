@@ -1,7 +1,7 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes
 
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
-import com.myplaygroup.app.feature_main.domain.model.DailyClassType
+import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime

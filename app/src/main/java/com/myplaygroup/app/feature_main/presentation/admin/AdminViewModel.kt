@@ -25,7 +25,7 @@ class AdminViewModel @Inject constructor(
     private val userSettingsManager: UserSettingsManager,
     private val imageRepository: ImageRepository,
     private val basicAuthInterceptor: BasicAuthInterceptor,
-    private val mainDaoUseCases: MainDaoInteractor
+    private val daoInteractor: MainDaoInteractor
 ) : BaseViewModel() {
 
     val username = userSettingsManager.getFlow {
@@ -79,7 +79,7 @@ class AdminViewModel @Inject constructor(
     private fun logout() = viewModelScope.launch {
         basicAuthInterceptor.accessToken = null
         userSettingsManager.clearData()
-        mainDaoUseCases.clearAllTables()
+        daoInteractor.clearAllTables()
 
         setUIEvent(
             UiEvent.PopAndNavigateTo(

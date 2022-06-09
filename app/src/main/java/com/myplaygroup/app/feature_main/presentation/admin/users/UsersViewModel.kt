@@ -7,9 +7,9 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_main.domain.interactors.MainValidationInteractors
 import com.myplaygroup.app.feature_main.domain.model.AppUser
 import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
-import com.myplaygroup.app.feature_main.domain.interactors.MainValidatorsInteractors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UsersViewModel @Inject constructor(
     private val repository: UsersRepository,
-    private val validators: MainValidatorsInteractors
+    private val validators: MainValidationInteractors
 ) : BaseViewModel() {
 
     var state by mutableStateOf(UsersState())
@@ -53,7 +53,7 @@ class UsersViewModel @Inject constructor(
                 val unsyncedUsers = getUnsyncedDailyClasses()
                 viewModelScope.launch(Dispatchers.IO) {
                     repository
-                        .unsyncedUsers(unsyncedUsers)
+                        .registerUsers(unsyncedUsers)
                         .collect{ collectAppUsers(it) }
                 }
             }

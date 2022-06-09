@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.myplaygroup.app.feature_main.domain.model.DailyClassType
+import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 
 @Composable
 fun LabeledRadioGroup(

@@ -2,7 +2,7 @@ package com.myplaygroup.app.feature_main.data.repository
 
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
-import com.myplaygroup.app.feature_main.domain.model.DailyClassType
+import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

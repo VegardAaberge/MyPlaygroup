@@ -3,8 +3,8 @@ package com.myplaygroup.app.feature_main.presentation.admin.classes
 import com.google.common.truth.Truth
 import com.myplaygroup.app.core.utility.MainCoroutineRule
 import com.myplaygroup.app.feature_main.data.repository.FakeDailyClassesRepository
+import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
-import com.myplaygroup.app.feature_main.domain.model.DailyClassType
 import io.github.boguszpawlowski.composecalendar.CalendarState
 import io.github.boguszpawlowski.composecalendar.header.MonthState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState

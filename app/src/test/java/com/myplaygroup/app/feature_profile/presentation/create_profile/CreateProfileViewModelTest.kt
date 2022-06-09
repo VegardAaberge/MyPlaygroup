@@ -7,7 +7,7 @@ import com.myplaygroup.app.core.data.settings.FakeUserSettingsManager
 import com.myplaygroup.app.core.domain.settings.UserRole
 import com.myplaygroup.app.core.utility.MainCoroutineRule
 import com.myplaygroup.app.feature_profile.data.repository.FakeProfileRepository
-import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileValidators
+import com.myplaygroup.app.feature_profile.domain.interactors.ProfileValidationInteractors
 import kotlinx.coroutines.*
 import org.junit.Before
 import org.junit.Rule
@@ -23,7 +23,7 @@ class CreateProfileViewModelTest {
     private lateinit var profileRepository: FakeProfileRepository
     private lateinit var imageRepository: FakeImageRepository
     private lateinit var userSettingsManager: FakeUserSettingsManager
-    private lateinit var profileUseCases: ProfileValidators
+    private lateinit var profileUseCases: ProfileValidationInteractors
     private lateinit var viewModel: CreateProfileViewModel
 
     val username = "vegard"
@@ -38,7 +38,7 @@ class CreateProfileViewModelTest {
         profileRepository = FakeProfileRepository()
         imageRepository = FakeImageRepository()
         userSettingsManager = FakeUserSettingsManager()
-        profileUseCases = ProfileValidators()
+        profileUseCases = ProfileValidationInteractors()
 
         viewModel = CreateProfileViewModel(
             profileRepository,

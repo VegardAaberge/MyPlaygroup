@@ -1,7 +1,6 @@
-package com.myplaygroup.app.feature_profile.domain.use_cases.validators
+package com.myplaygroup.app.core.domain.validation
 
 import android.graphics.Bitmap
-import com.myplaygroup.app.feature_profile.domain.use_cases.ValidationResult
 
 class ProfileBitmapValidator {
     operator fun invoke(bitmap: Bitmap?) : ValidationResult {

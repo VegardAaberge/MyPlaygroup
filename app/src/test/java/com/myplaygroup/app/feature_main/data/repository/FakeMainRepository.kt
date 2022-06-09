@@ -35,8 +35,4 @@ class FakeMainRepository : ChatRepository {
     override suspend fun getChatMessages(fetchFromRemote: Boolean): Flow<Resource<List<Message>>> {
         return flow { Resource.Success(messages) }
     }
-
-    override fun clearAllTables() {
-        messages = mutableListOf()
-    }
 }

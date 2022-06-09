@@ -1,10 +1,10 @@
-package com.myplaygroup.app.feature_profile.domain.use_cases.validators
+package com.myplaygroup.app.feature_profile.domain.interactors.validators
 
 import org.junit.Before
 import org.junit.Test
 
 import com.google.common.truth.Truth.assertThat;
-import com.google.common.truth.Truth.assertWithMessage
+import com.myplaygroup.app.core.domain.validation.EmailValidator
 
 class EmailValidatorTest {
 

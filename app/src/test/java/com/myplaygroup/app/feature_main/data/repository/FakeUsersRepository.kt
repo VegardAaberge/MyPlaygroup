@@ -31,9 +31,17 @@ class FakeUsersRepository : UsersRepository {
         )
     )
 
-    override fun getAllUsers(fetchFromRemote: Boolean): Flow<Resource<List<AppUser>>> {
+    override suspend fun getAllUsers(fetchFromRemote: Boolean): Flow<Resource<List<AppUser>>> {
         return flow {
             emit(Resource.Success(appUsers))
         }
+    }
+
+    override suspend fun addUserToDatabase(username: String): Resource<AppUser> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun registerUsers(users: List<AppUser>): Flow<Resource<List<AppUser>>> {
+        TODO("Not yet implemented")
     }
 }
