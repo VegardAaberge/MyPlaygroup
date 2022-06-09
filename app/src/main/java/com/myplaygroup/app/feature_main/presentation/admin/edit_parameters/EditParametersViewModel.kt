@@ -7,15 +7,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.domain.use_cases.EditUseCases
+import com.myplaygroup.app.feature_main.domain.interactors.EditParametersInteractor
+import com.myplaygroup.app.feature_main.domain.interactors.enums.ParametersType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class EditParametersViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val editUseCases: EditUseCases
+    private val editUseCases: EditParametersInteractor
 ) : BaseViewModel() {
 
     var state by mutableStateOf(EditParametersState())
@@ -48,7 +50,7 @@ class EditParametersViewModel @Inject constructor(
         }
     }
 
-    fun saveData(){
+    fun saveData() = viewModelScope.launch(Dispatchers.IO){
         val validationResponse = editUseCases.validateParameters(state.parameterItems)
 
         state = state.copy(
@@ -56,7 +58,7 @@ class EditParametersViewModel @Inject constructor(
         )
 
         if(validationResponse.all { x -> x.error == null }){
-            val result = editUseCases.storeParameterItems()
+            val result = editUseCases.storeParameterItems(state.parameterItems)
             if(result is Resource.Success){
                 setUIEvent(
                     UiEvent.PopPage

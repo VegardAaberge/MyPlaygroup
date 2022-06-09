@@ -11,7 +11,7 @@ import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.destinations.*
-import com.myplaygroup.app.feature_main.domain.use_cases.MainDaoUseCases
+import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,7 @@ class AdminViewModel @Inject constructor(
     private val userSettingsManager: UserSettingsManager,
     private val imageRepository: ImageRepository,
     private val basicAuthInterceptor: BasicAuthInterceptor,
-    private val mainDaoUseCases: MainDaoUseCases
+    private val mainDaoUseCases: MainDaoInteractor
 ) : BaseViewModel() {
 
     val username = userSettingsManager.getFlow {

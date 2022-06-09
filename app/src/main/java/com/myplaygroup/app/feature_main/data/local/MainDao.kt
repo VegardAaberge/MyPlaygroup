@@ -39,6 +39,9 @@ interface MainDao {
         messages: List<DailyClassEntity>
     )
 
+    @Query("SELECT * FROM dailyclassentity WHERE id = :id")
+    suspend fun getDailyClassById(id: Long) : DailyClassEntity
+
     @Query("SELECT * FROM dailyclassentity ORDER BY date")
     suspend fun getDailyClasses() : List<DailyClassEntity>
 
@@ -52,6 +55,9 @@ interface MainDao {
     suspend fun insertMonthlyPlans(
         messages: List<MonthlyPlanEntity>
     )
+
+    @Query("SELECT * FROM monthlyplanentity WHERE id = :id")
+    suspend fun getMonthlyPlanById(id: Long) : MonthlyPlanEntity
 
     @Query("SELECT * FROM monthlyplanentity ORDER BY id")
     suspend fun getMonthlyPlans() : List<MonthlyPlanEntity>
@@ -75,8 +81,11 @@ interface MainDao {
     @Query("SELECT * FROM appuserentity ORDER BY id")
     suspend fun getAppUsers() : List<AppUserEntity>
 
+    @Query("SELECT * FROM appuserentity WHERE id = :id")
+    suspend fun getAppUserById(id: Long) : AppUserEntity
+
     @Query("SELECT * FROM appuserentity WHERE clientId IN (:clientIds)")
-    suspend fun getAppUsersById(clientIds: List<String> ) : List<AppUserEntity>
+    suspend fun getAppUsersByClientId(clientIds: List<String> ) : List<AppUserEntity>
 
     @Query("DELETE FROM appuserentity WHERE id != -1")
     fun clearAppUsers()

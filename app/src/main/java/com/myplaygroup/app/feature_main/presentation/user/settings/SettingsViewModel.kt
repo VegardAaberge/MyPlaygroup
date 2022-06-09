@@ -10,7 +10,7 @@ import com.myplaygroup.app.destinations.EditProfileScreenDestination
 import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
-import com.myplaygroup.app.feature_main.domain.use_cases.MainDaoUseCases
+import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
 import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +23,7 @@ class SettingsViewModel @Inject constructor(
     private val basicAuthInterceptor: BasicAuthInterceptor,
     private val imageRepository: ImageRepository,
     private val userSettingsManager: UserSettingsManager,
-    private val daoUseCases: MainDaoUseCases
+    private val daoUseCases: MainDaoInteractor
 ) : ViewModel() {
 
     lateinit var mainViewModel: MainViewModel

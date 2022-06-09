@@ -17,10 +17,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.feature_main.domain.interactors.enums.ParametersType
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
-import com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.ParametersType
 import com.plcoding.stockmarketapp.presentation.company_listings.components.MonthlyPlanItem
 
 @Composable

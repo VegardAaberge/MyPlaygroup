@@ -74,7 +74,7 @@ class UsersRepositoryImpl @Inject constructor(
         return fetchNetworkResource(
             fetch = {
                 val entitiesToUpload = unsyncedClasses.map { x -> x.clientId }
-                val userEntities = dao.getAppUsersById(entitiesToUpload)
+                val userEntities = dao.getAppUsersByClientId(entitiesToUpload)
                 val registerRequests = userEntities.map { x -> RegistrationRequest(
                     username = x.username,
                     password = Constants.MY_PLAYGROUP

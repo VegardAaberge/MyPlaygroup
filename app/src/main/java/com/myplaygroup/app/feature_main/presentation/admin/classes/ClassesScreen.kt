@@ -17,12 +17,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.calendar_classes.CalendarClassesScreen
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.feature_main.domain.interactors.enums.ParametersType
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.CreateClassesSection
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.SelectedClassDialog
-import com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.ParametersType
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 

@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_main.domain.use_cases.validators
+package com.myplaygroup.app.feature_main.domain.interactors.validators
 
 import com.myplaygroup.app.feature_profile.domain.use_cases.ValidationResult
 
