@@ -127,7 +127,7 @@ class ClassesViewModelTest {
             startTime = startTime,
             endTime = endTime,
             classDate = classDate,
-            cancelled = cancelled,
+            delete = cancelled,
         ))
 
         val changedClass = viewModel.state.dailyClasses.first { x -> x.id == 1L }
@@ -164,7 +164,7 @@ class ClassesViewModelTest {
             startTime = selectedClass.startTime,
             endTime = selectedClass.endTime,
             classDate = selectedClass.date,
-            cancelled = true,
+            delete = true,
         ))
 
         val unsyncedClasses = viewModel.state.dailyClasses.filter { x -> x.id == -1L }

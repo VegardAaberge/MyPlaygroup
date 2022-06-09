@@ -17,8 +17,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
+import com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.ParametersType
 import com.plcoding.stockmarketapp.presentation.company_listings.components.MonthlyPlanItem
 
 @Composable
@@ -48,7 +50,12 @@ fun MonthlyPlanScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-
+                            adminViewModel.onEvent(
+                                AdminScreenEvent.NavigateToEditScreen(
+                                    type = ParametersType.PLANS,
+                                    id = monthlyPlan.id
+                                )
+                            )
                         }
                         .padding(16.dp)
 

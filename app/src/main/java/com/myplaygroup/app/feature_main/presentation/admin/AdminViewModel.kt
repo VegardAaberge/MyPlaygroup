@@ -10,10 +10,7 @@ import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.destinations.EditProfileScreenDestination
-import com.myplaygroup.app.destinations.LoginScreenDestination
-import com.myplaygroup.app.destinations.MainScreenDestination
-import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
+import com.myplaygroup.app.destinations.*
 import com.myplaygroup.app.feature_main.domain.use_cases.MainDaoUseCases
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,6 +67,11 @@ class AdminViewModel @Inject constructor(
             }
             is AdminScreenEvent.routeUpdated -> {
                 updateTitle(event.route)
+            }
+            is AdminScreenEvent.NavigateToEditScreen -> {
+                setUIEvent(
+                    UiEvent.NavigateTo(EditParametersScreenDestination(event.id, event.type))
+                )
             }
         }
     }

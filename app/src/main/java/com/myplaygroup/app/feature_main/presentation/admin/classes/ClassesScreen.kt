@@ -17,10 +17,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.calendar_classes.CalendarClassesScreen
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.CreateClassesSection
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.SelectedClassDialog
+import com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.ParametersType
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 
@@ -64,12 +66,21 @@ fun ClassesScreen(
                 selectedDay = state.selectedDate,
                 calendarState = calendarState,
                 classes = state.dailyClasses,
-                cardSelected = {
-                    viewModel.onEvent(ClassesScreenEvent.ClassSelected(it))
+                cardSelected = { dailyClass ->
+                    if (dailyClass.id == -1L) {
+                        viewModel.onEvent(ClassesScreenEvent.ClassSelected(dailyClass))
+                    } else {
+                        adminViewModel.onEvent(
+                            AdminScreenEvent.NavigateToEditScreen(
+                                type = ParametersType.CLASSES,
+                                id = dailyClass.id
+                            )
+                        )
+                    }
                 }
             )
 
-            if(state.selectedClass != null) {
+            state.selectedClass?.let { selectedClass ->
                 Dialog(
                     onDismissRequest = {
                         viewModel.onEvent(ClassesScreenEvent.ClassSelected(null))
@@ -77,11 +88,11 @@ fun ClassesScreen(
                     properties = DialogProperties()
                 ) {
                     SelectedClassDialog(
-                        selectedClass = state.selectedClass,
-                        submit = { startTime, endTime, classDate, cancelled ->
-                            viewModel.onEvent(
-                                ClassesScreenEvent.SubmitSelectedClassTapped(startTime, endTime, classDate, cancelled)
-                            )
+                        selectedClass = selectedClass,
+                        submit = { startTime, endTime, classDate, delete ->
+                            viewModel.onEvent(ClassesScreenEvent.SubmitSelectedClassTapped(
+                                startTime, endTime, classDate, delete
+                            ))
                         }
                     )
                 }

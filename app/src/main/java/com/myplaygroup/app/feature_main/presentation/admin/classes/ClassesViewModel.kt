@@ -73,17 +73,15 @@ class ClassesViewModel @Inject constructor(
 
                 state.selectedClass?.let { selectedClass ->
 
-                    val shouldDelete = selectedClass.id == -1L && event.cancelled
                     val newDailyClasses = state.dailyClasses.toMutableList()
 
-                    if(shouldDelete){
+                    if(event.delete){
                         newDailyClasses.remove(selectedClass)
                     }else{
                         val newDailyClass = selectedClass.copy(
                             startTime = event.startTime,
                             endTime = event.endTime,
                             date = event.classDate,
-                            cancelled = event.cancelled,
                             modified = true
                         )
 

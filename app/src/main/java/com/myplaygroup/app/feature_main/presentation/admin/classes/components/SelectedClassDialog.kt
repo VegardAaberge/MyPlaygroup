@@ -10,11 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.BasicTextField
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
@@ -38,8 +35,8 @@ fun SelectedClassDialog(
     var classDate by remember {
         mutableStateOf(selectedClass.date)
     }
-    var cancelled by remember {
-        mutableStateOf(selectedClass.cancelled)
+    var delete by remember {
+        mutableStateOf(false)
     }
 
     Column(
@@ -59,7 +56,7 @@ fun SelectedClassDialog(
 
         BasicTextField(
             label = "Day of week",
-            width = 170.dp,
+            width = 180.dp,
             fieldValue = selectedClass.dayOfWeek.name
                 .lowercase()
                 .replaceFirstChar { x -> x.uppercase() },
@@ -107,9 +104,7 @@ fun SelectedClassDialog(
                 .fillMaxWidth()
         ) {
             Text(
-                text = if (selectedClass.id == -1L) {
-                    "Delete"
-                } else "Cancelled"
+                text = "Delete"
             )
             Switch(
                 colors = SwitchDefaults.colors(
@@ -118,24 +113,24 @@ fun SelectedClassDialog(
                     uncheckedTrackColor = Color.LightGray
                 ),
                 onCheckedChange = {
-                    cancelled = !cancelled
+                    delete = !delete
                 },
-                checked = cancelled
+                checked = delete
             )
         }
 
         Button(
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = if (cancelled && selectedClass.id == -1L) {
+                backgroundColor = if (delete) {
                     MaterialTheme.colors.error
                 } else MaterialTheme.colors.primary,
             ),
             onClick = {
-                submit(startTime, endTime, classDate, cancelled)
+                submit(startTime, endTime, classDate, delete)
             }
         ) {
             Text(
-                text = if (cancelled && selectedClass.id == -1L) {
+                text = if (delete) {
                     "Delete"
                 } else "Update"
             )

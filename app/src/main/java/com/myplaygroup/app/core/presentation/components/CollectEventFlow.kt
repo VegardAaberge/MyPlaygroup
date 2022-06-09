@@ -7,7 +7,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun collectEventFlow(
@@ -30,7 +29,9 @@ fun collectEventFlow(
                     navigator?.popBackStack()
                 }
                 is BaseViewModel.UiEvent.NavigateTo -> {
-                    navigator?.navigate(event.destination)
+                    navigator?.navigate(
+                        direction = event.destination
+                    )
                 }
                 is BaseViewModel.UiEvent.PopAndNavigateTo -> {
                     navigator?.navigate(event.destination) {

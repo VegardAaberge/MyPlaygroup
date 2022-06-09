@@ -5,9 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.destinations.DirectionDestination
+import com.ramcosta.composedestinations.spec.Direction
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -32,7 +31,7 @@ open class BaseViewModel : ViewModel() {
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()
         object PopPage : UiEvent()
-        data class NavigateTo(val destination: DirectionDestination) : UiEvent()
+        data class NavigateTo(val destination: Direction) : UiEvent()
         data class PopAndNavigateTo(val popRoute: String, val destination: DirectionDestination) : UiEvent()
     }
 }

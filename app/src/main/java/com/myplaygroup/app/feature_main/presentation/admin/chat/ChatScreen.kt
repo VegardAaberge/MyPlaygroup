@@ -12,7 +12,7 @@ import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 @Composable
 fun ChatScreen(
     adminViewModel: AdminViewModel,
-    chatViewModel: ChatViewModel = hiltViewModel()
+    chatViewModel: ChatViewModel = hiltViewModel(),
 ) {
     adminViewModel.state = adminViewModel.state.copy(
         actionButtons = listOf()

@@ -20,6 +20,6 @@ sealed class ClassesScreenEvent {
         val startTime: LocalTime,
         val endTime: LocalTime,
         val classDate: LocalDate,
-        val cancelled: Boolean
+        val delete: Boolean
     ) : ClassesScreenEvent()
 }
