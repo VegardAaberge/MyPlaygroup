@@ -75,6 +75,12 @@ interface MainDao {
     @Query("SELECT * FROM appuserentity ORDER BY id")
     suspend fun getAppUsers() : List<AppUserEntity>
 
+    @Query("SELECT * FROM appuserentity WHERE clientId IN (:clientIds)")
+    suspend fun getAppUsersById(clientIds: List<String> ) : List<AppUserEntity>
+
     @Query("DELETE FROM appuserentity WHERE id != -1")
     fun clearAppUsers()
+
+    @Query("DELETE FROM appuserentity")
+    fun clearAllAppUsers()
 }

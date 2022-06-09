@@ -13,4 +13,8 @@ interface UsersRepository {
     suspend fun addUserToDatabase(
         username: String
     ) : Resource<AppUser>
+
+    fun unsyncedUsers(
+        unsyncedClasses: List<AppUser>
+    ): Flow<Resource<List<AppUser>>>
 }

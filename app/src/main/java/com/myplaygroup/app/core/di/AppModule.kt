@@ -23,7 +23,9 @@ import com.myplaygroup.app.core.util.Constants.MAIN_DATABASE_NAME
 import com.myplaygroup.app.core.util.Constants.MASTER_KEY_URI
 import com.myplaygroup.app.core.util.Constants.PREFERENCE_FILE
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
+import com.myplaygroup.app.feature_main.domain.use_cases.MainDaoUseCases
 import com.myplaygroup.app.feature_main.domain.use_cases.MainValidators
+import com.myplaygroup.app.feature_main.domain.use_cases.data.ClearAllTables
 import com.myplaygroup.app.feature_profile.domain.use_cases.ProfileValidators
 import dagger.Module
 import dagger.Provides
@@ -63,7 +65,13 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMainUseCases() = MainValidators()
+    fun provideMainValidators() = MainValidators()
+
+    @Provides
+    @Singleton
+    fun provideMainDaoUseCases(db: MainDatabase) = MainDaoUseCases(
+        clearAllTables = ClearAllTables(db)
+    )
 
     @Singleton
     @Provides

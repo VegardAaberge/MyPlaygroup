@@ -49,7 +49,19 @@ class UsersViewModel @Inject constructor(
                     createErrorMessage = usernameResult.errorMessage
                 )
             }
+            is UsersScreenEvent.UploadAppUsers -> {
+                val unsyncedUsers = getUnsyncedDailyClasses()
+                viewModelScope.launch(Dispatchers.IO) {
+                    repository
+                        .unsyncedUsers(unsyncedUsers)
+                        .collect{ collectAppUsers(it) }
+                }
+            }
         }
+    }
+
+    fun getUnsyncedDailyClasses() : List<AppUser> {
+        return state.appUsers.filter { x -> x.id == -1L || x.modified }
     }
 
     private fun createUser(username: String) = viewModelScope.launch {
