@@ -1,13 +1,13 @@
 package com.myplaygroup.app.feature_main.presentation.admin.edit_parameters
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
@@ -31,14 +31,25 @@ fun EditParametersScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            DefaultTopAppBar(title = "Edit")
+            DefaultTopAppBar(
+                title = "Edit",
+                actions = {
+                    IconButton(
+                        onClick = {
+
+                        },
+                    ) {
+                        Text(text = "Save")
+                    }
+                }
+            )
         }
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         ){
-            items(state.parameterItems.size){ i ->
-                val item = state.parameterItems[i]
+            items(state.parameterItems){ item ->
 
                 when(item.type){
                     ParameterDisplayType.INFO -> {
@@ -64,13 +75,6 @@ fun EditParametersScreen(
 
                         }
                     }
-                }
-
-
-                if(i < state.parameterItems.size){
-                    Divider(modifier = Modifier.padding(
-                        horizontal = 16.dp
-                    ))
                 }
             }
         }
