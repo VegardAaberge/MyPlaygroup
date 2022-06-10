@@ -68,7 +68,7 @@ fun UserItem(
                         tint = MaterialTheme.colors.error,
                         contentDescription = null
                     )
-                }else if(appUser.id == -1L){
+                }else if(appUser.modified == true){
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24),
                         tint = MaterialTheme.colors.primary,

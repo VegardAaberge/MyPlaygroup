@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.presentation.admin.users
 
+import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,18 +22,19 @@ class UsersViewModel @Inject constructor(
     private val validators: MainValidationInteractors
 ) : BaseViewModel() {
 
+    private var lastRefresh: Long = 0
+
     var state by mutableStateOf(UsersState())
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository
-                .getAllUsers(true)
-                .collect{ collectAppUsers(it) }
-        }
+        fetchData(true)
     }
 
     fun onEvent(event: UsersScreenEvent) {
         when (event) {
+            is UsersScreenEvent.RefreshData -> {
+                fetchData(false)
+            }
             is UsersScreenEvent.CreateUserDialog -> {
                 state = state.copy(
                     showCreateUser = event.show,
@@ -60,8 +62,21 @@ class UsersViewModel @Inject constructor(
         }
     }
 
+    fun fetchData(fetchFromRemote: Boolean){
+        if (SystemClock.elapsedRealtime() - lastRefresh < 1000){
+            return;
+        }
+        lastRefresh = SystemClock.elapsedRealtime()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository
+                .getAllUsers(fetchFromRemote)
+                .collect{ collectAppUsers(it) }
+        }
+    }
+
     fun getUnsyncedDailyClasses() : List<AppUser> {
-        return state.appUsers.filter { x -> x.id == -1L || x.modified }
+        return state.appUsers.filter { x -> x.modified }
     }
 
     private fun createUser(username: String) = viewModelScope.launch {
@@ -100,6 +115,6 @@ class UsersViewModel @Inject constructor(
     }
 
     fun getUnsyncedUsers() : List<AppUser> {
-        return state.appUsers.filter { x -> x.id == -1L || x.modified }
+        return state.appUsers.filter { x -> x.modified }
     }
 }

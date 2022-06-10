@@ -1,7 +1,7 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes
 
-import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
@@ -10,6 +10,7 @@ sealed class ClassesScreenEvent {
     object ToggleCreateClassesSection : ClassesScreenEvent()
     object GenerateClassesTapped : ClassesScreenEvent()
     object UploadCreatedClasses : ClassesScreenEvent()
+    object RefreshData : ClassesScreenEvent()
     data class SelectedNewDate(val selectedDate: LocalDate?) : ClassesScreenEvent()
     data class ClassChanged(val type: DailyClassType) : ClassesScreenEvent()
     data class WeekdayChanged(val dayOfWeek: DayOfWeek) : ClassesScreenEvent()

@@ -2,6 +2,7 @@ package com.myplaygroup.app.feature_main.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.myplaygroup.app.feature_main.data.model.AppUserEntity
@@ -34,7 +35,7 @@ interface MainDao {
     //
     // Daily Classes
     //
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = IGNORE)
     suspend fun insertDailyClasses(
         dailyClass: List<DailyClassEntity>
     )
@@ -50,13 +51,13 @@ interface MainDao {
     @Query("SELECT * FROM dailyclassentity ORDER BY date")
     suspend fun getDailyClasses() : List<DailyClassEntity>
 
-    @Query("DELETE FROM dailyclassentity")
+    @Query("DELETE FROM dailyclassentity WHERE modified != 1")
     suspend fun clearDailyClasses()
 
     //
     // Monthly Plans
     //
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = IGNORE)
     suspend fun insertMonthlyPlans(
         messages: List<MonthlyPlanEntity>
     )
@@ -72,13 +73,13 @@ interface MainDao {
     @Query("SELECT * FROM monthlyplanentity ORDER BY id")
     suspend fun getMonthlyPlans() : List<MonthlyPlanEntity>
 
-    @Query("DELETE FROM monthlyplanentity")
+    @Query("DELETE FROM monthlyplanentity WHERE modified != 1")
     suspend fun clearMonthlyPlans()
 
     //
     // App Users
     //
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = IGNORE)
     suspend fun insertAppUsers(
         users: List<AppUserEntity>
     )
@@ -97,7 +98,7 @@ interface MainDao {
     @Query("SELECT * FROM appuserentity WHERE clientId IN (:clientIds)")
     suspend fun getAppUsersByClientId(clientIds: List<String> ) : List<AppUserEntity>
 
-    @Query("DELETE FROM appuserentity WHERE id != -1")
+    @Query("DELETE FROM appuserentity WHERE modified != 1")
     fun clearAppUsers()
 
     @Query("DELETE FROM appuserentity")

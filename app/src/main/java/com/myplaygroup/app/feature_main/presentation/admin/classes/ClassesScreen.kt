@@ -7,13 +7,17 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.calendar_classes.CalendarClassesScreen
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
@@ -35,6 +39,8 @@ fun ClassesScreen(
         viewModel = viewModel,
         adminViewModel = adminViewModel
     )
+
+    CatchOnResume(viewModel)
 
     val scaffoldState = collectEventFlow(viewModel = viewModel)
 
@@ -163,5 +169,23 @@ private fun CreateClassesAnimatedSection(
                 viewModel.onEvent(ClassesScreenEvent.GenerateClassesTapped)
             }
         )
+    }
+}
+
+@Composable
+fun CatchOnResume(
+    viewModel: ClassesViewModel
+) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            if(event == Lifecycle.Event.ON_RESUME){
+                viewModel.onEvent(ClassesScreenEvent.RefreshData)
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
     }
 }

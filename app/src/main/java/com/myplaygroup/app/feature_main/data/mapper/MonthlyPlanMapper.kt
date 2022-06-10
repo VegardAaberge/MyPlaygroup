@@ -13,7 +13,8 @@ fun MonthlyPlanEntity.toMonthlyPlan() : MonthlyPlan {
         paid = paid,
         planName = planName,
         daysOfWeek = daysOfWeek.map { x -> enumValueOf(x) },
-        planPrice = planPrice
+        planPrice = planPrice,
+        modified = modified
     )
 }
 
@@ -27,6 +28,7 @@ fun MonthlyPlan.toMonthlyPlanEntity() : MonthlyPlanEntity {
         paid = paid,
         planName = planName,
         daysOfWeek = daysOfWeek.map { x -> x.name },
-        planPrice = planPrice
+        planPrice = planPrice,
+        modified = modified
     )
 }

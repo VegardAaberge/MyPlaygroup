@@ -11,11 +11,15 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
@@ -32,6 +36,8 @@ fun MonthlyPlanScreen(
         viewModel = viewModel,
         adminViewModel = adminViewModel
     )
+
+    CatchOnResume(viewModel)
 
     val scaffoldState = collectEventFlow(viewModel = viewModel)
     val state = viewModel.state
@@ -96,4 +102,22 @@ private fun CreateToolbarActionItems(
             )
         )
     )
+}
+
+@Composable
+fun CatchOnResume(
+    viewModel: MonthlyPlansViewModel
+) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            if(event == Lifecycle.Event.ON_RESUME){
+                viewModel.onEvent(MonthlyPlansScreenEvent.RefreshData)
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
 }

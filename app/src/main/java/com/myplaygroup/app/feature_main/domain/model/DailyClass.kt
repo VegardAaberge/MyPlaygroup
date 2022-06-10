@@ -13,5 +13,5 @@ data class DailyClass(
     val startTime: LocalTime,
     val dayOfWeek: DayOfWeek,
     val cancelled: Boolean = false,
-    val modified: Boolean = false
+    val modified: Boolean = id == -1L
 )

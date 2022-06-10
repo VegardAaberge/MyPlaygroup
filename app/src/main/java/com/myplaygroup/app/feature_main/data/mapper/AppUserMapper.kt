@@ -14,7 +14,8 @@ fun AppUserEntity.toAppUser() : AppUser {
         profileCreated = profileCreated,
         profileName = profileName?: "",
         userCredit = userCredit,
-        username = username
+        username = username,
+        modified = modified
     )
 }
 
@@ -29,6 +30,7 @@ fun AppUser.toAppUserEntity() : AppUserEntity {
         profileCreated = profileCreated,
         profileName = profileName,
         userCredit = userCredit,
-        username = username
+        username = username,
+        modified = modified
     )
 }

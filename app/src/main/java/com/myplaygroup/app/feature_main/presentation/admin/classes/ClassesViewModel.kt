@@ -1,13 +1,14 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes
 
+import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,18 +25,19 @@ class ClassesViewModel @Inject constructor(
     private val repository: DailyClassesRepository
 ) : BaseViewModel() {
 
+    private var lastRefresh: Long = 0
+
     var state by mutableStateOf(ClassesState())
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository
-                .getAllDailyClasses(true)
-                .collect{ collectDailyClasses(it) }
-        }
+        fetchData(true)
     }
 
     fun onEvent(event: ClassesScreenEvent) {
         when (event) {
+            is ClassesScreenEvent.RefreshData -> {
+                fetchData(false)
+            }
             is ClassesScreenEvent.ToggleCreateClassesSection -> {
                 state = state.copy(isCreateVisible = !state.isCreateVisible)
             }
@@ -97,8 +99,21 @@ class ClassesViewModel @Inject constructor(
         }
     }
 
+    fun fetchData(fetchFromRemote: Boolean){
+        if (SystemClock.elapsedRealtime() - lastRefresh < 1000){
+            return;
+        }
+        lastRefresh = SystemClock.elapsedRealtime()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository
+                .getAllDailyClasses(true)
+                .collect{ collectDailyClasses(it) }
+        }
+    }
+
     fun getUnsyncedDailyClasses() : List<DailyClass> {
-        return state.dailyClasses.filter { x -> x.id == -1L || x.modified }
+        return state.dailyClasses.filter { x -> x.modified }
     }
 
     private fun setWeekdays(dayOfWeek: DayOfWeek){

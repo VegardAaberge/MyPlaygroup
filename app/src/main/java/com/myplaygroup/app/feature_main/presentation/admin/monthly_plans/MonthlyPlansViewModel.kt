@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.presentation.admin.monthly_plans
 
+import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,21 +19,35 @@ class MonthlyPlansViewModel @Inject constructor(
     private val repository: MonthlyPlansRepository
 ) : BaseViewModel() {
 
+    private var lastRefresh: Long = 0
+
     var state by mutableStateOf(MonthlyPlansState())
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository
-                .getAllMonthlyPlans(true)
-                .collect{ collectMonthlyPlans(it) }
-        }
+        fetchData(true)
     }
 
     fun onEvent(event: MonthlyPlansScreenEvent) {
         when (event) {
+            is MonthlyPlansScreenEvent.RefreshData -> {
+                fetchData(false)
+            }
             is MonthlyPlansScreenEvent.CreateMonthlyPlanDialog -> {
                 state = state.copy(showCreateMonthlyPlan = event.show)
             }
+        }
+    }
+
+    fun fetchData(fetchFromRemote: Boolean){
+        if (SystemClock.elapsedRealtime() - lastRefresh < 1000){
+            return;
+        }
+        lastRefresh = SystemClock.elapsedRealtime()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository
+                .getAllMonthlyPlans(true)
+                .collect{ collectMonthlyPlans(it) }
         }
     }
 
