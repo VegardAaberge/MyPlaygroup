@@ -17,6 +17,7 @@ data class AppUserEntity(
     val profileCreated: Boolean = false,
     val profileName: String? = null,
     val phoneNumber: String? = null,
+    val resetPassword: Boolean = false,
 
     @Transient
     val modified: Boolean = id == -1L

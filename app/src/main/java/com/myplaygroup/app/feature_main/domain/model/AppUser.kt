@@ -11,5 +11,6 @@ data class AppUser(
     val profileName: String,
     val userCredit: Long,
     val username: String,
+    val resetPassword: Boolean = false,
     val modified: Boolean = id == -1L
 )

@@ -1,16 +1,16 @@
 package com.myplaygroup.app.feature_main.data.repository
 
 import android.app.Application
+import com.myplaygroup.app.core.data.mapper.toDailyClass
+import com.myplaygroup.app.core.data.mapper.toDailyClassEntity
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
-import com.myplaygroup.app.core.util.networkBoundResource
-import com.myplaygroup.app.core.data.mapper.toDailyClass
-import com.myplaygroup.app.core.data.mapper.toDailyClassEntity
 import com.myplaygroup.app.core.util.fetchNetworkResource
-import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import kotlinx.coroutines.flow.Flow
 import java.io.IOException
@@ -36,7 +36,7 @@ class DailyClassesRepositoryImpl @Inject constructor(
                 api.getAllClasses()
             },
             saveFetchResult = { dailyClasses ->
-                dao.clearDailyClasses()
+                dao.clearSyncedDailyClasses()
                 dao.insertDailyClasses(dailyClasses)
                 dao.getDailyClasses().map { it.toDailyClass() }
             },
@@ -67,7 +67,7 @@ class DailyClassesRepositoryImpl @Inject constructor(
                 api.createDailyClasses(entitiesToUpload)
             },
             processFetch = { dailyClasses ->
-                dao.clearDailyClasses()
+                dao.clearAllDailyClasses()
                 dao.insertDailyClasses(dailyClasses)
                 dao.getDailyClasses().map { it.toDailyClass() }
             },

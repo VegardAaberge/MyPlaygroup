@@ -60,6 +60,7 @@ class EditParametersInteractor @Inject constructor(
                     ParameterItem(STRING, appUser::profileName.name, appUser.profileName),
                     ParameterItem(SWITCH, appUser::profileCreated.name, appUser.profileCreated),
                     ParameterItem(SWITCH, appUser::locked.name, appUser.locked),
+                    ParameterItem(SWITCH, appUser::resetPassword.name, appUser.resetPassword),
                 )
             }
             ParametersType.UNDEFINED -> {
@@ -172,12 +173,14 @@ class EditParametersInteractor @Inject constructor(
                 val profileName = parameterItems.getValue(appUser::profileName.name, appUser.profileName)
                 val profileCreated = parameterItems.getValue(appUser::profileCreated.name, appUser.profileCreated)
                 val locked = parameterItems.getValue(appUser::locked.name, appUser.locked)
+                val resetPassword = parameterItems.getValue(appUser::resetPassword.name, appUser.resetPassword)
 
                 val appUserEntity = appUser.copy(
                     phoneNumber = phoneNumber,
                     profileName = profileName,
                     profileCreated = profileCreated,
                     locked = locked,
+                    resetPassword = resetPassword,
                     modified = true
                 ).toAppUserEntity()
 

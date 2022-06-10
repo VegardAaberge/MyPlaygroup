@@ -51,8 +51,11 @@ interface MainDao {
     @Query("SELECT * FROM dailyclassentity ORDER BY date")
     suspend fun getDailyClasses() : List<DailyClassEntity>
 
+    @Query("DELETE FROM dailyclassentity")
+    suspend fun clearAllDailyClasses()
+
     @Query("DELETE FROM dailyclassentity WHERE modified != 1")
-    suspend fun clearDailyClasses()
+    suspend fun clearSyncedDailyClasses()
 
     //
     // Monthly Plans
@@ -74,7 +77,10 @@ interface MainDao {
     suspend fun getMonthlyPlans() : List<MonthlyPlanEntity>
 
     @Query("DELETE FROM monthlyplanentity WHERE modified != 1")
-    suspend fun clearMonthlyPlans()
+    suspend fun clearSyncedMonthlyPlans()
+
+    @Query("DELETE FROM appuserentity")
+    suspend fun clearAllMonthlyPlans()
 
     //
     // App Users
@@ -99,7 +105,7 @@ interface MainDao {
     suspend fun getAppUsersByClientId(clientIds: List<String> ) : List<AppUserEntity>
 
     @Query("DELETE FROM appuserentity WHERE modified != 1")
-    fun clearAppUsers()
+    fun clearSyncedAppUsers()
 
     @Query("DELETE FROM appuserentity")
     suspend fun clearAllAppUsers()

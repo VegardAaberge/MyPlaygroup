@@ -1,7 +1,6 @@
 package com.myplaygroup.app.feature_main.data.repository
 
 import android.app.Application
-import com.myplaygroup.app.core.data.mapper.toDailyClass
 import com.myplaygroup.app.core.data.mapper.toMonthlyPlan
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.repository.TokenRepository
@@ -9,7 +8,6 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
-import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +35,7 @@ class MonthlyPlansRepositoryImpl @Inject constructor(
                 api.getMonthlyPlans()
             },
             saveFetchResult = { monthlyPlans ->
-                dao.clearMonthlyPlans()
+                dao.clearSyncedMonthlyPlans()
                 dao.insertMonthlyPlans(monthlyPlans)
                 dao.getMonthlyPlans().map { it.toMonthlyPlan() }
             },

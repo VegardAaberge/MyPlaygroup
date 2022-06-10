@@ -6,7 +6,6 @@ import com.myplaygroup.app.feature_main.data.model.AppUserEntity
 import com.myplaygroup.app.feature_main.data.model.DailyClassEntity
 import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
-import com.myplaygroup.app.feature_main.data.remote.request.RegistrationRequest
 import com.myplaygroup.app.feature_main.data.remote.request.SendMessageRequest
 import com.myplaygroup.app.feature_main.data.remote.response.MessagesResponse
 import com.myplaygroup.app.feature_main.data.remote.response.ScheduleResponse
@@ -79,7 +78,7 @@ interface PlaygroupApi {
     suspend fun getAppUsers() : Response<List<AppUserEntity>>
 
     @POST("api/v1/users")
-    suspend fun createAppUsers(
-        @Body unsyncedClasses: List<RegistrationRequest>
+    suspend fun uploadAppUsers(
+        @Body unsyncedClasses: List<AppUserEntity>
     ): Response<List<AppUserEntity>>
 }
