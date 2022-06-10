@@ -32,8 +32,8 @@ fun DateParamItem(
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-            timeChanged(LocalDate.of(year, month, dayOfMonth), item.key)
-        }, itemDate.year, itemDate.monthValue, itemDate.dayOfMonth
+            timeChanged(LocalDate.of(year, month + 1, dayOfMonth), item.key)
+        }, itemDate.year, itemDate.monthValue - 1, itemDate.dayOfMonth
     )
 
     ReadonlyTextField(
