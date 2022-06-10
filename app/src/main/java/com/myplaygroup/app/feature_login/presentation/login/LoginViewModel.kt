@@ -58,6 +58,7 @@ class LoginViewModel @Inject constructor(
                         )
                     )
                 }else{
+                    state = state.copy(password = "")
                     setUIEvent(
                         UiEvent.NavigateTo(
                             destination = CreateProfileScreenDestination

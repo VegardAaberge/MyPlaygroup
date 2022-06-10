@@ -34,7 +34,7 @@ fun CreateProfileScreen(
     viewModel: CreateProfileViewModel = hiltViewModel()
 ) {
     val takePictureMode = viewModel.state.takePictureMode
-    val scaffoldState = collectEventFlow(viewModel)
+    val scaffoldState = collectEventFlow(viewModel, navigator)
 
     if(takePictureMode){
         CameraScreen(
