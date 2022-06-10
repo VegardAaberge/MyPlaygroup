@@ -16,7 +16,7 @@ import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 @Composable
 fun SwitchParamItem(
     item: ParameterItem,
-    switchChanged: (Boolean) -> Unit
+    switchChanged: (Any, String) -> Unit
 ) {
     val checked = item.value as Boolean
 
@@ -32,7 +32,7 @@ fun SwitchParamItem(
         Switch(
             checked = checked,
             onCheckedChange = {
-                switchChanged(it)
+                switchChanged(it, item.key)
             }
         )
     }
@@ -50,7 +50,7 @@ fun SwitchParamItemPreview() {
                 key = "Key",
                 value = true
             ),
-        ){
+        ){ value, key ->
 
         }
     }

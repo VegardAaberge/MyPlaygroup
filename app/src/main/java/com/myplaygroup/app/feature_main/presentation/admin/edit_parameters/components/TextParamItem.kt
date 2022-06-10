@@ -18,7 +18,7 @@ import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 @Composable
 fun TextParamItem(
     item: ParameterItem,
-    textChanged: (String) -> Unit
+    valueChanged: (Any, String) -> Unit
 ) {
     TextField(
         value = item.value.toString(),
@@ -26,7 +26,7 @@ fun TextParamItem(
             Text(text = item.getTitle())
         },
         onValueChange = {
-            textChanged(it)
+            valueChanged(it, item.key)
         },
         trailingIcon = {
             Icon(
@@ -53,7 +53,7 @@ fun TextParamItemPreview() {
                 key = "classData",
                 value = "text"
             ),
-        ){
+        ){ value, key ->
 
         }
     }

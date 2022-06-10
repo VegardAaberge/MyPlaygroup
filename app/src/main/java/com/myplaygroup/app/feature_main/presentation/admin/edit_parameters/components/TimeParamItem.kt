@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun TimeParamItem(
     item: ParameterItem,
-    timeChanged: (LocalTime) -> Unit
+    timeChanged: (Any, String) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -31,7 +31,7 @@ fun TimeParamItem(
     val timePickerDialog = TimePickerDialog(
         context,
         {_, hour : Int, minute: Int ->
-            timeChanged(LocalTime.of(hour, minute))
+            timeChanged(LocalTime.of(hour, minute), item.key)
         }, itemTime.hour, itemTime.minute, false
     )
 
@@ -65,7 +65,7 @@ fun TimeParamItemPreview() {
                 key = "Key",
                 value = LocalTime.of(12, 11)
             ),
-        ){
+        ){ value, key ->
 
         }
     }

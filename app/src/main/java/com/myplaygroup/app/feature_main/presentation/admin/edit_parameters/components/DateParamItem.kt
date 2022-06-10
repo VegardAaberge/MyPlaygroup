@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DateParamItem(
     item: ParameterItem,
-    timeChanged: (LocalDate) -> Unit
+    timeChanged: (Any, String) -> Unit
 ) {
     val context = LocalContext.current
     val itemDate = item.value as LocalDate
@@ -32,7 +32,7 @@ fun DateParamItem(
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-            timeChanged(LocalDate.of(year, month, dayOfMonth))
+            timeChanged(LocalDate.of(year, month, dayOfMonth), item.key)
         }, itemDate.year, itemDate.monthValue, itemDate.dayOfMonth
     )
 
@@ -66,7 +66,7 @@ fun DateParamItemPreview() {
                 key = "Key",
                 value = LocalDate.of(2021, 12, 11)
             ),
-        ){
+        ){ value, key ->
 
         }
     }

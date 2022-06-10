@@ -7,8 +7,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.domain.interactors.EditParametersInteractor
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
+import com.myplaygroup.app.feature_main.domain.interactors.EditParametersInteractor
+import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,7 +48,27 @@ class EditParametersViewModel @Inject constructor(
             is EditParametersScreenEvent.SaveData -> {
                 saveData()
             }
+            is EditParametersScreenEvent.UpdateValue -> {
+                state.parameterItems.firstOrNull() {
+                        x -> x.key == event.key
+                }?.let {
+                    updateValue(event.value, it)
+                }
+            }
         }
+    }
+
+    private fun updateValue(value: Any, item: ParameterItem) {
+
+        val items = state.parameterItems.toMutableList()
+        val itemIndex = items.indexOf(item)
+
+        items[itemIndex] = item.copy(
+            value = value
+        )
+        state = state.copy(
+            parameterItems = items
+        )
     }
 
     fun saveData() = viewModelScope.launch(Dispatchers.IO){
