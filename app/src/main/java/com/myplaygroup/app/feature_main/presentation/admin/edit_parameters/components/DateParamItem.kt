@@ -39,6 +39,7 @@ fun DateParamItem(
     ReadonlyTextField(
         label = item.getTitle(),
         fieldValue = time,
+        isError = item.error != null,
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.DateRange,

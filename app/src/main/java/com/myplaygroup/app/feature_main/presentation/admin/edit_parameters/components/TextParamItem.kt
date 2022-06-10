@@ -25,6 +25,7 @@ fun TextParamItem(
         label = {
             Text(text = item.getTitle())
         },
+        isError = item.error != null,
         onValueChange = {
             valueChanged(it, item.key)
         },

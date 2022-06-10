@@ -15,6 +15,7 @@ fun ReadonlyTextField(
     label: String,
     fieldValue: String,
     modifier : Modifier = Modifier,
+    isError: Boolean = false,
     colors: TextFieldColors = TextFieldDefaults.textFieldColors(),
     trailingIcon: @Composable (() -> Unit)? = null,
     action: () -> Unit = {},
@@ -24,6 +25,7 @@ fun ReadonlyTextField(
             value = fieldValue,
             onValueChange = {  },
             trailingIcon = trailingIcon,
+            isError = isError,
             label = {
                 Text(text = label)
             },

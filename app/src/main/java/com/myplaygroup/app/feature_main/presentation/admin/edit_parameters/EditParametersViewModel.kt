@@ -1,11 +1,13 @@
 package com.myplaygroup.app.feature_main.presentation.admin.edit_parameters
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.domain.interactors.EditParametersInteractor
@@ -33,6 +35,7 @@ class EditParametersViewModel @Inject constructor(
             val result = editUseCases.fetchParameterItems(type, id)
             if(result is Resource.Success){
                 state = state.copy(
+                    type = type,
                     parameterItems = result.data!!
                 )
             }else if (result is Resource.Error){
@@ -72,19 +75,22 @@ class EditParametersViewModel @Inject constructor(
     }
 
     fun saveData() = viewModelScope.launch(Dispatchers.IO){
-        val validationResponse = editUseCases.validateParameters(state.parameterItems)
+        Log.d(Constants.DEBUG_KEY, "Saving parameters")
+        val validationResponse = editUseCases.validateParameters(state.parameterItems, state.type)
 
         state = state.copy(
             parameterItems = validationResponse
         )
 
         if(validationResponse.all { x -> x.error == null }){
-            val result = editUseCases.storeParameterItems(state.parameterItems)
+            val result = editUseCases.storeParameterItems(state.parameterItems, state.type)
             if(result is Resource.Success){
+                Log.d(Constants.DEBUG_KEY, "Save done, pop page")
                 setUIEvent(
                     UiEvent.PopPage
                 )
             }else{
+                Log.d(Constants.DEBUG_KEY, "Save failed")
                 setUIEvent(
                     UiEvent.ShowSnackbar(result.message!!)
                 )

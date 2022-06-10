@@ -7,7 +7,7 @@ data class ParameterItem(
     val type: ParameterDisplayType,
     val key: String,
     val value: Any,
-    val error: String? = null
+    var error: String? = null
 ){
     fun getTitle() : String {
         return TextUtils.deCamelCasealize(key).replaceFirstChar { x -> x.uppercase() }

@@ -27,6 +27,7 @@ fun InfoParamItem(
                 contentDescription = null
             )
         },
+        isError = item.error != null,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent,
             unfocusedIndicatorColor = Color.LightGray,

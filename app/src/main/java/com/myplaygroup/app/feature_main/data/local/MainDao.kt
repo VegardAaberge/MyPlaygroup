@@ -36,7 +36,12 @@ interface MainDao {
     //
     @Insert(onConflict = REPLACE)
     suspend fun insertDailyClasses(
-        messages: List<DailyClassEntity>
+        dailyClass: List<DailyClassEntity>
+    )
+
+    @Insert(onConflict = REPLACE)
+    suspend fun insertDailyClass(
+        dailyClass: DailyClassEntity
     )
 
     @Query("SELECT * FROM dailyclassentity WHERE id = :id")
@@ -46,7 +51,7 @@ interface MainDao {
     suspend fun getDailyClasses() : List<DailyClassEntity>
 
     @Query("DELETE FROM dailyclassentity")
-    fun clearDailyClasses()
+    suspend fun clearDailyClasses()
 
     //
     // Monthly Plans
@@ -56,6 +61,11 @@ interface MainDao {
         messages: List<MonthlyPlanEntity>
     )
 
+    @Insert(onConflict = REPLACE)
+    suspend fun insertMonthlyPlan(
+        message: MonthlyPlanEntity
+    )
+
     @Query("SELECT * FROM monthlyplanentity WHERE id = :id")
     suspend fun getMonthlyPlanById(id: Long) : MonthlyPlanEntity
 
@@ -63,7 +73,7 @@ interface MainDao {
     suspend fun getMonthlyPlans() : List<MonthlyPlanEntity>
 
     @Query("DELETE FROM monthlyplanentity")
-    fun clearMonthlyPlans()
+    suspend fun clearMonthlyPlans()
 
     //
     // App Users
@@ -91,5 +101,5 @@ interface MainDao {
     fun clearAppUsers()
 
     @Query("DELETE FROM appuserentity")
-    fun clearAllAppUsers()
+    suspend fun clearAllAppUsers()
 }

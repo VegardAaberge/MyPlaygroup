@@ -2,7 +2,7 @@ package com.myplaygroup.app.core.domain.validation
 
 class PhoneNumberValidator {
     operator fun invoke(phoneNumber: String) : ValidationResult {
-        if(phoneNumber.isEmpty()){
+        if(phoneNumber.isBlank()){
             return ValidationResult(
                 successful = false,
                 errorMessage = "The phone number cannpt be blank"
