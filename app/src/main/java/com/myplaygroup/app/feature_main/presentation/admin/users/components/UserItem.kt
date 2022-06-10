@@ -87,7 +87,6 @@ fun UserItemPreview() {
         UserItem(
             appUser = AppUser(
                 id = -1,
-                email = "null",
                 locked = true,
                 phoneNumber = "null",
                 profileName = "null",

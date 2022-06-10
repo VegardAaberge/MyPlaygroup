@@ -18,14 +18,12 @@ class UserSettingsManagerImpl @Inject constructor(
 
     override suspend fun updateProfileInfo(
         profileName: String,
-        email: String,
         phoneNumber: String
     ) {
         dataStore.updateData {
             it.copy(
                 profileName = profileName,
                 phoneNumber = phoneNumber,
-                email = email,
             )
         }
     }

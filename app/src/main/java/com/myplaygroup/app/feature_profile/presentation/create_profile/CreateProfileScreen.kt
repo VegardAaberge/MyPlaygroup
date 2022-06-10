@@ -2,7 +2,10 @@ package com.myplaygroup.app.feature_profile.presentation.create_profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -145,19 +148,6 @@ fun ColumnScope.TextFields(
         },
         modifier = widthModifier,
         errorMessage = state.phoneNumberError
-    )
-
-    ProfileField(
-        value = state.email,
-        enabled = !isBusy,
-        placeholder = stringResource(id = R.string.email_placeholder),
-        label = stringResource(id = R.string.email_label),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        onTextChange = {
-            viewModel.onEvent(CreateProfileScreenEvent.EnteredEmail(it))
-        },
-        modifier = widthModifier,
-        errorMessage = state.emailError
     )
 
     ProfileField(

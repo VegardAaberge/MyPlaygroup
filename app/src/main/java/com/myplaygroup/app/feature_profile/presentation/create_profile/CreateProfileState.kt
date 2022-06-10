@@ -11,8 +11,6 @@ data class CreateProfileState(
     val repeatedPasswordError: String? = null,
     val phoneNumber: String = "",
     val phoneNumberError: String? = null,
-    val email: String = "",
-    val emailError: String? = null,
     val takePictureMode: Boolean = false,
     val profileBitmap: Bitmap? = null,
     val profileBitmapError: String? = null

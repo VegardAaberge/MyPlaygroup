@@ -2,16 +2,14 @@ package com.myplaygroup.app.feature_profile.data.repository
 
 import android.content.Context
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
-import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.fetchNetworkResource
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
@@ -26,7 +24,6 @@ class ProfileRepositoryImpl @Inject constructor(
         username: String,
         profileName: String,
         phoneNumber: String,
-        email: String,
         newPassword: String,
     ): Flow<Resource<Unit>> {
 
@@ -37,7 +34,6 @@ class ProfileRepositoryImpl @Inject constructor(
                     ProfileRequest(
                         profileName = profileName,
                         phoneNumber = phoneNumber,
-                        email = email,
                         password = newPassword
                     )
                 )
@@ -46,7 +42,6 @@ class ProfileRepositoryImpl @Inject constructor(
                 userSettingsManager.updateProfileInfo(
                     profileName = body.profileName,
                     phoneNumber = body.phoneNumber,
-                    email = body.email,
                 )
             },
             onFetchError = { r ->
@@ -67,8 +62,7 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun editProfile(
         username: String,
         profileName: String,
-        phoneNumber: String,
-        email: String
+        phoneNumber: String
     ): Flow<Resource<Unit>> {
 
         return fetchNetworkResource(
@@ -77,8 +71,7 @@ class ProfileRepositoryImpl @Inject constructor(
                     username = username,
                     ProfileRequest(
                         profileName = profileName,
-                        phoneNumber = phoneNumber,
-                        email = email
+                        phoneNumber = phoneNumber
                     )
                 )
             },
@@ -86,7 +79,6 @@ class ProfileRepositoryImpl @Inject constructor(
                 userSettingsManager.updateProfileInfo(
                     profileName = body.profileName,
                     phoneNumber = body.phoneNumber,
-                    email = body.email,
                 )
             },
             onFetchError = { r ->

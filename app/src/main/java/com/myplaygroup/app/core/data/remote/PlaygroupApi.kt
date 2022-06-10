@@ -1,10 +1,7 @@
 package com.myplaygroup.app.core.data.remote
 
-import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
-import com.myplaygroup.app.feature_login.data.requests.VerifyCodeRequest
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
-import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
 import com.myplaygroup.app.feature_main.data.model.AppUserEntity
 import com.myplaygroup.app.feature_main.data.model.DailyClassEntity
 import com.myplaygroup.app.feature_main.data.model.MessageEntity
@@ -29,16 +26,6 @@ interface PlaygroupApi {
         @Field("username") username: String,
         @Field("password") password: String
     ): Response<LoginResponse>
-
-    @POST("/api/v1/reset-password/send")
-    suspend fun sendEmailRequest(
-        @Body emailRequest: SendEmailRequest
-    ): Response<SendResetPasswordResponse>
-
-    @POST("/api/v1/reset-password/verify")
-    suspend fun checkVerificationCode(
-        @Body codeRequest: VerifyCodeRequest
-    ): Response<SimpleResponse>
 
     @POST("/api/v1/profile/create/{username}")
     suspend fun createProfile(

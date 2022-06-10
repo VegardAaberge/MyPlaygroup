@@ -11,12 +11,10 @@ class FakeUserSettingsManager : UserSettingsManager {
 
     override suspend fun updateProfileInfo(
         profileName: String,
-        email: String,
         phoneNumber: String
     ) {
         userSettings = userSettings.copy(
             profileName = profileName,
-            email = email,
             phoneNumber = phoneNumber
         )
     }

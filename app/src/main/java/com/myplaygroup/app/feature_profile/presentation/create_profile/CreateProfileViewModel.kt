@@ -4,12 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.myplaygroup.app.core.domain.settings.UserSettingsManager
-import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.domain.repository.ImageRepository
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
+import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_profile.domain.interactors.ProfileValidationInteractors
+import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -34,9 +34,6 @@ class CreateProfileViewModel @Inject constructor(
             }
             is CreateProfileScreenEvent.EnteredPhoneNumber -> {
                 state = state.copy(phoneNumber = event.phoneNumber)
-            }
-            is CreateProfileScreenEvent.EnteredEmail -> {
-                state = state.copy(email = event.email)
             }
             is CreateProfileScreenEvent.EnteredPassword -> {
                 state = state.copy(password = event.password)
@@ -64,7 +61,6 @@ class CreateProfileViewModel @Inject constructor(
 
         val profileBitmapResult = profileUseCases.profileBitmapValidator(state.profileBitmap)
         val profileNameResult = profileUseCases.profileNameValidator(state.profileName)
-        val emailResult = profileUseCases.emailValidator(state.email)
         val phoneNumberResult = profileUseCases.phoneNumberValidator(state.phoneNumber)
         val passwordResult = profileUseCases.passwordValidator(state.password)
         val repeatedPasswordResult = profileUseCases.repeatedPasswordValidator(
@@ -72,13 +68,12 @@ class CreateProfileViewModel @Inject constructor(
         )
 
         val hasError = listOf(
-            profileBitmapResult, profileNameResult, emailResult, phoneNumberResult, passwordResult, repeatedPasswordResult
+            profileBitmapResult, profileNameResult, phoneNumberResult, passwordResult, repeatedPasswordResult
         ).any { !it.successful }
 
         state = state.copy(
             profileBitmapError = profileBitmapResult.errorMessage,
             profileNameError = profileNameResult.errorMessage,
-            emailError = emailResult.errorMessage,
             phoneNumberError = phoneNumberResult.errorMessage,
             passwordError = passwordResult.errorMessage,
             repeatedPasswordError = repeatedPasswordResult.errorMessage,
@@ -109,7 +104,6 @@ class CreateProfileViewModel @Inject constructor(
                     username = username,
                     profileName = state.profileName,
                     phoneNumber = state.phoneNumber,
-                    email = state.email,
                     newPassword = state.password
                 ).collect { collectCreateProfile(it) }
             }

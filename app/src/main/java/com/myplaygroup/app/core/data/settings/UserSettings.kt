@@ -11,5 +11,4 @@ data class UserSettings (
     val userRole: String  = NO_VALUE,
     val profileName: String  = NO_VALUE,
     val phoneNumber: String  = NO_VALUE,
-    val email: String  = NO_VALUE
 )

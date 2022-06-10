@@ -11,7 +11,6 @@ class FakeUsersRepository : UsersRepository {
     var appUsers = mutableListOf<AppUser>(
         AppUser(
             id = 1,
-            email = "null",
             locked = true,
             phoneNumber = "null",
             profileName = "null",
@@ -21,7 +20,6 @@ class FakeUsersRepository : UsersRepository {
         ),
         AppUser(
             id = 2,
-            email = "vegard.aaberge@gmail.com",
             locked = false,
             phoneNumber = "12345678901",
             profileName = "Vegard",

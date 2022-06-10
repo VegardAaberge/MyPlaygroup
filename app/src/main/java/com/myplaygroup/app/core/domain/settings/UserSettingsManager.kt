@@ -4,7 +4,7 @@ import com.myplaygroup.app.core.data.settings.UserSettings
 import kotlinx.coroutines.flow.Flow
 
 interface UserSettingsManager {
-    suspend fun updateProfileInfo(profileName: String, email: String, phoneNumber: String)
+    suspend fun updateProfileInfo(profileName: String, phoneNumber: String)
 
     suspend fun updateUsernameAndRole(username: String, userRole: String)
 

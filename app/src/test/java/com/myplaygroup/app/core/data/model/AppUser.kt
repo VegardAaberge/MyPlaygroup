@@ -1,6 +1,5 @@
 package com.myplaygroup.app.core.data.model
 
-import android.provider.ContactsContract.CommonDataKinds.Email
 import com.myplaygroup.app.core.domain.settings.UserRole
 
 
@@ -9,7 +8,6 @@ data class AppUser (
     val username: String,
     val profileName: String? = null,
     val phoneNumber: String? = null,
-    val email: String? = null,
     val password: String? = null,
     val appUserRole: UserRole = UserRole.USER,
     val userCredit: Long = 0L,

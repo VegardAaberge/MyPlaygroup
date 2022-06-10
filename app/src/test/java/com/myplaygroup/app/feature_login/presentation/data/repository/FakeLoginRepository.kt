@@ -4,7 +4,6 @@ import com.myplaygroup.app.core.data.model.AppUser
 import com.myplaygroup.app.core.domain.settings.UserRole
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
-import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,7 +25,6 @@ class FakeLoginRepository : LoginRepository {
             appUserRole = UserRole.ADMIN,
             profileCreated = true,
             profileName = "Playgroup",
-            email = "test@test.com",
             phoneNumber = "12345678901"
         ),
         AppUser(
@@ -35,7 +33,6 @@ class FakeLoginRepository : LoginRepository {
             appUserRole = UserRole.USER,
             profileCreated = true,
             profileName = "Vegard",
-            email = "test@test.com",
             phoneNumber = "12345678901"
         ),
         AppUser(
@@ -68,29 +65,11 @@ class FakeLoginRepository : LoginRepository {
                             user_role = currentUser.appUserRole.name,
                             profile_created = currentUser.profileCreated,
                             profile_name = currentUser.profileName,
-                            email = currentUser.email,
                             phone_number = currentUser.phoneNumber
                         )
                     )
                 )
             }
-        }
-    }
-
-    override suspend fun sendEmailRequestForm(email: String): Flow<Resource<SendResetPasswordResponse>> {
-        return flow {
-            emit(Resource.Success(SendResetPasswordResponse(
-                token = "token"
-            )))
-        }
-    }
-
-    override suspend fun checkVerificationCode(
-        code: String,
-        token: String
-    ): Flow<Resource<Unit>> {
-        return flow {
-            emit(Resource.Success())
         }
     }
 }

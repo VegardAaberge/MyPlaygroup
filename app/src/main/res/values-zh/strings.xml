@@ -7,15 +7,6 @@
     <string name="password_placeholder">输入密码</string>
     <string name="button_login">登录</string>
     <string name="my_playgroup">我的游戏组</string>
-    <string name="forgot_passeord">忘记密码?</string>
-    <string name="send_email">Send</string>
-    <string name="forgot_password_placeholder">Email</string>
-    <string name="forgot_password_label">Enter Email</string>
-    <string name="forgot_password_explanation">Write in your email, and go to your email to reset the password</string>
-    <string name="forgot_password_header">Forgot your password?</string>
-    <string name="enter_code_placeholder">Code</string>
-    <string name="enter_code_label">Enter code</string>
-    <string name="check_code">Continue</string>
     <string name="api_login_exception">Couldn\'t connect to the service, check your internet connection</string>
     <string name="profile_name_placeholder">Enter profile name</string>
     <string name="profile_name_label">Profile name</string>
@@ -24,8 +15,6 @@
     <string name="confirm_password_placeholder">Confirm your password</string>
     <string name="confirm_password_label">Confirm password</string>
     <string name="profile_screen_title">Edit Profile</string>
-    <string name="email_placeholder">Enter email</string>
-    <string name="email_label">Email</string>
     <string name="camera_flip">Flip</string>
     <string name="camera_gallery">Gallery</string>
     <string name="camera_title">Camera</string>

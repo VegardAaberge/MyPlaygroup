@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import com.myplaygroup.app.feature_profile.domain.interactors.ProfileValidationInteractors
+import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -31,7 +31,6 @@ class EditProfileViewModel @Inject constructor(
                 state = state.copy(
                     profileName = it.profileName,
                     phoneNumber = it.phoneNumber,
-                    email = it.email
                 )
             }
         }
@@ -45,9 +44,6 @@ class EditProfileViewModel @Inject constructor(
             is EditProfileScreenEvent.EnteredPhoneNumber -> {
                 state = state.copy(phoneNumber = event.phoneNumber)
             }
-            is EditProfileScreenEvent.EnteredEmail -> {
-                state = state.copy(email = event.email)
-            }
             is EditProfileScreenEvent.SaveProfile -> {
                 submitData()
             }
@@ -57,16 +53,14 @@ class EditProfileViewModel @Inject constructor(
     private fun submitData() = viewModelScope.launch{
 
         val profileNameResult = profileUseCases.profileNameValidator(state.profileName)
-        val emailResult = profileUseCases.emailValidator(state.email)
         val phoneNumberResult = profileUseCases.phoneNumberValidator(state.phoneNumber)
 
         val hasError = listOf(
-            profileNameResult, emailResult, phoneNumberResult
+            profileNameResult, phoneNumberResult
         ).any { !it.successful }
 
         state = state.copy(
             profileNameError = profileNameResult.errorMessage,
-            emailError = emailResult.errorMessage,
             phoneNumberError = phoneNumberResult.errorMessage,
         )
 
@@ -78,7 +72,6 @@ class EditProfileViewModel @Inject constructor(
                     username = username,
                     profileName = state.profileName,
                     phoneNumber = state.phoneNumber,
-                    email = state.email,
                 ).collect { collectCreateProfile(it) }
             }
         }

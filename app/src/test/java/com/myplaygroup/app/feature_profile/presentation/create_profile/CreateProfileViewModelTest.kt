@@ -8,7 +8,9 @@ import com.myplaygroup.app.core.domain.settings.UserRole
 import com.myplaygroup.app.core.utility.MainCoroutineRule
 import com.myplaygroup.app.feature_profile.data.repository.FakeProfileRepository
 import com.myplaygroup.app.feature_profile.domain.interactors.ProfileValidationInteractors
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,7 +32,6 @@ class CreateProfileViewModelTest {
     val profileName = "Vegard"
     val password = "b11111111B"
     val phoneNumber = "12345678901"
-    val email = "vegard.aaberge@gmail.com"
     val profileBitmap = mock(Bitmap::class.java)
 
     @Before
@@ -52,7 +53,6 @@ class CreateProfileViewModelTest {
             password = password,
             repeatedPassword = password,
             phoneNumber = phoneNumber,
-            email = email,
             profileBitmap = profileBitmap
         )
     }
@@ -92,7 +92,6 @@ class CreateProfileViewModelTest {
         Truth.assertThat(appUser.profileName).isEqualTo(profileName)
         Truth.assertThat(appUser.password).isEqualTo(password)
         Truth.assertThat(appUser.phoneNumber).isEqualTo(phoneNumber)
-        Truth.assertThat(appUser.email).isEqualTo(email)
         Truth.assertThat(storedUri).isNotNull()
         Truth.assertThat(viewModel.state.passwordError).isNull()
     }

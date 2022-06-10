@@ -8,7 +8,6 @@ interface ProfileRepository {
         username: String,
         profileName: String,
         phoneNumber: String,
-        email: String,
         newPassword: String,
     ) : Flow<Resource<Unit>>
 
@@ -16,6 +15,5 @@ interface ProfileRepository {
         username: String,
         profileName: String,
         phoneNumber: String,
-        email: String,
     ) : Flow<Resource<Unit>>
 }

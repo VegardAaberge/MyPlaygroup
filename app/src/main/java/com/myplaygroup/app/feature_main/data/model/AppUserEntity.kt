@@ -16,7 +16,6 @@ data class AppUserEntity(
     val userCredit: Long = 0,
     val profileCreated: Boolean = false,
     val profileName: String? = null,
-    val email: String? = null,
     val phoneNumber: String? = null,
 
     @Transient

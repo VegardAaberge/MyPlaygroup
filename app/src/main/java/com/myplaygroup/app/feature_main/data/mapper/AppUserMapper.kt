@@ -8,7 +8,6 @@ fun AppUserEntity.toAppUser() : AppUser {
     return AppUser(
         id = id,
         clientId = clientId,
-        email = email ?: "",
         locked = locked,
         phoneNumber = phoneNumber?: "",
         profileCreated = profileCreated,
@@ -24,7 +23,6 @@ fun AppUser.toAppUserEntity() : AppUserEntity {
     return AppUserEntity(
         id = id,
         clientId = clientId,
-        email = email,
         locked = locked,
         phoneNumber = phoneNumber,
         profileCreated = profileCreated,

@@ -5,7 +5,6 @@ import java.util.*
 data class AppUser(
     val clientId: String = UUID.randomUUID().toString(),
     val id: Long = -1,
-    val email: String,
     val locked: Boolean,
     val phoneNumber: String,
     val profileCreated: Boolean,

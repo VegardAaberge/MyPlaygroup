@@ -7,10 +7,7 @@ import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.fetchNetworkResource
-import com.myplaygroup.app.feature_login.data.requests.SendEmailRequest
-import com.myplaygroup.app.feature_login.data.requests.VerifyCodeRequest
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
-import com.myplaygroup.app.feature_login.data.responses.SendResetPasswordResponse
 import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -51,7 +48,6 @@ class LoginRepositoryImpl @Inject constructor(
                 if(loginResponse.profile_created){
                     userSettingsManager.updateProfileInfo(
                         profileName = loginResponse.profile_name!!,
-                        email = loginResponse.email!!,
                         phoneNumber = loginResponse.phone_number!!,
                     )
                 }
@@ -63,57 +59,6 @@ class LoginRepositoryImpl @Inject constructor(
                     else -> "Couldn't reach server: ${r.message}"
                 }
             },
-            onFetchException = { t ->
-                when(t){
-                    is IOException -> "No Internet Connection"
-                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
-                }
-            }
-        )
-    }
-
-    override suspend fun sendEmailRequestForm(
-        email: String
-    ): Flow<Resource<SendResetPasswordResponse>> {
-
-        return fetchNetworkResource(
-            fetch = {
-                if(checkForInternetConnection(context)){
-                    api.sendEmailRequest(
-                        SendEmailRequest(email)
-                    )
-                } else throw IOException()
-            },
-            processFetch = { r -> r },
-            onFetchError = { r -> "Couldn't reach server: ${r.message}" },
-            onFetchException = { t ->
-                when(t){
-                    is IOException -> "No Internet Connection"
-                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
-                }
-            }
-        )
-    }
-
-    override suspend fun checkVerificationCode(
-        code: String,
-        token: String
-    ): Flow<Resource<Unit>> {
-
-        return fetchNetworkResource(
-            fetch = {
-                if(checkForInternetConnection(context)){
-                    api.checkVerificationCode(
-                        VerifyCodeRequest(
-                            token = token,
-                            code = code
-                        )
-                    )
-                } else throw IOException()
-
-            },
-            processFetch = { r -> r.message },
-            onFetchError = { r -> "Couldn't reach server: ${r.message}" },
             onFetchException = { t ->
                 when(t){
                     is IOException -> "No Internet Connection"

@@ -1,8 +1,8 @@
 package com.myplaygroup.app.feature_login.presentation.login
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -13,8 +13,9 @@ import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.RequestPermissions
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.core.presentation.components.scaffoldColumnModifier
-import com.myplaygroup.app.destinations.ForgotPasswordScreenDestination
-import com.myplaygroup.app.feature_login.presentation.login.components.*
+import com.myplaygroup.app.feature_login.presentation.login.components.LoginButton
+import com.myplaygroup.app.feature_login.presentation.login.components.LoginImageAndText
+import com.myplaygroup.app.feature_login.presentation.login.components.LoginTextFields
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -75,16 +76,6 @@ fun LoginScreen(
                 loginEvent = {
                     focusManager.clearFocus()
                     viewModel.onEvent(LoginScreenEvent.LoginTapped)
-                },
-                modifier = widthModifier
-            )
-            
-            Spacer(modifier = Modifier.height(10.dp))
-
-            LoginForgotPassword(
-                isBusy = isBusy,
-                forgotPasswordEvent = {
-                    navigator!!.navigate(ForgotPasswordScreenDestination())
                 },
                 modifier = widthModifier
             )

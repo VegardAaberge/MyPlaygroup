@@ -1,8 +1,7 @@
 package com.myplaygroup.app.feature_profile.data.repository
 
-import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_login.domain.repository.LoginRepository
 import com.myplaygroup.app.core.data.model.AppUser
+import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,7 +18,6 @@ class FakeProfileRepository() : ProfileRepository {
         username: String,
         profileName: String,
         phoneNumber: String,
-        email: String,
         newPassword: String
     ): Flow<Resource<Unit>> {
 
@@ -28,7 +26,6 @@ class FakeProfileRepository() : ProfileRepository {
         val newUser = user.copy(
             profileName = profileName,
             phoneNumber = phoneNumber,
-            email = email,
             password = newPassword
         )
 
@@ -42,7 +39,6 @@ class FakeProfileRepository() : ProfileRepository {
         username: String,
         profileName: String,
         phoneNumber: String,
-        email: String
     ): Flow<Resource<Unit>> {
 
         val user = users.first { x -> x.username == username }
@@ -50,7 +46,6 @@ class FakeProfileRepository() : ProfileRepository {
         val newUser = user.copy(
             profileName = profileName,
             phoneNumber = phoneNumber,
-            email = email,
         )
 
         users.remove(user)
