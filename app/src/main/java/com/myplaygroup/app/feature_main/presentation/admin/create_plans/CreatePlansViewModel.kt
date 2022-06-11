@@ -11,6 +11,8 @@ import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,10 +31,49 @@ class CreatePlansViewModel @Inject constructor(
 
     fun onEvent(event: CreatePlansScreenEvent) {
         when (event) {
+            is CreatePlansScreenEvent.UserChanged -> {
+                state = state.copy(user = event.user)
+            }
+            is CreatePlansScreenEvent.KidChanged -> {
+                state = state.copy(kid = event.kid)
+            }
+            is CreatePlansScreenEvent.PlanChanged -> {
+                state.standardPlans.firstOrNull() { x -> x.name == event.plan }?.let { plan ->
+                    state = state.copy(
+                        plan = plan.name,
+                        price = plan.price.toString()
+                    )
+                }
+            }
+            is CreatePlansScreenEvent.PriceChanged -> {
+                state = state.copy(price = event.price)
+            }
+            is CreatePlansScreenEvent.WeekdayChanged -> {
+                setWeekdays(event.dayOfWeek)
+            }
+            is CreatePlansScreenEvent.StartDateChanged -> {
+                state = state.copy(startDate = event.startDate)
+
+                // TODO Calculate new price
+            }
+            is CreatePlansScreenEvent.EndDateChanged -> {
+                state = state.copy(endDate = event.endDate)
+
+                // TODO Calculate new price
+            }
             is CreatePlansScreenEvent.GenerateData -> {
 
             }
         }
+    }
+
+    private fun setWeekdays(dayOfWeek: DayOfWeek){
+        val weekdays = state.weekdays
+        val currentValue = weekdays[dayOfWeek] ?: false
+        weekdays.put(dayOfWeek, !currentValue)
+        state = state.copy(
+            weekdays = weekdays
+        )
     }
 
     private fun getMonthlyPlans() = viewModelScope.launch {
@@ -42,8 +83,14 @@ class CreatePlansViewModel @Inject constructor(
             collectResult(
                 result = result,
                 storeData = {
+                    val maxDate = it.maxOfOrNull { x -> x.startDate } ?: LocalDate.now()
+                    val startDate = LocalDate.of(maxDate.year, maxDate.month, 1)
+                    val endDate = startDate.plusMonths(1).minusDays(1)
+
                     state = state.copy(
-                        monthlyPlans = it
+                        monthlyPlans = it,
+                        startDate = startDate,
+                        endDate = endDate
                     )
                 }
             )

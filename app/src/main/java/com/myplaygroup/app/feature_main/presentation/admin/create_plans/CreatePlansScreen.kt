@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,8 +19,6 @@ import com.myplaygroup.app.feature_main.presentation.admin.create_plans.componen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.DayOfWeek
-import java.time.LocalDate
-import java.util.*
 
 @Destination
 @Composable
@@ -28,8 +26,8 @@ fun CreatePlansScreen(
     navigator: DestinationsNavigator,
     viewModel: CreatePlansViewModel = hiltViewModel()
 ) {
-    val scaffoldState = collectEventFlow(viewModel, navigator)
     val state = viewModel.state
+    val scaffoldState = collectEventFlow(viewModel, navigator)
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -58,42 +56,27 @@ fun CreatePlansScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            CreateSinglePlanBody(viewModel)
+            CreateSinglePlanBody(viewModel, state)
         }
     }
 }
 
 @Composable
 fun CreateSinglePlanBody(
-    viewModel: CreatePlansViewModel
+    viewModel: CreatePlansViewModel,
+    state: CreatePlansState
 ) {
-    val monthlyPlans = viewModel.state.monthlyPlans
-    val maxDate = monthlyPlans.maxOfOrNull { x -> x.startDate } ?: LocalDate.now()
-    val startDate = LocalDate.of(maxDate.year, maxDate.month, 1)
-    val endDate = startDate.plusMonths(1).minusDays(1)
-
-    val users = viewModel.state.users
-    val plans = viewModel.state.standardPlans
-
-    val weekdays by remember { mutableStateOf(initWeekdays()) }
+    val weekdays = state.weekdays
     val weekdayChanged: (DayOfWeek) -> Unit = { dayOfWeek ->
-        val currentValue = weekdays[dayOfWeek] ?: false
-        weekdays.put(dayOfWeek, !currentValue)
+        viewModel.onEvent(CreatePlansScreenEvent.WeekdayChanged(dayOfWeek))
     }
-
-    var selectedUser by remember { mutableStateOf("") }
-    var selectedKid by remember { mutableStateOf("") }
-    var selectedPlan by remember { mutableStateOf("") }
-    var selectedPrice by remember { mutableStateOf("0") }
-    var selectedStartDate by remember { mutableStateOf(startDate) }
-    var selectedEndDate by remember { mutableStateOf(endDate) }
 
     PlansDropdownMenuItem(
         label = "User",
-        items = users.map { x -> x.username },
-        selected = selectedUser,
+        items = state.users.map { x -> x.username },
+        selected = state.user,
         selectedChanged = {
-            selectedUser = it
+            viewModel.onEvent(CreatePlansScreenEvent.UserChanged(it))
         }
     )
 
@@ -101,9 +84,9 @@ fun CreateSinglePlanBody(
 
     PlansTextFieldItem(
         label = "Kid",
-        selected = selectedKid,
+        selected = state.kid,
         selectedChanged = {
-            selectedKid = it
+            viewModel.onEvent(CreatePlansScreenEvent.KidChanged(it))
         }
     )
 
@@ -111,12 +94,10 @@ fun CreateSinglePlanBody(
 
     PlansDropdownMenuItem(
         label = "Plans",
-        items = plans.map { x -> x.name },
-        selected = selectedPlan,
+        items = state.standardPlans.map { x -> x.name },
+        selected = state.plan,
         selectedChanged = {
-            val currentPlan = plans.first { x -> x.name == it }
-            selectedPrice = currentPlan.price.toString()
-            selectedPlan = currentPlan.name
+            viewModel.onEvent(CreatePlansScreenEvent.PlanChanged(it))
         }
     )
 
@@ -146,9 +127,9 @@ fun CreateSinglePlanBody(
 
     OutlinedDateField(
         label = "Start Date",
-        selected = selectedStartDate,
+        selected = state.startDate,
         timeChanged = {
-            selectedStartDate = it
+            viewModel.onEvent(CreatePlansScreenEvent.StartDateChanged(it))
         }
     )
 
@@ -156,9 +137,9 @@ fun CreateSinglePlanBody(
 
     OutlinedDateField(
         label = "End Date",
-        selected = selectedEndDate,
+        selected = state.endDate,
         timeChanged = {
-            selectedEndDate = it
+            viewModel.onEvent(CreatePlansScreenEvent.EndDateChanged(it))
         }
     )
 
@@ -166,20 +147,9 @@ fun CreateSinglePlanBody(
 
     PlansTextFieldItem(
         label = "Price",
-        selected = selectedPrice,
+        selected = state.price,
         selectedChanged = {
-            selectedPrice = it
+            viewModel.onEvent(CreatePlansScreenEvent.PriceChanged(it))
         }
     )
-}
-
-private fun initWeekdays() : EnumMap<DayOfWeek, Boolean> {
-    val weekdays : EnumMap<DayOfWeek, Boolean> = EnumMap(DayOfWeek::class.java)
-    weekdays.put(DayOfWeek.MONDAY, true)
-    weekdays.put(DayOfWeek.TUESDAY, true)
-    weekdays.put(DayOfWeek.WEDNESDAY, true)
-    weekdays.put(DayOfWeek.THURSDAY, true)
-    weekdays.put(DayOfWeek.FRIDAY, true)
-    weekdays.put(DayOfWeek.SATURDAY, false)
-    return weekdays
 }
