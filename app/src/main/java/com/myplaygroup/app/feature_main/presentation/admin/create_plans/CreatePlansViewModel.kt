@@ -1,6 +1,5 @@
-package com.myplaygroup.app.feature_main.presentation.admin.monthly_plans
+package com.myplaygroup.app.feature_main.presentation.admin.create_plans
 
-import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,36 +14,25 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MonthlyPlansViewModel @Inject constructor(
-    private val repository: MonthlyPlansRepository
+class CreatePlansViewModel @Inject constructor(
+    private val monthlyPlansRepository: MonthlyPlansRepository
 ) : BaseViewModel() {
 
-    private var lastRefresh: Long = 0
-
-    var state by mutableStateOf(MonthlyPlansState())
+    var state by mutableStateOf(CreatePlansState())
 
     init {
-        fetchData(true)
+        viewModelScope.launch {
+            monthlyPlansRepository
+                .getAllMonthlyPlans(false)
+                .collect { collectMonthlyPlans(it) }
+        }
     }
 
-    fun onEvent(event: MonthlyPlansScreenEvent) {
+    fun onEvent(event: CreatePlansScreenEvent) {
         when (event) {
-            is MonthlyPlansScreenEvent.RefreshData -> {
-                fetchData(false)
+            is CreatePlansScreenEvent.GenerateData -> {
+
             }
-        }
-    }
-
-    fun fetchData(fetchFromRemote: Boolean){
-        if (SystemClock.elapsedRealtime() - lastRefresh < 1000){
-            return;
-        }
-        lastRefresh = SystemClock.elapsedRealtime()
-
-        viewModelScope.launch(Dispatchers.IO) {
-            repository
-                .getAllMonthlyPlans(true)
-                .collect{ collectMonthlyPlans(it) }
         }
     }
 

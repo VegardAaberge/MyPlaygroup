@@ -85,7 +85,7 @@ fun AdminScreen(
                 items = NavDrawer.items.values.toList(),
                 onItemClick = { route ->
                     when(route){
-                        NavDrawer.LOGOUT -> adminViewModel.onEvent(AdminScreenEvent.logoutTapped)
+                        NavDrawer.LOGOUT -> adminViewModel.onEvent(AdminScreenEvent.LogoutTapped)
                         else -> {
                             adminViewModel.onEvent(
                                 AdminScreenEvent.routeUpdated(route)

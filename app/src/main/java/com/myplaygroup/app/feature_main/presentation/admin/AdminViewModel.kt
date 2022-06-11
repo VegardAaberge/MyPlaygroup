@@ -62,7 +62,7 @@ class AdminViewModel @Inject constructor(
                     UiEvent.NavigateTo(ProfileSelectorScreenDestination)
                 )
             }
-            is AdminScreenEvent.logoutTapped -> {
+            is AdminScreenEvent.LogoutTapped -> {
                 logout()
             }
             is AdminScreenEvent.routeUpdated -> {
@@ -71,6 +71,11 @@ class AdminViewModel @Inject constructor(
             is AdminScreenEvent.NavigateToEditScreen -> {
                 setUIEvent(
                     UiEvent.NavigateTo(EditParametersScreenDestination(event.id, event.type))
+                )
+            }
+            is AdminScreenEvent.NavigateToCreateMonthlyPlan -> {
+                setUIEvent(
+                    UiEvent.NavigateTo(CreatePlansScreenDestination)
                 )
             }
         }

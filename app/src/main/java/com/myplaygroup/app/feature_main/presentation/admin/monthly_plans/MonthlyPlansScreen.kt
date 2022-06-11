@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -15,8 +14,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -73,17 +70,6 @@ fun MonthlyPlanScreen(
                 }
             }
         }
-
-        if(state.showCreateMonthlyPlan){
-            Dialog(
-                onDismissRequest = {
-                    viewModel.onEvent(MonthlyPlansScreenEvent.CreateMonthlyPlanDialog(false))
-                },
-                properties = DialogProperties()
-            ) {
-                Text(text = "Popup")
-            }
-        }
     }
 }
 
@@ -97,7 +83,7 @@ private fun CreateToolbarActionItems(
             AdminState.ActionButton(
                 icon = Icons.Default.Add,
                 action = {
-                    viewModel.onEvent(MonthlyPlansScreenEvent.CreateMonthlyPlanDialog(true))
+                    adminViewModel.onEvent(AdminScreenEvent.NavigateToCreateMonthlyPlan)
                 }
             )
         )

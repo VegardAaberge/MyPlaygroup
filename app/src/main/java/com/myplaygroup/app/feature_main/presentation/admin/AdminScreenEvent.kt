@@ -5,7 +5,8 @@ import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 sealed class AdminScreenEvent {
     object EditProfilePictureTapped : AdminScreenEvent()
     object EditProfileTapped : AdminScreenEvent()
-    object logoutTapped : AdminScreenEvent()
+    object LogoutTapped : AdminScreenEvent()
+    object NavigateToCreateMonthlyPlan : AdminScreenEvent()
     data class routeUpdated(val route: String) : AdminScreenEvent()
     data class NavigateToEditScreen(
         val type: ParametersType,

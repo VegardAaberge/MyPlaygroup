@@ -12,7 +12,6 @@ import com.myplaygroup.app.destinations.LoginScreenDestination
 import com.myplaygroup.app.destinations.MainScreenDestination
 import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
 import com.myplaygroup.app.feature_main.domain.interactors.FakeMainDaoInteractor
-import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -55,7 +54,7 @@ class AdminViewModelTest {
             username = "vegard"
         )
 
-        viewModel.onEvent(AdminScreenEvent.logoutTapped)
+        viewModel.onEvent(AdminScreenEvent.LogoutTapped)
 
         Truth.assertThat(basicAuthInterceptor.accessToken).isNull()
         Truth.assertThat(userSettingsManager.userSettings).isEqualTo(UserSettings())
@@ -66,7 +65,7 @@ class AdminViewModelTest {
     fun `Tap logout, page is popped`() = runBlocking {
 
         basicAuthInterceptor.accessToken = "accessToken"
-        viewModel.onEvent(AdminScreenEvent.logoutTapped)
+        viewModel.onEvent(AdminScreenEvent.LogoutTapped)
 
         val uiEvent = viewModel.eventChannelFlow.first()
 

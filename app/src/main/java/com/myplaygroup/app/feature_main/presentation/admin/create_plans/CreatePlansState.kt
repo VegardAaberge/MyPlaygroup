@@ -1,9 +1,9 @@
-package com.myplaygroup.app.feature_main.presentation.admin.monthly_plans
+package com.myplaygroup.app.feature_main.presentation.admin.create_plans
 
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 
-data class MonthlyPlansState (
+data class CreatePlansState(
+    val data : String = "",
     val monthlyPlans: List<MonthlyPlan> = emptyList(),
-    val showCreateMonthlyPlan: Boolean = false,
     val isLoading: Boolean = false
 )

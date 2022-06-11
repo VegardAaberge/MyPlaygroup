@@ -28,8 +28,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun EditParametersScreen(
     id: Long,
     parametersType: ParametersType,
+    navigator: DestinationsNavigator,
     viewModel: EditParametersViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
 ) {
     val scaffoldState = collectEventFlow(viewModel, navigator)
     val state = viewModel.state
