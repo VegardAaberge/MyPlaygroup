@@ -30,6 +30,7 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_admin/presentation/classes/components/CalendarClassesScreen.kt" value="0.335" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/classes/components/CreateClassesSection.kt" value="0.25" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/classes/components/SelectedClassDialog.kt" value="0.625" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/create_plans/CreatePlansScreen.kt" value="0.335" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/DateParamItem.kt" value="0.375" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/InfoParamItem.kt" value="0.6953703703703704" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/SwitchParamItem.kt" value="0.6953703703703704" />
