@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,16 +16,21 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class CreatePlansViewModel @Inject constructor(
     private val monthlyPlansRepository: MonthlyPlansRepository,
-    private val usersRepository: UsersRepository
+    private val usersRepository: UsersRepository,
+    private val dailyClassesRepository: DailyClassesRepository
 ) : BaseViewModel() {
+
+    private var dailyClasses : List<DailyClass> = emptyList()
 
     var state by mutableStateOf(CreatePlansState())
 
     init {
+        getDailyClasses()
         getMonthlyPlans()
         getUsers()
         getStandardPlans()
@@ -44,22 +51,22 @@ class CreatePlansViewModel @Inject constructor(
                         price = plan.price.toString()
                     )
                 }
+                calculatePrice()
             }
             is CreatePlansScreenEvent.PriceChanged -> {
                 state = state.copy(price = event.price)
             }
             is CreatePlansScreenEvent.WeekdayChanged -> {
                 setWeekdays(event.dayOfWeek)
+                calculatePrice()
             }
             is CreatePlansScreenEvent.StartDateChanged -> {
                 state = state.copy(startDate = event.startDate)
-
-                // TODO Calculate new price
+                calculatePrice()
             }
             is CreatePlansScreenEvent.EndDateChanged -> {
                 state = state.copy(endDate = event.endDate)
-
-                // TODO Calculate new price
+                calculatePrice()
             }
             is CreatePlansScreenEvent.GenerateData -> {
 
@@ -67,12 +74,34 @@ class CreatePlansViewModel @Inject constructor(
         }
     }
 
-    private fun setWeekdays(dayOfWeek: DayOfWeek){
-        val weekdays = state.weekdays
-        val currentValue = weekdays[dayOfWeek] ?: false
-        weekdays.put(dayOfWeek, !currentValue)
+    private fun calculatePrice() {
+        val daysOfWeek = state.weekdays.filter { x -> x.value }
+
+        val relevantClasses = dailyClasses
+            .filter { x -> daysOfWeek.containsKey(x.dayOfWeek) }
+
+        if(relevantClasses.size == 0 || state.plan.isEmpty())
+            return
+
+        val firstDay = LocalDate.of(state.startDate.year, state.startDate.month, 1)
+        val lastDay = firstDay.plusMonths(1).minusDays(1);
+
+        val classesInMonth = relevantClasses.filter { x -> x.date >= state.startDate && x.date <= state.endDate }.size.toFloat()
+        val classesChosen = relevantClasses.filter { x -> x.date >= firstDay && x.date <= lastDay }.size.toFloat()
+        val price = state.standardPlans.first { x -> x.name == state.plan }.price
+
+        val adjustedPrice = price / (classesChosen / classesInMonth)
         state = state.copy(
-            weekdays = weekdays
+            price = adjustedPrice.roundToInt().toString()
+        )
+    }
+
+    private fun setWeekdays(dayOfWeek: DayOfWeek){
+        val weekdays = state.weekdays.toMutableMap()
+        val currentValue = weekdays[dayOfWeek] ?: false
+        weekdays[dayOfWeek] =  !currentValue
+        state = state.copy(
+            weekdays = weekdays,
         )
     }
 
@@ -92,6 +121,19 @@ class CreatePlansViewModel @Inject constructor(
                         startDate = startDate,
                         endDate = endDate
                     )
+                }
+            )
+        }
+    }
+
+    private fun getDailyClasses() = viewModelScope.launch {
+        val dailyClassesFlow = dailyClassesRepository.getAllDailyClasses(false)
+
+        dailyClassesFlow.collect { result ->
+            collectResult(
+                result = result,
+                storeData = {
+                    dailyClasses = it
                 }
             )
         }

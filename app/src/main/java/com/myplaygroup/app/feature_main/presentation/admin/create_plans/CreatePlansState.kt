@@ -11,7 +11,7 @@ data class CreatePlansState(
     val users: List<AppUser> = emptyList(),
     val standardPlans: List<StandardPlan> = emptyList(),
     val monthlyPlans: List<MonthlyPlan> = emptyList(),
-    val weekdays: EnumMap<DayOfWeek, Boolean> = initWeekdays(),
+    val weekdays: Map<DayOfWeek, Boolean> = initWeekdays().toMap(),
     var user: String  = "",
     var kid: String = "",
     var plan: String = "",
