@@ -43,7 +43,7 @@ class MonthlyPlansViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             repository
-                .getAllMonthlyPlans(fetchFromRemote)
+                .getMonthlyPlans(fetchFromRemote)
                 .collect{ collectMonthlyPlans(it) }
         }
     }

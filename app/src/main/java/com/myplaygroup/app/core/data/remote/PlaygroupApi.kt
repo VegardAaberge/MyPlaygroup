@@ -2,10 +2,7 @@ package com.myplaygroup.app.core.data.remote
 
 import com.myplaygroup.app.feature_login.data.responses.LoginResponse
 import com.myplaygroup.app.feature_login.data.responses.RefreshTokenResponse
-import com.myplaygroup.app.feature_main.data.model.AppUserEntity
-import com.myplaygroup.app.feature_main.data.model.DailyClassEntity
-import com.myplaygroup.app.feature_main.data.model.MessageEntity
-import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
+import com.myplaygroup.app.feature_main.data.model.*
 import com.myplaygroup.app.feature_main.data.remote.request.SendMessageRequest
 import com.myplaygroup.app.feature_main.data.remote.response.MessagesResponse
 import com.myplaygroup.app.feature_main.data.remote.response.ScheduleResponse
@@ -73,6 +70,9 @@ interface PlaygroupApi {
 
     @GET("api/v1/plans")
     suspend fun getMonthlyPlans() : Response<List<MonthlyPlanEntity>>
+
+    @GET("api/v1/plans/standard")
+    suspend fun getStandardPlans() : Response<List<StandardPlanEntity>>
 
     @GET("api/v1/users")
     suspend fun getAppUsers() : Response<List<AppUserEntity>>

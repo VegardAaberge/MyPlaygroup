@@ -24,10 +24,19 @@ class CreatePlansViewModel @Inject constructor(
     init {
         getMonthlyPlans()
         getUsers()
+        getStandardPlans()
     }
 
-    fun getMonthlyPlans() = viewModelScope.launch {
-        val monthlyPlanFlow = monthlyPlansRepository.getAllMonthlyPlans(false)
+    fun onEvent(event: CreatePlansScreenEvent) {
+        when (event) {
+            is CreatePlansScreenEvent.GenerateData -> {
+
+            }
+        }
+    }
+
+    private fun getMonthlyPlans() = viewModelScope.launch {
+        val monthlyPlanFlow = monthlyPlansRepository.getMonthlyPlans(false)
 
         monthlyPlanFlow.collect { result ->
             collectResult(
@@ -41,7 +50,7 @@ class CreatePlansViewModel @Inject constructor(
         }
     }
 
-    fun getUsers() = viewModelScope.launch {
+    private fun getUsers() = viewModelScope.launch {
         val monthlyPlanFlow = usersRepository.getAllUsers(false)
 
         monthlyPlanFlow.collect { result ->
@@ -56,11 +65,18 @@ class CreatePlansViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: CreatePlansScreenEvent) {
-        when (event) {
-            is CreatePlansScreenEvent.GenerateData -> {
+    private fun getStandardPlans() = viewModelScope.launch {
+        val standardPlanFlow = monthlyPlansRepository.getStandardPlans(false)
 
-            }
+        standardPlanFlow.collect { result ->
+            collectResult(
+                result = result,
+                storeData = {
+                    state = state.copy(
+                        standardPlans = it
+                    )
+                }
+            )
         }
     }
 

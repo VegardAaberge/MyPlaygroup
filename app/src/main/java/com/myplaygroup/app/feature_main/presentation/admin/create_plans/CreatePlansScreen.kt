@@ -18,7 +18,6 @@ import com.myplaygroup.app.feature_main.presentation.admin.create_plans.componen
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.PlansTextFieldItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import io.ktor.util.date.*
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
@@ -74,20 +73,13 @@ fun CreateSinglePlanBody(
     val endDate = startDate.plusMonths(1).minusDays(1)
 
     val users = viewModel.state.users
+    val plans = viewModel.state.standardPlans
 
     val weekdays by remember { mutableStateOf(initWeekdays()) }
     val weekdayChanged: (DayOfWeek) -> Unit = { dayOfWeek ->
         val currentValue = weekdays[dayOfWeek] ?: false
         weekdays.put(dayOfWeek, !currentValue)
     }
-
-    val years = listOf(
-        LocalDate.now().minusYears(1).year.toString(),
-        LocalDate.now().year.toString(),
-        LocalDate.now().plusYears(1).year.toString()
-    )
-    val months = Month.values().map { x -> x.name.lowercase().replaceFirstChar { y -> y.uppercase() } }
-    val plans = listOf("Evening V2", "Evening V3", "Morning V2", "Morning V3", "Morning V4", "Morning V5")
 
     var selectedUser by remember { mutableStateOf("") }
     var selectedKid by remember { mutableStateOf("") }
@@ -119,10 +111,12 @@ fun CreateSinglePlanBody(
 
     PlansDropdownMenuItem(
         label = "Plans",
-        items = plans,
+        items = plans.map { x -> x.name },
         selected = selectedPlan,
         selectedChanged = {
-            selectedPlan = it
+            val currentPlan = plans.first { x -> x.name == it }
+            selectedPrice = currentPlan.price.toString()
+            selectedPlan = currentPlan.name
         }
     )
 

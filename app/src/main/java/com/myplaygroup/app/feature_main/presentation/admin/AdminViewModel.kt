@@ -12,6 +12,8 @@ import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.destinations.*
 import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
+import com.myplaygroup.app.feature_main.domain.model.StandardPlan
+import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AdminViewModel @Inject constructor(
     private val userSettingsManager: UserSettingsManager,
+    private val monthlyPlansRepository: MonthlyPlansRepository,
     private val imageRepository: ImageRepository,
     private val basicAuthInterceptor: BasicAuthInterceptor,
     private val daoInteractor: MainDaoInteractor
@@ -47,6 +50,11 @@ class AdminViewModel @Inject constructor(
                     adminUri = it.data!!
                 )
             }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            monthlyPlansRepository.getStandardPlans(true)
+                .collect { collectStandardPlans(it) }
         }
     }
 
@@ -119,6 +127,17 @@ class AdminViewModel @Inject constructor(
             setUIEvent(
                 UiEvent.ShowSnackbar(result.message!!)
             )
+        }
+    }
+
+    private fun collectStandardPlans(result: Resource<List<StandardPlan>>) = viewModelScope.launch(Dispatchers.Main) {
+        when(result){
+            is Resource.Error -> {
+                setUIEvent(
+                    UiEvent.ShowSnackbar(result.message!!)
+                )
+            }
+            else -> {}
         }
     }
 }

@@ -5,10 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import com.myplaygroup.app.feature_main.data.model.AppUserEntity
-import com.myplaygroup.app.feature_main.data.model.DailyClassEntity
-import com.myplaygroup.app.feature_main.data.model.MessageEntity
-import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
+import com.myplaygroup.app.feature_main.data.model.*
 
 @Dao
 interface MainDao {
@@ -109,4 +106,18 @@ interface MainDao {
 
     @Query("DELETE FROM appuserentity")
     suspend fun clearAllAppUsers()
+
+    //
+    // Standard Plans
+    //
+    @Insert(onConflict = REPLACE)
+    suspend fun insertStandardPlans(
+        messages: List<StandardPlanEntity>
+    )
+
+    @Query("SELECT * FROM standardplanentity ORDER BY id")
+    suspend fun getStandardPlans() : List<StandardPlanEntity>
+
+    @Query("DELETE FROM standardplanentity")
+    suspend fun clearStandardPlans()
 }
