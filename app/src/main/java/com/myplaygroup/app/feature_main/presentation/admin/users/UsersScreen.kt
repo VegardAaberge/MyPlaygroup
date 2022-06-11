@@ -18,7 +18,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.R
@@ -33,7 +32,7 @@ import com.plcoding.stockmarketapp.presentation.company_listings.components.User
 @Composable
 fun UsersScreen(
     adminViewModel: AdminViewModel,
-    viewModel: UsersViewModel = hiltViewModel()
+    viewModel: UsersViewModel
 ) {
     CreateToolbarActionItems(
         viewModel = viewModel,

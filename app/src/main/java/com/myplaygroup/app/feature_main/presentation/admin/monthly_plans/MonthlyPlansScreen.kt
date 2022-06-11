@@ -14,7 +14,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
@@ -27,7 +26,7 @@ import com.plcoding.stockmarketapp.presentation.company_listings.components.Mont
 @Composable
 fun MonthlyPlanScreen(
     adminViewModel: AdminViewModel,
-    viewModel: MonthlyPlansViewModel = hiltViewModel()
+    viewModel: MonthlyPlansViewModel
 ) {
     CreateToolbarActionItems(
         viewModel = viewModel,

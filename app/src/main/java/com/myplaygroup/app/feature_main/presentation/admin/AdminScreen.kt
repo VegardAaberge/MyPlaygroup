@@ -15,11 +15,15 @@ import androidx.navigation.compose.rememberNavController
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_admin.presentation.NavDrawerHeader
 import com.myplaygroup.app.feature_main.presentation.admin.chat.ChatScreen
+import com.myplaygroup.app.feature_main.presentation.admin.chat.ChatViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.classes.ClassesScreen
+import com.myplaygroup.app.feature_main.presentation.admin.classes.ClassesViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.monthly_plans.MonthlyPlanScreen
+import com.myplaygroup.app.feature_main.presentation.admin.monthly_plans.MonthlyPlansViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawerBody
 import com.myplaygroup.app.feature_main.presentation.admin.users.UsersScreen
+import com.myplaygroup.app.feature_main.presentation.admin.users.UsersViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -116,21 +120,24 @@ fun AdminScreen(
 @Composable
 fun DrawerNavigation(
     navController: NavHostController,
-    adminViewModel: AdminViewModel
+    adminViewModel: AdminViewModel,
+    chatViewModel: ChatViewModel = hiltViewModel(),
+    classesViewModel: ClassesViewModel = hiltViewModel(),
+    monthlyPlansViewModel: MonthlyPlansViewModel = hiltViewModel(),
+    usersViewModel: UsersViewModel = hiltViewModel()
 ) {
-
     NavHost(navController, startDestination = NavDrawer.CHAT) {
         composable(NavDrawer.CHAT) {
-            ChatScreen(adminViewModel)
+            ChatScreen(adminViewModel, chatViewModel)
         }
         composable(NavDrawer.CLASSES) {
-            ClassesScreen(adminViewModel)
+            ClassesScreen(adminViewModel, classesViewModel)
         }
         composable(NavDrawer.PLANS) {
-            MonthlyPlanScreen(adminViewModel)
+            MonthlyPlanScreen(adminViewModel, monthlyPlansViewModel)
         }
         composable(NavDrawer.USERS) {
-            UsersScreen(adminViewModel)
+            UsersScreen(adminViewModel,usersViewModel)
         }
     }
 }

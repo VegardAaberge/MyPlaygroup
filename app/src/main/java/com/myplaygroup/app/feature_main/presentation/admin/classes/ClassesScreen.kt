@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.R
@@ -33,7 +32,7 @@ import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 @Composable
 fun ClassesScreen(
     adminViewModel: AdminViewModel,
-    viewModel: ClassesViewModel = hiltViewModel(),
+    viewModel: ClassesViewModel,
 ) {
     CreateToolbarActionItems(
         viewModel = viewModel,

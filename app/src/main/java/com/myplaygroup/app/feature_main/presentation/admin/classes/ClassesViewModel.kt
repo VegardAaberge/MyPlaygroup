@@ -107,7 +107,7 @@ class ClassesViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             repository
-                .getAllDailyClasses(true)
+                .getAllDailyClasses(fetchFromRemote)
                 .collect{ collectDailyClasses(it) }
         }
     }
