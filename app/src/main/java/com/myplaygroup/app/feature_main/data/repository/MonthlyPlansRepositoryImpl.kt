@@ -2,6 +2,7 @@ package com.myplaygroup.app.feature_main.data.repository
 
 import android.app.Application
 import com.myplaygroup.app.core.data.mapper.toMonthlyPlan
+import com.myplaygroup.app.core.data.mapper.toMonthlyPlanEntity
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Resource
@@ -90,5 +91,16 @@ class MonthlyPlansRepositoryImpl @Inject constructor(
                 }
             }
         )
+    }
+
+    override suspend fun addMonthlyPlanToDatabase(monthlyPlan: MonthlyPlan): Resource<MonthlyPlan> {
+        return try {
+            val monthlyPlanEntity = monthlyPlan.toMonthlyPlanEntity()
+            dao.insertMonthlyPlan(monthlyPlanEntity)
+            Resource.Success(monthlyPlanEntity.toMonthlyPlan())
+        } catch (t: Throwable) {
+            t.printStackTrace()
+            Resource.Error(t.localizedMessage ?: "Unknown error")
+        }
     }
 }

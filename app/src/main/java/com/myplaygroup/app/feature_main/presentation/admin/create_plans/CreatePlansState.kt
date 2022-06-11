@@ -23,12 +23,6 @@ data class CreatePlansState(
     companion object{
         private fun initWeekdays() : EnumMap<DayOfWeek, Boolean> {
             val weekdays : EnumMap<DayOfWeek, Boolean> = EnumMap(DayOfWeek::class.java)
-            weekdays.put(DayOfWeek.MONDAY, true)
-            weekdays.put(DayOfWeek.TUESDAY, true)
-            weekdays.put(DayOfWeek.WEDNESDAY, true)
-            weekdays.put(DayOfWeek.THURSDAY, true)
-            weekdays.put(DayOfWeek.FRIDAY, true)
-            weekdays.put(DayOfWeek.SATURDAY, false)
             return weekdays
         }
     }

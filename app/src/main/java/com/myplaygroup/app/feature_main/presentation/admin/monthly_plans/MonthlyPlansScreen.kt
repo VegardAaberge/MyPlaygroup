@@ -12,10 +12,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
@@ -77,15 +80,28 @@ private fun CreateToolbarActionItems(
     viewModel: MonthlyPlansViewModel,
     adminViewModel: AdminViewModel
 ){
-    adminViewModel.state = adminViewModel.state.copy(
-        actionButtons = listOf(
+    val actionButtons = mutableListOf<AdminState.ActionButton>()
+    if(viewModel.getUnsyncedMonthlyPlans().any()){
+        actionButtons.add(
             AdminState.ActionButton(
-                icon = Icons.Default.Add,
                 action = {
-                    adminViewModel.onEvent(AdminScreenEvent.NavigateToCreateMonthlyPlan)
-                }
-            )
+                    viewModel.onEvent(MonthlyPlansScreenEvent.UploadMonthlyPlans)
+                },
+                icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+            ),
         )
+    }
+    actionButtons.add(
+        AdminState.ActionButton(
+            action = {
+                adminViewModel.onEvent(AdminScreenEvent.NavigateToCreateMonthlyPlan)
+            },
+            icon = Icons.Default.Add
+        )
+    )
+
+    adminViewModel.state = adminViewModel.state.copy(
+        actionButtons = actionButtons
     )
 }
 

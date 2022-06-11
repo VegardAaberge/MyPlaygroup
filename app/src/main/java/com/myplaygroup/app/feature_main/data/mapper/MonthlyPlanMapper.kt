@@ -9,7 +9,7 @@ import java.util.*
 
 fun MonthlyPlanEntity.toMonthlyPlan() : MonthlyPlan {
 
-    val dateFormat = DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT, Locale("en"))
+    val dateFormat = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT, Locale("en"))
     val parsedStartDate = LocalDate.parse(startDate, dateFormat) ?: LocalDate.now()
     val parsedEndDate = LocalDate.parse(endDate, dateFormat) ?: LocalDate.now()
 
@@ -28,7 +28,7 @@ fun MonthlyPlanEntity.toMonthlyPlan() : MonthlyPlan {
 
 fun MonthlyPlan.toMonthlyPlanEntity() : MonthlyPlanEntity {
 
-    val dateFormat = DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT, Locale("en"))
+    val dateFormat = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT, Locale("en"))
 
     return MonthlyPlanEntity(
         id = id,

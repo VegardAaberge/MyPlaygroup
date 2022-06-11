@@ -65,4 +65,8 @@ class MonthlyPlansViewModel @Inject constructor(
             }
         }
     }
+
+    fun getUnsyncedMonthlyPlans(): List<MonthlyPlan> {
+        return state.monthlyPlans.filter { x -> x.modified }
+    }
 }

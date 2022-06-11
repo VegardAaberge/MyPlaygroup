@@ -14,4 +14,8 @@ interface MonthlyPlansRepository {
     suspend fun getStandardPlans(
         fetchFromRemote: Boolean
     ) : Flow<Resource<List<StandardPlan>>>
+
+    suspend fun addMonthlyPlanToDatabase(
+        monthlyPlan: MonthlyPlan
+    ) : Resource<MonthlyPlan>
 }

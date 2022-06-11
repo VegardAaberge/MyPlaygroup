@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
@@ -69,8 +70,32 @@ class CreatePlansViewModel @Inject constructor(
                 calculatePrice()
             }
             is CreatePlansScreenEvent.GenerateData -> {
-
+                addMonthlyPlanToDatabase()
             }
+        }
+    }
+
+    private fun addMonthlyPlanToDatabase() = viewModelScope.launch(Dispatchers.IO){
+        val monthlyPlan = MonthlyPlan(
+            username = state.user,
+            kidName = state.kid,
+            startDate = state.startDate,
+            endDate = state.endDate,
+            planName = state.plan,
+            daysOfWeek = state.weekdays.keys.toList(),
+            planPrice = state.price.toLong()
+        )
+
+        val result = monthlyPlansRepository.addMonthlyPlanToDatabase(monthlyPlan)
+
+        if (result is Resource.Success) {
+            setUIEvent(
+                UiEvent.PopPage
+            )
+        } else if (result is Resource.Error) {
+            setUIEvent(
+                UiEvent.ShowSnackbar(result.message!!)
+            )
         }
     }
 
