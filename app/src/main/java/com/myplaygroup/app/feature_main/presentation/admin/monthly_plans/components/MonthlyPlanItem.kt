@@ -90,6 +90,7 @@ fun SelectedClassDialogPreview() {
                 username = "meng",
                 kidName = "emma",
                 month = Month.AUGUST,
+                year = 2022,
                 paid = true,
                 daysOfWeek = listOf(
                     DayOfWeek.MONDAY,

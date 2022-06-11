@@ -7,6 +7,7 @@ data class MonthlyPlan(
     val id: Long = -1,
     val username: String,
     val kidName: String,
+    val year: Int,
     val month: Month,
     val paid: Boolean,
     val planName: String,

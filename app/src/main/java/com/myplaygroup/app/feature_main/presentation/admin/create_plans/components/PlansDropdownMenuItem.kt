@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.presentation.admin.create_plans.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.DropdownMenu
@@ -31,38 +32,40 @@ fun PlansDropdownMenuItem(
     else
         Icons.Filled.KeyboardArrowDown
 
-    ReadonlyOutlinedTextField(
-        label = label,
-        fieldValue = selected,
-        trailingIcon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .onGloballyPositioned { coordinates ->
-                mTextFieldSize = coordinates.size.toSize()
+    Box() {
+        ReadonlyOutlinedTextField(
+            label = label,
+            fieldValue = selected,
+            trailingIcon = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                )
             },
-    ){
-        expanded = !expanded
-    }
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    mTextFieldSize = coordinates.size.toSize()
+                },
+        ){
+            expanded = !expanded
+        }
 
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = {
-            expanded = false
-        },
-        modifier = Modifier
-            .width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
-    ) {
-        items.forEach { user ->
-            DropdownMenuItem(onClick = {
-                selectedChanged(user)
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
                 expanded = false
-            }) {
-                Text(text = user)
+            },
+            modifier = Modifier
+                .width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
+        ) {
+            items.forEach { user ->
+                DropdownMenuItem(onClick = {
+                    selectedChanged(user)
+                    expanded = false
+                }) {
+                    Text(text = user)
+                }
             }
         }
     }

@@ -5,21 +5,22 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
-import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.LabelledCheckbox
+import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.OutlinedDateField
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.PlansDropdownMenuItem
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.PlansTextFieldItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.ktor.util.date.*
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.util.*
 
 @Destination
@@ -51,14 +52,29 @@ fun CreatePlansScreen(
             )
         }
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            CreateSinglePlanBody()
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            CreateSinglePlanBody(viewModel)
         }
     }
 }
 
 @Composable
-fun CreateSinglePlanBody(){
+fun CreateSinglePlanBody(
+    viewModel: CreatePlansViewModel
+) {
+    val monthlyPlans = viewModel.state.monthlyPlans
+    val maxMonthInt = monthlyPlans.map { x -> x.month }.maxOfOrNull { x -> x.ordinal } ?: 1
+    val maxYearInt = monthlyPlans.map { x -> x.year }.maxOfOrNull { x -> x } ?: LocalDate.now().year
+
+    val latestMonth = Month.from(maxMonthInt).name.lowercase().replaceFirstChar { x -> x.uppercase() }
+
+    val users = viewModel.state.users
 
     val weekdays by remember { mutableStateOf(initWeekdays()) }
     val weekdayChanged: (DayOfWeek) -> Unit = { dayOfWeek ->
@@ -66,8 +82,11 @@ fun CreateSinglePlanBody(){
         weekdays.put(dayOfWeek, !currentValue)
     }
 
-    val monthlyPlans = listOf(Month.APRIL, Month.JUNE, Month.MAY, Month.APRIL)
-    val users = listOf("Vegard", "Meng", "Admin")
+    val years = listOf(
+        LocalDate.now().minusYears(1).year.toString(),
+        LocalDate.now().year.toString(),
+        LocalDate.now().plusYears(1).year.toString()
+    )
     val months = Month.values().map { x -> x.name.lowercase().replaceFirstChar { y -> y.uppercase() } }
     val plans = listOf("Evening V2", "Evening V3", "Morning V2", "Morning V3", "Morning V4", "Morning V5")
 
@@ -75,13 +94,13 @@ fun CreateSinglePlanBody(){
     var selectedKid by remember { mutableStateOf("") }
     var selectedPlan by remember { mutableStateOf("") }
     var selectedPrice by remember { mutableStateOf("0") }
-
-    val latestMonth = Month.from(monthlyPlans.maxOf { x -> x.ordinal }).name.lowercase().replaceFirstChar { x -> x.uppercase() }
+    var selectedYear by remember { mutableStateOf(maxYearInt.toString()) }
     var selectedMonth by remember { mutableStateOf(latestMonth) }
+    var selectedStartDate by remember { mutableStateOf(LocalDate.of(maxYearInt, maxMonthInt, 1)) }
 
     PlansDropdownMenuItem(
         label = "User",
-        items = users,
+        items = users.map { x -> x.username },
         selected = selectedUser,
         selectedChanged = {
             selectedUser = it
@@ -99,6 +118,15 @@ fun CreateSinglePlanBody(){
     )
 
     Spacer(modifier = Modifier.height(8.dp))
+
+    PlansDropdownMenuItem(
+        label = "Year",
+        items = years,
+        selected = selectedYear,
+        selectedChanged = {
+            selectedYear = it
+        }
+    )
 
     PlansDropdownMenuItem(
         label = "Month",
@@ -151,16 +179,16 @@ fun CreateSinglePlanBody(){
             selectedPrice = it
         }
     )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun CreatePlansScreenPreview() {
-    MyPlaygroupTheme {
-        Column(modifier = Modifier.padding(16.dp)) {
-            CreateSinglePlanBody()
+    Spacer(modifier = Modifier.height(8.dp))
+
+    OutlinedDateField(
+        label = "Start Date",
+        selected = selectedStartDate,
+        timeChanged = {
+            selectedStartDate = it
         }
-    }
+    )
 }
 
 private fun initWeekdays() : EnumMap<DayOfWeek, Boolean> {

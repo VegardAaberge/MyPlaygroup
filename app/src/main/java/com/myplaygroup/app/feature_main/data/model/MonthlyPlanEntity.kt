@@ -13,6 +13,7 @@ data class MonthlyPlanEntity(
     val username: String,
     val kidName: String,
     val month: Month,
+    val year: Int,
     val paid: Boolean,
     val planName: String,
     val daysOfWeek: List<String>,

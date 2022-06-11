@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
+import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,16 +15,44 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreatePlansViewModel @Inject constructor(
-    private val monthlyPlansRepository: MonthlyPlansRepository
+    private val monthlyPlansRepository: MonthlyPlansRepository,
+    private val usersRepository: UsersRepository
 ) : BaseViewModel() {
 
     var state by mutableStateOf(CreatePlansState())
 
     init {
-        viewModelScope.launch {
-            monthlyPlansRepository
-                .getAllMonthlyPlans(false)
-                .collect { collectMonthlyPlans(it) }
+        getMonthlyPlans()
+        getUsers()
+    }
+
+    fun getMonthlyPlans() = viewModelScope.launch {
+        val monthlyPlanFlow = monthlyPlansRepository.getAllMonthlyPlans(false)
+
+        monthlyPlanFlow.collect { result ->
+            collectResult(
+                result = result,
+                storeData = {
+                    state = state.copy(
+                        monthlyPlans = it
+                    )
+                }
+            )
+        }
+    }
+
+    fun getUsers() = viewModelScope.launch {
+        val monthlyPlanFlow = usersRepository.getAllUsers(false)
+
+        monthlyPlanFlow.collect { result ->
+            collectResult(
+                result = result,
+                storeData = {
+                    state = state.copy(
+                        users = it
+                    )
+                }
+            )
         }
     }
 
@@ -36,12 +64,10 @@ class CreatePlansViewModel @Inject constructor(
         }
     }
 
-    private fun collectMonthlyPlans(result: Resource<List<MonthlyPlan>>) = viewModelScope.launch(Dispatchers.Main) {
+    private fun <T> collectResult(result: Resource<T>, storeData : (T) -> Unit) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
-                state = state.copy(
-                    monthlyPlans = result.data!!
-                )
+                storeData(result.data!!)
             }
             is Resource.Error -> {
                 setUIEvent(
