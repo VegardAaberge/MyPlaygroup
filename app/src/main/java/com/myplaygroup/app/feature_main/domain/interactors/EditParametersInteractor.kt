@@ -44,7 +44,8 @@ class EditParametersInteractor @Inject constructor(
                 listOf(
                     ParameterItem(HIDDEN, monthlyPlan::id.name, monthlyPlan.id),
                     ParameterItem(INFO, monthlyPlan::planName.name, monthlyPlan.planName),
-                    ParameterItem(INFO, monthlyPlan::month.name, monthlyPlan.month),
+                    ParameterItem(INFO, monthlyPlan::startDate.name, monthlyPlan.startDate),
+                    ParameterItem(INFO, monthlyPlan::endDate.name, monthlyPlan.endDate),
                     ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
                     ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice),
                     ParameterItem(STRING, monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek),

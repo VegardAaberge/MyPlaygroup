@@ -24,4 +24,8 @@ object Constants {
     const val AUTHENTICATION_ERROR_MESSAGE = "Token was invalid, fetched new token"
 
     val IGNORE_AUTH_URLS = listOf("/api/v1/login", "/api/v1/reset-password/send", "/api/v1/reset-password/verify")
+
+    const val DATE_FORMAT = "yyyy-MM-dd"
+    const val TIME_FORMAT = "HH:mm:ss"
+    const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
 }

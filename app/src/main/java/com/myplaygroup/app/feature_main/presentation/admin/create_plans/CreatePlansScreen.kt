@@ -69,10 +69,9 @@ fun CreateSinglePlanBody(
     viewModel: CreatePlansViewModel
 ) {
     val monthlyPlans = viewModel.state.monthlyPlans
-    val maxMonthInt = monthlyPlans.map { x -> x.month }.maxOfOrNull { x -> x.ordinal } ?: 1
-    val maxYearInt = monthlyPlans.map { x -> x.year }.maxOfOrNull { x -> x } ?: LocalDate.now().year
-
-    val latestMonth = Month.from(maxMonthInt).name.lowercase().replaceFirstChar { x -> x.uppercase() }
+    val maxDate = monthlyPlans.maxOfOrNull { x -> x.startDate } ?: LocalDate.now()
+    val startDate = LocalDate.of(maxDate.year, maxDate.month, 1)
+    val endDate = startDate.plusMonths(1).minusDays(1)
 
     val users = viewModel.state.users
 
@@ -94,9 +93,8 @@ fun CreateSinglePlanBody(
     var selectedKid by remember { mutableStateOf("") }
     var selectedPlan by remember { mutableStateOf("") }
     var selectedPrice by remember { mutableStateOf("0") }
-    var selectedYear by remember { mutableStateOf(maxYearInt.toString()) }
-    var selectedMonth by remember { mutableStateOf(latestMonth) }
-    var selectedStartDate by remember { mutableStateOf(LocalDate.of(maxYearInt, maxMonthInt, 1)) }
+    var selectedStartDate by remember { mutableStateOf(startDate) }
+    var selectedEndDate by remember { mutableStateOf(endDate) }
 
     PlansDropdownMenuItem(
         label = "User",
@@ -114,26 +112,6 @@ fun CreateSinglePlanBody(
         selected = selectedKid,
         selectedChanged = {
             selectedKid = it
-        }
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    PlansDropdownMenuItem(
-        label = "Year",
-        items = years,
-        selected = selectedYear,
-        selectedChanged = {
-            selectedYear = it
-        }
-    )
-
-    PlansDropdownMenuItem(
-        label = "Month",
-        items = months,
-        selected = selectedMonth,
-        selectedChanged = {
-            selectedMonth = it
         }
     )
 
@@ -172,21 +150,31 @@ fun CreateSinglePlanBody(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    PlansTextFieldItem(
-        label = "Price",
-        selected = selectedPrice,
-        selectedChanged = {
-            selectedPrice = it
+    OutlinedDateField(
+        label = "Start Date",
+        selected = selectedStartDate,
+        timeChanged = {
+            selectedStartDate = it
         }
     )
 
     Spacer(modifier = Modifier.height(8.dp))
 
     OutlinedDateField(
-        label = "Start Date",
-        selected = selectedStartDate,
+        label = "End Date",
+        selected = selectedEndDate,
         timeChanged = {
-            selectedStartDate = it
+            selectedEndDate = it
+        }
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    PlansTextFieldItem(
+        label = "Price",
+        selected = selectedPrice,
+        selectedChanged = {
+            selectedPrice = it
         }
     )
 }

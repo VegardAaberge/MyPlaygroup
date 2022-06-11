@@ -1,5 +1,7 @@
 package com.myplaygroup.app.core.data.mapper
 
+import com.myplaygroup.app.core.util.Constants.DATE_FORMAT
+import com.myplaygroup.app.core.util.Constants.TIME_FORMAT
 import com.myplaygroup.app.feature_main.data.model.DailyClassEntity
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import java.time.LocalDate
@@ -7,15 +9,12 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-const val dateFormat = "yyyy-MM-dd"
-const val timeFormat = "HH:mm:ss"
-
 fun DailyClassEntity.toDailyClass() : DailyClass {
 
-    val dateFormat = DateTimeFormatter.ofPattern(dateFormat, Locale("en"))
+    val dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT, Locale("en"))
     val parsedDate = LocalDate.parse(date, dateFormat) ?: LocalDate.now()
 
-    val timeFormat = DateTimeFormatter.ofPattern(timeFormat, Locale("en"))
+    val timeFormat = DateTimeFormatter.ofPattern(TIME_FORMAT, Locale("en"))
     val parsedStartTime = LocalTime.parse(startTime, timeFormat) ?: LocalTime.now()
     val parsedEndTime = LocalTime.parse(endTime, timeFormat) ?: LocalTime.now()
 
@@ -33,8 +32,8 @@ fun DailyClassEntity.toDailyClass() : DailyClass {
 
 fun DailyClass.toDailyClassEntity() : DailyClassEntity {
 
-    val dateFormat = DateTimeFormatter.ofPattern(dateFormat, Locale("en"))
-    val timeFormat = DateTimeFormatter.ofPattern(timeFormat, Locale("en"))
+    val dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT, Locale("en"))
+    val timeFormat = DateTimeFormatter.ofPattern(TIME_FORMAT, Locale("en"))
 
     return DailyClassEntity(
         id = id,

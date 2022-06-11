@@ -6,7 +6,7 @@ import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.DayOfWeek
-import java.time.Month
+import java.time.LocalDate
 
 class FakeMonthlyPlansRepository : MonthlyPlansRepository {
 
@@ -14,7 +14,8 @@ class FakeMonthlyPlansRepository : MonthlyPlansRepository {
         MonthlyPlan(
             id = 1,
             username = "vegard",
-            month = Month.JULY,
+            startDate = LocalDate.of(2022, 7, 1),
+            endDate = LocalDate.of(2022, 7, 1).plusMonths(1).minusDays(1),
             kidName = "emma",
             paid = true,
             daysOfWeek = listOf(
@@ -28,7 +29,8 @@ class FakeMonthlyPlansRepository : MonthlyPlansRepository {
         MonthlyPlan(
             id = 2,
             username = "vegard",
-            month = Month.JULY,
+            startDate = LocalDate.of(2022, 7, 1),
+            endDate = LocalDate.of(2022, 7, 1).plusMonths(1).minusDays(1),
             kidName = "ellie",
             paid = false,
             daysOfWeek = listOf(

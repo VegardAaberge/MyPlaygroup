@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.Month
 
 @Composable
@@ -26,7 +27,7 @@ fun MonthlyPlanItem(
     monthlyPlan: MonthlyPlan,
     modifier: Modifier = Modifier
 ) {
-    val month = monthlyPlan.month.name.lowercase().replaceFirstChar { x -> x.uppercase() }
+    val month = monthlyPlan.startDate.month.name.lowercase().replaceFirstChar { x -> x.uppercase() }
 
     Row(
         modifier = modifier,
@@ -66,15 +67,6 @@ fun MonthlyPlanItem(
                     color = MaterialTheme.colors.onBackground,
                     modifier = Modifier.weight(1f)
                 )
-
-                if(monthlyPlan.paid){
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        tint = Color.Green,
-                        contentDescription = null
-                    )
-                }
             }
         }
     }
@@ -89,9 +81,8 @@ fun SelectedClassDialogPreview() {
                 id = -1,
                 username = "meng",
                 kidName = "emma",
-                month = Month.AUGUST,
-                year = 2022,
-                paid = true,
+                startDate = LocalDate.now(),
+                endDate = LocalDate.now().plusMonths(1).minusDays(1),
                 daysOfWeek = listOf(
                     DayOfWeek.MONDAY,
                     DayOfWeek.WEDNESDAY,
