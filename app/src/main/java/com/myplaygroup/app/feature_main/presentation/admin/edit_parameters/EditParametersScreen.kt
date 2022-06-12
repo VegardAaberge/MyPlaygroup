@@ -26,7 +26,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun EditParametersScreen(
-    id: Long,
+    id: String,
     parametersType: ParametersType,
     navigator: DestinationsNavigator,
     viewModel: EditParametersViewModel = hiltViewModel(),

@@ -21,12 +21,12 @@ class EditParametersInteractor @Inject constructor(
 
     suspend fun fetchParameterItems(
         type: ParametersType,
-        id: Long
+        id: String
     ) : Resource<List<ParameterItem>> {
 
         val parameterItems = when(type){
             ParametersType.CLASSES -> {
-                val dailyClass = dao.getDailyClassById(id).toDailyClass()
+                val dailyClass = dao.getDailyClassById(id.toLong()).toDailyClass()
 
                 listOf(
                     ParameterItem(HIDDEN, dailyClass::id.name, dailyClass.id),
@@ -108,9 +108,7 @@ class EditParametersInteractor @Inject constructor(
     ): Resource<Unit> {
 
         return try {
-            val id = parameterItems
-                .firstOrNull { x -> x.key == "id" }
-                ?.value as? Long ?: -1L
+            val id = parameterItems.firstOrNull { x -> x.key == "id" }?.toString() ?: ""
 
             storeParameterItemBody(
                 id = id,
@@ -125,14 +123,14 @@ class EditParametersInteractor @Inject constructor(
     }
 
     private suspend fun storeParameterItemBody(
-        id: Long,
+        id: String,
         parameterItems: List<ParameterItem>,
         type: ParametersType,
     ) : Resource<Unit> {
 
         return when(type){
             ParametersType.CLASSES -> {
-                val dailyClass = dao.getDailyClassById(id).toDailyClass()
+                val dailyClass = dao.getDailyClassById(id.toLong()).toDailyClass()
 
                 val date = parameterItems.getValue(dailyClass::date.name, dailyClass.date)
                 val startTime = parameterItems.getValue(dailyClass::startTime.name, dailyClass.startTime)

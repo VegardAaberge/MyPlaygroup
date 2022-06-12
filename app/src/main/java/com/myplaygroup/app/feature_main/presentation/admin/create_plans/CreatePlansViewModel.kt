@@ -91,27 +91,22 @@ class CreatePlansViewModel @Inject constructor(
     }
 
     private fun addMultiplePlansToDatabase() = viewModelScope.launch(Dispatchers.IO) {
-        state.monthlyPlans.filter { x -> state.basePlansSelected[x.kidName] ?: false }.forEach { monthlyPlan ->
+        state.baseMonthlyPlans.filter { x -> state.basePlansSelected[x.kidName] ?: false }.forEach { monthlyPlan ->
             val newMonthlyPlan = monthlyPlan.copy(
                 clientId = UUID.randomUUID().toString(),
                 id = -1,
                 startDate = state.multipleStartDate,
                 endDate = state.multipleEndDate,
-                cancelled = false
+                cancelled = false,
+                modified = true
             )
 
             val result = monthlyPlansRepository.addMonthlyPlanToDatabase(newMonthlyPlan)
-
-            if (result is Resource.Success) {
-                setUIEvent(
-                    UiEvent.PopPage
-                )
-            } else if (result is Resource.Error) {
-                setUIEvent(
-                    UiEvent.ShowSnackbar(result.message!!)
-                )
-            }
         }
+
+        setUIEvent(
+            UiEvent.PopPage
+        )
     }
 
     private fun addMonthlyPlanToDatabase() = viewModelScope.launch(Dispatchers.IO){

@@ -30,7 +30,7 @@ class EditParametersViewModel @Inject constructor(
             val type = ParametersType.valueOf(
                 savedStateHandle.get<String>("parametersType")?: return@launch
             )
-            val id = savedStateHandle.get<Long>("id") ?: return@launch
+            val id = savedStateHandle.get<String>("id") ?: return@launch
 
             val result = editUseCases.fetchParameterItems(type, id)
             if(result is Resource.Success){

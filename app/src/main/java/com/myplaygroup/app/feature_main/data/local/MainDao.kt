@@ -67,8 +67,8 @@ interface MainDao {
         message: MonthlyPlanEntity
     )
 
-    @Query("SELECT * FROM monthlyplanentity WHERE id = :id")
-    suspend fun getMonthlyPlanById(id: Long) : MonthlyPlanEntity
+    @Query("SELECT * FROM monthlyplanentity WHERE clientId = :clientId")
+    suspend fun getMonthlyPlanById(clientId: String) : MonthlyPlanEntity
 
     @Query("SELECT * FROM monthlyplanentity WHERE clientId IN (:clientIds)")
     suspend fun getMonthlyPlansByClientId(clientIds: List<String>): List<MonthlyPlanEntity>
@@ -98,8 +98,8 @@ interface MainDao {
     @Query("SELECT * FROM appuserentity ORDER BY id")
     suspend fun getAppUsers() : List<AppUserEntity>
 
-    @Query("SELECT * FROM appuserentity WHERE id = :id")
-    suspend fun getAppUserById(id: Long) : AppUserEntity
+    @Query("SELECT * FROM appuserentity WHERE clientId = :clientId")
+    suspend fun getAppUserById(clientId: String) : AppUserEntity
 
     @Query("SELECT * FROM appuserentity WHERE clientId IN (:clientIds)")
     suspend fun getAppUsersByClientId(clientIds: List<String> ) : List<AppUserEntity>

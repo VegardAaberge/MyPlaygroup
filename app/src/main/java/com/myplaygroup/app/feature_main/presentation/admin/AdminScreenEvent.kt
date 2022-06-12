@@ -10,6 +10,6 @@ sealed class AdminScreenEvent {
     data class routeUpdated(val route: String) : AdminScreenEvent()
     data class NavigateToEditScreen(
         val type: ParametersType,
-        val id: Long
+        val clientId: String
     ) : AdminScreenEvent()
 }

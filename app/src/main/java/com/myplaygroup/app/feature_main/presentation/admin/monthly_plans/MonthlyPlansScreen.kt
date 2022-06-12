@@ -58,7 +58,7 @@ fun MonthlyPlanScreen(
                             adminViewModel.onEvent(
                                 AdminScreenEvent.NavigateToEditScreen(
                                     type = ParametersType.PLANS,
-                                    id = monthlyPlan.id
+                                    clientId = monthlyPlan.clientId
                                 )
                             )
                         }

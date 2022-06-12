@@ -78,7 +78,7 @@ fun ClassesScreen(
                         adminViewModel.onEvent(
                             AdminScreenEvent.NavigateToEditScreen(
                                 type = ParametersType.CLASSES,
-                                id = dailyClass.id
+                                clientId = dailyClass.id.toString()
                             )
                         )
                     }

@@ -61,7 +61,7 @@ fun UsersScreen(
                             adminViewModel.onEvent(
                                 AdminScreenEvent.NavigateToEditScreen(
                                     type = ParametersType.USERS,
-                                    id = appUser.id
+                                    clientId = appUser.clientId
                                 )
                             )
                         }
