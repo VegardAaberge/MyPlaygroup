@@ -4,11 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.*
 
 @Serializable
 @Entity
 data class MonthlyPlanEntity(
-    @PrimaryKey val id: Long,
+    @PrimaryKey val clientId: String = UUID.randomUUID().toString(),
+    val id: Long = -1,
     val username: String,
     val kidName: String,
     val startDate: String,
@@ -16,6 +18,7 @@ data class MonthlyPlanEntity(
     val planName: String,
     val daysOfWeek: List<String>,
     val planPrice: Long,
+    val cancelled: Boolean,
 
     @Transient
     val modified: Boolean = id == -1L

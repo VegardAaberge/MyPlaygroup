@@ -32,6 +32,14 @@ class MonthlyPlansViewModel @Inject constructor(
             is MonthlyPlansScreenEvent.RefreshData -> {
                 fetchData(false)
             }
+            is MonthlyPlansScreenEvent.UploadMonthlyPlans -> {
+                val unsyncedMonthlyPlans = getUnsyncedMonthlyPlans()
+                viewModelScope.launch(Dispatchers.IO) {
+                    repository
+                        .uploadMonthlyPlans(unsyncedMonthlyPlans)
+                        .collect{ collectMonthlyPlans(it) }
+                }
+            }
         }
     }
 

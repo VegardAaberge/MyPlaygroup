@@ -62,16 +62,16 @@ fun UserItem(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
 
-                if(appUser.locked){
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_block_24),
-                        tint = MaterialTheme.colors.error,
-                        contentDescription = null
-                    )
-                }else if(appUser.modified == true){
+                if(appUser.modified){
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24),
                         tint = MaterialTheme.colors.primary,
+                        contentDescription = null
+                    )
+                }else if(appUser.locked){
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_block_24),
+                        tint = MaterialTheme.colors.error,
                         contentDescription = null
                     )
                 }

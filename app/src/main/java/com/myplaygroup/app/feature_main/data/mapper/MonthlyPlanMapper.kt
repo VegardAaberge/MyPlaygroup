@@ -15,6 +15,7 @@ fun MonthlyPlanEntity.toMonthlyPlan() : MonthlyPlan {
 
     return MonthlyPlan(
         id = id,
+        clientId = clientId,
         username = username,
         kidName = kidName,
         startDate = parsedStartDate,
@@ -22,6 +23,7 @@ fun MonthlyPlanEntity.toMonthlyPlan() : MonthlyPlan {
         planName = planName,
         daysOfWeek = daysOfWeek.map { x -> enumValueOf(x) },
         planPrice = planPrice,
+        cancelled = cancelled,
         modified = modified
     )
 }
@@ -32,6 +34,7 @@ fun MonthlyPlan.toMonthlyPlanEntity() : MonthlyPlanEntity {
 
     return MonthlyPlanEntity(
         id = id,
+        clientId = clientId,
         username = username,
         kidName = kidName,
         startDate = startDate.format(dateFormat),
@@ -39,6 +42,7 @@ fun MonthlyPlan.toMonthlyPlanEntity() : MonthlyPlanEntity {
         planName = planName,
         daysOfWeek = daysOfWeek.map { x -> x.name },
         planPrice = planPrice,
+        cancelled = cancelled,
         modified = modified
     )
 }

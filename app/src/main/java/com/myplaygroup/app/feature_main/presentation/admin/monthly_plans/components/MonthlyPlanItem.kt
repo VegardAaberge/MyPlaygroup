@@ -4,23 +4,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Month
 
 @Composable
 fun MonthlyPlanItem(
@@ -67,6 +66,21 @@ fun MonthlyPlanItem(
                     color = MaterialTheme.colors.onBackground,
                     modifier = Modifier.weight(1f)
                 )
+
+                if(monthlyPlan.modified){
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24),
+                        tint = MaterialTheme.colors.primary,
+                        contentDescription = null
+                    )
+                }
+                else if(monthlyPlan.cancelled){
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_block_24),
+                        tint = MaterialTheme.colors.error,
+                        contentDescription = null
+                    )
+                }
             }
         }
     }
@@ -89,6 +103,7 @@ fun SelectedClassDialogPreview() {
                     DayOfWeek.FRIDAY
                 ),
                 planName = "Evening v2",
+                cancelled = false,
                 planPrice = 790
             ),
         )

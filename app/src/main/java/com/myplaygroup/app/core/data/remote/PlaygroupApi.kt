@@ -74,6 +74,11 @@ interface PlaygroupApi {
     @GET("api/v1/plans/standard")
     suspend fun getStandardPlans() : Response<List<StandardPlanEntity>>
 
+    @POST("api/v1/plans")
+    suspend fun uploadMonthlyPlans(
+        @Body monthlyPlanEntities: List<MonthlyPlanEntity>
+    ): Response<List<MonthlyPlanEntity>>
+
     @GET("api/v1/users")
     suspend fun getAppUsers() : Response<List<AppUserEntity>>
 

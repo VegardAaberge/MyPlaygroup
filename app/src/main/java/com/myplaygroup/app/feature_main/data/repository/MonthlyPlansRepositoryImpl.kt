@@ -7,6 +7,7 @@ import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
+import com.myplaygroup.app.core.util.fetchNetworkResource
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toStandardPlan
@@ -102,5 +103,35 @@ class MonthlyPlansRepositoryImpl @Inject constructor(
             t.printStackTrace()
             Resource.Error(t.localizedMessage ?: "Unknown error")
         }
+    }
+
+    override suspend fun uploadMonthlyPlans(
+        unsyncedMonthlyPlans: List<MonthlyPlan>
+    ): Flow<Resource<List<MonthlyPlan>>> {
+
+        return fetchNetworkResource(
+            fetch = {
+                val entitiesToUpload = unsyncedMonthlyPlans.map { x -> x.clientId }
+                val monthlyPlanEntities = dao.getMonthlyPlansByClientId(entitiesToUpload)
+                api.uploadMonthlyPlans(monthlyPlanEntities)
+            },
+            processFetch = { monthlyPlans ->
+                dao.clearAllMonthlyPlans()
+                dao.insertMonthlyPlans(monthlyPlans)
+                dao.getMonthlyPlans().map { it.toMonthlyPlan() }
+            },
+            onFetchError = { r ->
+                when(r.code){
+                    403 -> tokenRepository.verifyRefreshTokenAndReturnMessage()
+                    else -> "Couldn't reach server: ${r.message}"
+                }
+            },
+            onFetchException = { t ->
+                when(t){
+                    is IOException -> "No Internet Connection"
+                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
+                }
+            }
+        )
     }
 }

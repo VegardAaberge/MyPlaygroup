@@ -70,13 +70,16 @@ interface MainDao {
     @Query("SELECT * FROM monthlyplanentity WHERE id = :id")
     suspend fun getMonthlyPlanById(id: Long) : MonthlyPlanEntity
 
+    @Query("SELECT * FROM monthlyplanentity WHERE clientId IN (:clientIds)")
+    suspend fun getMonthlyPlansByClientId(clientIds: List<String>): List<MonthlyPlanEntity>
+
     @Query("SELECT * FROM monthlyplanentity ORDER BY id")
     suspend fun getMonthlyPlans() : List<MonthlyPlanEntity>
 
     @Query("DELETE FROM monthlyplanentity WHERE modified != 1")
     suspend fun clearSyncedMonthlyPlans()
 
-    @Query("DELETE FROM appuserentity")
+    @Query("DELETE FROM monthlyplanentity")
     suspend fun clearAllMonthlyPlans()
 
     //

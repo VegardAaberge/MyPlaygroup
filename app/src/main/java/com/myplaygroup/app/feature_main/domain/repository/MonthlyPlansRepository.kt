@@ -18,4 +18,8 @@ interface MonthlyPlansRepository {
     suspend fun addMonthlyPlanToDatabase(
         monthlyPlan: MonthlyPlan
     ) : Resource<MonthlyPlan>
+
+    suspend fun uploadMonthlyPlans(
+        unsyncedMonthlyPlans: List<MonthlyPlan>
+    ): Flow<Resource<List<MonthlyPlan>>>
 }
