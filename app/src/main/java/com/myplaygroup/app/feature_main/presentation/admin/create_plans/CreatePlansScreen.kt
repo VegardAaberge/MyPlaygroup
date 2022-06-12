@@ -1,8 +1,12 @@
 package com.myplaygroup.app.feature_main.presentation.admin.create_plans
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,6 +20,7 @@ import com.myplaygroup.app.feature_main.presentation.admin.classes.components.La
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.OutlinedDateField
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.PlansDropdownMenuItem
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.PlansTextFieldItem
+import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.UserCheckbox
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.DayOfWeek
@@ -56,7 +61,57 @@ fun CreatePlansScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            CreateSinglePlanBody(viewModel, state)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .height(56.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(text = "Create Multiple users")
+                Switch(
+                    checked = state.createMultipleUsers,
+                    onCheckedChange = {
+                        viewModel.onEvent(CreatePlansScreenEvent.CreateMultipleUsers(it))
+                    }
+                )
+            }
+
+            if(state.createMultipleUsers){
+                CreateMultiplePlansBody(viewModel, state)
+            }else{
+                CreateSinglePlanBody(viewModel, state)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CreateMultiplePlansBody(
+    viewModel: CreatePlansViewModel,
+    state: CreatePlansState
+) {
+    Box(
+        modifier = Modifier
+            .height(30.dp)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Text(text = "Month: " + state.multipleStartDate.month.name)
+    }
+
+    LazyColumn{
+        items(state.baseMonthlyPlans){ item ->
+
+            val daysOfWeek = item.daysOfWeek.map { x -> x.name.take(1) }.joinToString()
+            UserCheckbox(
+                user = "${item.username} - ${item.kidName} ($daysOfWeek)",
+                isChecked = state.basePlansSelected[item.kidName] ?: false,
+                userChanged = {
+                    viewModel.onEvent(CreatePlansScreenEvent.BasePlanCheckboxTapped(it, item.kidName))
+                }
+            )
         }
     }
 }

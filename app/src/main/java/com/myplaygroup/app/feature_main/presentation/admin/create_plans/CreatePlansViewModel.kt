@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.util.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -39,6 +40,9 @@ class CreatePlansViewModel @Inject constructor(
 
     fun onEvent(event: CreatePlansScreenEvent) {
         when (event) {
+            is CreatePlansScreenEvent.CreateMultipleUsers -> {
+                state = state.copy(createMultipleUsers = event.createMultiple)
+            }
             is CreatePlansScreenEvent.UserChanged -> {
                 state = state.copy(user = event.user)
             }
@@ -69,8 +73,43 @@ class CreatePlansViewModel @Inject constructor(
                 state = state.copy(endDate = event.endDate)
                 calculatePrice()
             }
+            is CreatePlansScreenEvent.BasePlanCheckboxTapped -> {
+                val basePlansSelected = state.basePlansSelected.toMutableMap()
+                basePlansSelected[event.kid] = event.selected
+                state = state.copy(
+                    basePlansSelected = basePlansSelected
+                )
+            }
             is CreatePlansScreenEvent.GenerateData -> {
-                addMonthlyPlanToDatabase()
+                if (state.createMultipleUsers) {
+                    addMultiplePlansToDatabase()
+                } else {
+                    addMonthlyPlanToDatabase()
+                }
+            }
+        }
+    }
+
+    private fun addMultiplePlansToDatabase() = viewModelScope.launch(Dispatchers.IO) {
+        state.monthlyPlans.filter { x -> state.basePlansSelected[x.kidName] ?: false }.forEach { monthlyPlan ->
+            val newMonthlyPlan = monthlyPlan.copy(
+                clientId = UUID.randomUUID().toString(),
+                id = -1,
+                startDate = state.multipleStartDate,
+                endDate = state.multipleEndDate,
+                cancelled = false
+            )
+
+            val result = monthlyPlansRepository.addMonthlyPlanToDatabase(newMonthlyPlan)
+
+            if (result is Resource.Success) {
+                setUIEvent(
+                    UiEvent.PopPage
+                )
+            } else if (result is Resource.Error) {
+                setUIEvent(
+                    UiEvent.ShowSnackbar(result.message!!)
+                )
             }
         }
     }
@@ -141,10 +180,20 @@ class CreatePlansViewModel @Inject constructor(
                     val startDate = LocalDate.of(maxDate.year, maxDate.month, 1)
                     val endDate = startDate.plusMonths(1).minusDays(1)
 
+                    val baseMonthlyPlans = it.filter { x -> x.startDate > LocalDate.now().minusMonths(3) }
+                        .groupBy { x -> x.kidName }
+                        .map { x -> x.value.maxByOrNull { y -> y.startDate }!! }
+
+                    val baseMonthlyPlansSelected = baseMonthlyPlans.map { it.kidName to true }.toMap()
+
                     state = state.copy(
                         monthlyPlans = it,
                         startDate = startDate,
-                        endDate = endDate
+                        endDate = endDate,
+                        multipleStartDate = startDate.plusMonths(1),
+                        multipleEndDate = endDate.plusMonths(1),
+                        baseMonthlyPlans = baseMonthlyPlans,
+                        basePlansSelected = baseMonthlyPlansSelected
                     )
                 }
             )

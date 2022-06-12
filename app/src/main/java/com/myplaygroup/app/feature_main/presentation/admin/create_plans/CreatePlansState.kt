@@ -8,6 +8,7 @@ import java.time.LocalDate
 import java.util.*
 
 data class CreatePlansState(
+    val createMultipleUsers: Boolean = false,
     val users: List<AppUser> = emptyList(),
     val standardPlans: List<StandardPlan> = emptyList(),
     val monthlyPlans: List<MonthlyPlan> = emptyList(),
@@ -18,6 +19,12 @@ data class CreatePlansState(
     var price: String = "0",
     var startDate: LocalDate = LocalDate.now(),
     var endDate: LocalDate = LocalDate.now(),
+
+    var multipleStartDate: LocalDate = LocalDate.now(),
+    var multipleEndDate: LocalDate = LocalDate.now(),
+    var baseMonthlyPlans: List<MonthlyPlan> = emptyList(),
+    var basePlansSelected: Map<String, Boolean> = emptyMap(),
+
     val isLoading: Boolean = false
 ){
     companion object{

@@ -12,4 +12,6 @@ sealed class CreatePlansScreenEvent {
     data class PriceChanged(val price: String) : CreatePlansScreenEvent()
     data class StartDateChanged(val startDate: LocalDate) : CreatePlansScreenEvent()
     data class EndDateChanged(val endDate: LocalDate) : CreatePlansScreenEvent()
+    data class CreateMultipleUsers(val createMultiple: Boolean) : CreatePlansScreenEvent()
+    data class BasePlanCheckboxTapped(val selected: Boolean, val kid: String) : CreatePlansScreenEvent()
 }
