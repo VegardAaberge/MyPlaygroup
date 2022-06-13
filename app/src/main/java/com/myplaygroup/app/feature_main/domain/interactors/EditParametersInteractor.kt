@@ -32,6 +32,7 @@ class EditParametersInteractor @Inject constructor(
                     ParameterItem(HIDDEN, dailyClass::id.name, dailyClass.id),
                     ParameterItem(INFO, dailyClass::classType.name, dailyClass.classType),
                     ParameterItem(INFO, dailyClass::dayOfWeek.name, dailyClass.dayOfWeek),
+                    ParameterItem(INFO, dailyClass::dayOfWeek.name, dailyClass.dayOfWeek),
                     ParameterItem(DATE, dailyClass::date.name, dailyClass.date),
                     ParameterItem(TIME, dailyClass::startTime.name, dailyClass.startTime),
                     ParameterItem(TIME, dailyClass::endTime.name, dailyClass.endTime),
@@ -46,9 +47,10 @@ class EditParametersInteractor @Inject constructor(
                     ParameterItem(INFO, monthlyPlan::planName.name, monthlyPlan.planName),
                     ParameterItem(INFO, monthlyPlan::startDate.name, monthlyPlan.startDate),
                     ParameterItem(INFO, monthlyPlan::endDate.name, monthlyPlan.endDate),
+                    ParameterItem(INFO, monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek),
                     ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
                     ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice),
-                    ParameterItem(STRING, monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek),
+                    ParameterItem(SWITCH, monthlyPlan::cancelled.name, monthlyPlan.cancelled),
                 )
             }
             ParametersType.USERS -> {
@@ -153,12 +155,12 @@ class EditParametersInteractor @Inject constructor(
 
                 val kidName = parameterItems.getValue(monthlyPlan::kidName.name, monthlyPlan.kidName)
                 val planPrice = parameterItems.getValue(monthlyPlan::planPrice.name, monthlyPlan.planPrice)
-                val daysOfWeek = parameterItems.getValue(monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek)
+                val cancelled = parameterItems.getValue(monthlyPlan::cancelled.name, monthlyPlan.cancelled)
 
                 val monthlyPlanEntity = monthlyPlan.copy(
                     kidName = kidName,
                     planPrice = planPrice,
-                    daysOfWeek = daysOfWeek,
+                    cancelled = cancelled,
                     modified = true
                 ).toMonthlyPlanEntity()
 

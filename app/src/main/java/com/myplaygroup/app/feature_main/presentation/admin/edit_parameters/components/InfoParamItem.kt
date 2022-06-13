@@ -18,9 +18,13 @@ import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 fun InfoParamItem(
     item: ParameterItem
 ) {
+    val value = if(item.value is List<*>){
+        item.value.map { x -> x.toString().lowercase().replaceFirstChar { y -> y.uppercase() } }.joinToString()
+    }else item.value.toString()
+
     ReadonlyTextField(
         label = item.getTitle(),
-        fieldValue = item.value.toString(),
+        fieldValue = value,
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.Info,
