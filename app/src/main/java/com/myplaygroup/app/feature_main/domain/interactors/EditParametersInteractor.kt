@@ -42,7 +42,7 @@ class EditParametersInteractor @Inject constructor(
                 val monthlyPlan = dao.getMonthlyPlanById(id).toMonthlyPlan()
 
                 listOf(
-                    ParameterItem(HIDDEN, monthlyPlan::id.name, monthlyPlan.id),
+                    ParameterItem(HIDDEN, monthlyPlan::id.name, monthlyPlan.clientId),
                     ParameterItem(INFO, monthlyPlan::planName.name, monthlyPlan.planName),
                     ParameterItem(INFO, monthlyPlan::startDate.name, monthlyPlan.startDate),
                     ParameterItem(INFO, monthlyPlan::endDate.name, monthlyPlan.endDate),
@@ -55,7 +55,7 @@ class EditParametersInteractor @Inject constructor(
                 val appUser = dao.getAppUserById(id).toAppUser()
 
                 listOf(
-                    ParameterItem(HIDDEN, appUser::id.name, appUser.id),
+                    ParameterItem(HIDDEN, appUser::id.name, appUser.clientId),
                     ParameterItem(INFO, appUser::username.name, appUser.username),
                     ParameterItem(STRING, appUser::phoneNumber.name, appUser.phoneNumber),
                     ParameterItem(STRING, appUser::profileName.name, appUser.profileName),
@@ -108,7 +108,7 @@ class EditParametersInteractor @Inject constructor(
     ): Resource<Unit> {
 
         return try {
-            val id = parameterItems.firstOrNull { x -> x.key == "id" }?.toString() ?: ""
+            val id = parameterItems.firstOrNull { x -> x.key == "id" }?.value.toString() ?: ""
 
             storeParameterItemBody(
                 id = id,

@@ -173,7 +173,9 @@ class CreatePlansViewModel @Inject constructor(
                 storeData = {
                     val maxDate = it.maxOfOrNull { x -> x.startDate } ?: LocalDate.now()
                     val startDate = LocalDate.of(maxDate.year, maxDate.month, 1)
+                    val multipleStartDate = startDate.plusMonths(1)
                     val endDate = startDate.plusMonths(1).minusDays(1)
+                    val multipleEndDate = multipleStartDate.plusMonths(1).minusDays(1)
 
                     val baseMonthlyPlans = it.filter { x -> x.startDate > LocalDate.now().minusMonths(3) }
                         .groupBy { x -> x.kidName }
@@ -185,8 +187,8 @@ class CreatePlansViewModel @Inject constructor(
                         monthlyPlans = it,
                         startDate = startDate,
                         endDate = endDate,
-                        multipleStartDate = startDate.plusMonths(1),
-                        multipleEndDate = endDate.plusMonths(1),
+                        multipleStartDate = multipleStartDate,
+                        multipleEndDate = multipleEndDate,
                         baseMonthlyPlans = baseMonthlyPlans,
                         basePlansSelected = baseMonthlyPlansSelected
                     )
