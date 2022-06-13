@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.R
+import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
@@ -71,6 +72,10 @@ fun MonthlyPlanScreen(
                     ))
                 }
             }
+        }
+
+        if(viewModel.isBusy){
+            CustomProgressIndicator()
         }
     }
 }

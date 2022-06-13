@@ -9,10 +9,7 @@ import com.google.crypto.tink.Aead
 import com.google.crypto.tink.KeyTemplates
 import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
-import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
-import com.myplaygroup.app.core.data.remote.NullHostNameVerifier
-import com.myplaygroup.app.core.data.remote.PlaygroupApi
-import com.myplaygroup.app.core.data.remote.TrustAllX509TrustManager
+import com.myplaygroup.app.core.data.remote.*
 import com.myplaygroup.app.core.data.settings.UserSettings
 import com.myplaygroup.app.core.data.settings.UserSettingsSerializer
 import com.myplaygroup.app.core.util.Constants.BASE_URL
@@ -68,14 +65,17 @@ class AppModule {
     fun provideMyPlaygroupApi(
         basicAuthInterceptor: BasicAuthInterceptor
     ) : PlaygroupApi {
+
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val builder = OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .addInterceptor(basicAuthInterceptor)
+
         if(BASE_URL == LOCALHOST_URL){
             builder.hostnameVerifier(NullHostNameVerifier())
+            builder.addInterceptor(NetworkBehaviourInterceptor(2000))
         }
         val client = builder.build()
 

@@ -30,7 +30,7 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     val scaffoldState = collectEventFlow(viewModel, navigator)
 
-    val isBusy = viewModel.isBusy.value
+    val isBusy = viewModel.isBusy
     val user = viewModel.state.username
     val password = viewModel.state.password
 

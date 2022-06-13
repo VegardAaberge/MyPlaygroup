@@ -31,7 +31,7 @@ fun EditProfileScreen(
     viewModel: EditProfileViewModel = hiltViewModel()
 ) {
     val focusManager = LocalFocusManager.current
-    val isBusy = viewModel.isBusy.value
+    val isBusy = viewModel.isBusy
     val isFilledIn = viewModel.state.isFilledIn()
     val scaffoldState = collectEventFlow(viewModel, navigator)
 
@@ -75,7 +75,7 @@ fun EditProfileScreen(
 fun ColumnScope.TextFields(
     viewModel: EditProfileViewModel
 ) {
-    val isBusy = viewModel.isBusy.value
+    val isBusy = viewModel.isBusy
     val state = viewModel.state
 
     val widthModifier = Modifier

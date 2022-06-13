@@ -62,7 +62,7 @@ fun CreateProfileScreenBody(
 ) {
 
     val focusManager = LocalFocusManager.current
-    val isBusy = viewModel.isBusy.value
+    val isBusy = viewModel.isBusy
     val state = viewModel.state
 
     Scaffold(
@@ -118,7 +118,7 @@ fun CreateProfileScreenBody(
 fun ColumnScope.TextFields(
     viewModel: CreateProfileViewModel
 ) {
-    val isBusy = viewModel.isBusy.value
+    val isBusy = viewModel.isBusy
     val state = viewModel.state
 
     val widthModifier = Modifier

@@ -68,7 +68,7 @@ class ClassesViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     repository
                         .uploadDailyClasses(unsyncedClasses)
-                        .collect{ collectDailyClasses(it) }
+                        .collect{ collectDailyClasses(it, true) }
                 }
             }
             is ClassesScreenEvent.SubmitSelectedClassTapped -> {
@@ -108,11 +108,13 @@ class ClassesViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository
                 .getAllDailyClasses(fetchFromRemote)
-                .collect{ collectDailyClasses(it) }
+                .collect{ collectDailyClasses(it, fetchFromRemote) }
         }
     }
 
     fun getUnsyncedDailyClasses() : List<DailyClass> {
+        if(isBusy)
+            return emptyList()
         return state.dailyClasses.filter { x -> x.modified }
     }
 
@@ -167,7 +169,7 @@ class ClassesViewModel @Inject constructor(
         )
     }
 
-    private fun collectDailyClasses(result: Resource<List<DailyClass>>) = viewModelScope.launch(Dispatchers.Main) {
+    private fun collectDailyClasses(result: Resource<List<DailyClass>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
                 state = state.copy(
@@ -180,7 +182,9 @@ class ClassesViewModel @Inject constructor(
                 )
             }
             is Resource.Loading -> {
-                state = state.copy(isLoading = result.isLoading)
+                if(fetchFromRemote){
+                    isBusy(result.isLoading)
+                }
             }
         }
     }

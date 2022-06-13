@@ -56,7 +56,7 @@ class UsersViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     repository
                         .registerUsers(unsyncedUsers)
-                        .collect{ collectAppUsers(it) }
+                        .collect{ collectAppUsers(it, true) }
                 }
             }
         }
@@ -71,7 +71,7 @@ class UsersViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository
                 .getAllUsers(fetchFromRemote)
-                .collect{ collectAppUsers(it) }
+                .collect{ collectAppUsers(it, fetchFromRemote) }
         }
     }
 
@@ -96,7 +96,7 @@ class UsersViewModel @Inject constructor(
         }
     }
 
-    private fun collectAppUsers(result: Resource<List<AppUser>>) = viewModelScope.launch(Dispatchers.Main) {
+    private fun collectAppUsers(result: Resource<List<AppUser>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
                 state = state.copy(
@@ -109,12 +109,16 @@ class UsersViewModel @Inject constructor(
                 )
             }
             is Resource.Loading -> {
-                state = state.copy(isLoading = result.isLoading)
+                if(fetchFromRemote){
+                    isBusy(result.isLoading)
+                }
             }
         }
     }
 
     fun getUnsyncedUsers() : List<AppUser> {
+        if(isBusy)
+            return emptyList()
         return state.appUsers.filter { x -> x.modified }
     }
 }

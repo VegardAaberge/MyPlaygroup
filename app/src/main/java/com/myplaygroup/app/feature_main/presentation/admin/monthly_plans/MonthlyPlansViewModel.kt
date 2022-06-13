@@ -37,7 +37,7 @@ class MonthlyPlansViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     repository
                         .uploadMonthlyPlans(unsyncedMonthlyPlans)
-                        .collect{ collectMonthlyPlans(it) }
+                        .collect{ collectMonthlyPlans(it, true) }
                 }
             }
         }
@@ -52,11 +52,11 @@ class MonthlyPlansViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository
                 .getMonthlyPlans(fetchFromRemote)
-                .collect{ collectMonthlyPlans(it) }
+                .collect{ collectMonthlyPlans(it, fetchFromRemote) }
         }
     }
 
-    private fun collectMonthlyPlans(result: Resource<List<MonthlyPlan>>) = viewModelScope.launch(Dispatchers.Main) {
+    private fun collectMonthlyPlans(result: Resource<List<MonthlyPlan>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
                 state = state.copy(
@@ -69,12 +69,16 @@ class MonthlyPlansViewModel @Inject constructor(
                 )
             }
             is Resource.Loading -> {
-                state = state.copy(isLoading = result.isLoading)
+                if(fetchFromRemote){
+                    isBusy(result.isLoading)
+                }
             }
         }
     }
 
     fun getUnsyncedMonthlyPlans(): List<MonthlyPlan> {
+        if(isBusy)
+            return emptyList()
         return state.monthlyPlans.filter { x -> x.modified }
     }
 }

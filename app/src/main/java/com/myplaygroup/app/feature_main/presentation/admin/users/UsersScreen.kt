@@ -21,6 +21,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.R
+import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
@@ -89,6 +90,10 @@ fun UsersScreen(
                     }
                 )
             }
+        }
+
+        if(viewModel.isBusy){
+            CustomProgressIndicator()
         }
     }
 }

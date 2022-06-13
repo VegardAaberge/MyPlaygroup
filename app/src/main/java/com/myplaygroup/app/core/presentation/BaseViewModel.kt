@@ -15,8 +15,9 @@ open class BaseViewModel : ViewModel() {
     private val _eventChannel = Channel<UiEvent>()
     val eventChannelFlow = _eventChannel.receiveAsFlow()
 
-    private val _isBusy = mutableStateOf(false)
-    val isBusy: State<Boolean> = _isBusy
+    private val _isBusyInt = mutableStateOf(0)
+    val isBusyInt: State<Int> = _isBusyInt
+    val isBusy: Boolean get() = isBusyInt.value > 0
 
     fun setUIEvent(event: BaseViewModel.UiEvent){
         viewModelScope.launch {
@@ -25,11 +26,13 @@ open class BaseViewModel : ViewModel() {
     }
 
     fun isBusy(value: Boolean){
-        _isBusy.value = value
+        _isBusyInt.value = if(value) {
+            _isBusyInt.value + 1
+        } else _isBusyInt.value - 1
     }
 
     sealed class UiEvent {
-        data class ShowSnackbar(val message: String) : UiEvent()
+        data class ShowSnackbar(val message: String, ) : UiEvent()
         object PopPage : UiEvent()
         data class NavigateTo(val destination: Direction) : UiEvent()
         data class PopAndNavigateTo(val popRoute: String, val destination: DirectionDestination) : UiEvent()
