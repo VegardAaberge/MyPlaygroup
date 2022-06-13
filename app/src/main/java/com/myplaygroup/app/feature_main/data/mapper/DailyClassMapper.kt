@@ -26,6 +26,7 @@ fun DailyClassEntity.toDailyClass() : DailyClass {
         startTime = parsedStartTime,
         cancelled = cancelled,
         dayOfWeek = dayOfWeek,
+        kids = kids,
         modified = modified
     )
 }
@@ -43,6 +44,7 @@ fun DailyClass.toDailyClassEntity() : DailyClassEntity {
         endTime = endTime.format(timeFormat),
         startTime = startTime.format(timeFormat),
         dayOfWeek = dayOfWeek,
+        kids = kids,
         modified = modified
     )
 }

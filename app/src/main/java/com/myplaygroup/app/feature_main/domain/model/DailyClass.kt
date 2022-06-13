@@ -12,6 +12,7 @@ data class DailyClass(
     val endTime: LocalTime,
     val startTime: LocalTime,
     val dayOfWeek: DayOfWeek,
+    val kids : List<String> = listOf(),
     val cancelled: Boolean = false,
     val modified: Boolean = id == -1L
 )

@@ -20,7 +20,7 @@ fun InfoParamItem(
 ) {
     val value = if(item.value is List<*>){
         item.value.map { x -> x.toString().lowercase().replaceFirstChar { y -> y.uppercase() } }.joinToString()
-    }else item.value.toString()
+    }else item.value.toString().lowercase().replaceFirstChar { y -> y.uppercase() }.replace('_', ' ')
 
     ReadonlyTextField(
         label = item.getTitle(),

@@ -16,6 +16,7 @@ data class DailyClassEntity(
     val endTime: String,
     val startTime: String,
     val dayOfWeek: DayOfWeek,
+    val kids: List<String>,
 
     @Transient
     val modified: Boolean = id == -1L

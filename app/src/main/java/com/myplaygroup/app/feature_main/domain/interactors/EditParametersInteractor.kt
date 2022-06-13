@@ -32,7 +32,7 @@ class EditParametersInteractor @Inject constructor(
                     ParameterItem(HIDDEN, dailyClass::id.name, dailyClass.id),
                     ParameterItem(INFO, dailyClass::classType.name, dailyClass.classType),
                     ParameterItem(INFO, dailyClass::dayOfWeek.name, dailyClass.dayOfWeek),
-                    ParameterItem(INFO, dailyClass::dayOfWeek.name, dailyClass.dayOfWeek),
+                    ParameterItem(INFO, dailyClass::kids.name, dailyClass.kids),
                     ParameterItem(DATE, dailyClass::date.name, dailyClass.date),
                     ParameterItem(TIME, dailyClass::startTime.name, dailyClass.startTime),
                     ParameterItem(TIME, dailyClass::endTime.name, dailyClass.endTime),
