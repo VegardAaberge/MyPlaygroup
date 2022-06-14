@@ -3,15 +3,14 @@ package com.myplaygroup.app.feature_main.data.local
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import io.github.boguszpawlowski.composecalendar.day.Day
-import java.time.DayOfWeek
 import java.util.*
 
 class Converters {
 
     @TypeConverter
-    fun fromList(list: List<String>) : String{
-        return Gson().toJson(list)
+    fun fromList(list: List<String>?) : String{
+        val listToJson = list ?: emptyList()
+        return Gson().toJson(listToJson)
     }
 
     @TypeConverter
