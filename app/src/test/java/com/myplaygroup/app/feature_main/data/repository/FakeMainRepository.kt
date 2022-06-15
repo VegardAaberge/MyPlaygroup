@@ -32,7 +32,7 @@ class FakeMainRepository : ChatRepository {
         )
     )
 
-    override suspend fun getChatMessages(fetchFromRemote: Boolean): Flow<Resource<List<Message>>> {
+    override suspend fun getChatMessages(fetchFromRemote: Boolean, b: Boolean): Flow<Resource<List<Message>>> {
         return flow { Resource.Success(messages) }
     }
 }

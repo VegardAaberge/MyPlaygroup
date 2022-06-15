@@ -4,16 +4,16 @@ import android.content.Context
 import android.util.Log
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.settings.UserSettings
-import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.TokenRepository
+import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
-import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.data.mapper.ToSendMessageRequest
 import com.myplaygroup.app.feature_main.data.mapper.toMessage
 import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
+import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.ChatSocketRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,7 +29,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 class ChatSocketRepositoryImpl @Inject constructor(
@@ -116,7 +115,8 @@ class ChatSocketRepositoryImpl @Inject constructor(
             message = message,
             profileName = userSettings.profileName,
             createdBy = userSettings.username,
-            created = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+            created = LocalDateTime.now(),
+            receivers = receivers
         ).toMessageEntity()
 
         return sendMessage(
@@ -151,7 +151,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                     }
                 }
 
-                val sendMessageRequest = messageEntity.ToSendMessageRequest(receivers)
+                val sendMessageRequest = messageEntity.ToSendMessageRequest()
                 socket?.send(Frame.Text(sendMessageRequest))
 
                 withTimeout(30000){

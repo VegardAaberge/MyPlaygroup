@@ -7,7 +7,6 @@ import com.myplaygroup.app.feature_main.domain.model.Message
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -24,27 +23,28 @@ fun MessageEntity.toMessage(
         clientId = clientId,
         message = message,
         createdBy = createdBy,
-        created = parsedDate.toEpochSecond(ZoneOffset.UTC),
+        receivers = receivers,
+        created = parsedDate,
         profileName = profileName ?: "",
-        isSending = isSending
+        isSending = isSending,
     )
 }
 
 fun Message.toMessageEntity() : MessageEntity {
     val dateFormat = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT, Locale("en"))
-    val created = dateFormat.format(LocalDateTime.ofEpochSecond(created, 0, ZoneOffset.UTC))
 
     return MessageEntity(
         id = id,
         clientId = clientId,
         message = message,
+        receivers = receivers,
         createdBy = createdBy,
-        created = created,
+        created = created.format(dateFormat),
         profileName = profileName
     )
 }
 
-fun MessageEntity.ToSendMessageRequest(receivers: List<String>) : String {
+fun MessageEntity.ToSendMessageRequest() : String {
     return Json.encodeToString(
         SendMessageRequest(
             clientId = clientId,

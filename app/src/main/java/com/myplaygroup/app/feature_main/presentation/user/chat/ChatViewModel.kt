@@ -71,7 +71,7 @@ class ChatViewModel @Inject constructor(
     private fun refreshChat(){
         viewModelScope.launch(Dispatchers.IO) {
             repository
-                .getChatMessages(true)
+                .getChatMessages(true, true)
                 .collect { collectGetMessages(it)}
         }
 

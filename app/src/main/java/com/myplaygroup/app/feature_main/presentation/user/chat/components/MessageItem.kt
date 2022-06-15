@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_main.domain.model.Message
+import java.time.LocalDateTime
 
 @Composable
 fun MessageItem(
@@ -69,8 +70,9 @@ fun MyMessage() {
             message = Message(
                 message = "This is my message",
                 profileName = "Vegard Aaberge",
-                created = 3424324,
-                createdBy = "vegard"
+                created = LocalDateTime.now(),
+                createdBy = "vegard",
+                receivers = emptyList()
             )
         )
     }
@@ -85,8 +87,9 @@ fun LongMessage() {
             message = Message(
                 message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                 profileName = "Vegard Aaberge",
-                created = 3424324,
-                createdBy = "vegard"
+                created = LocalDateTime.now(),
+                createdBy = "vegard",
+                receivers = emptyList()
             )
         )
     }
@@ -101,8 +104,9 @@ fun OtherMessage() {
             message = Message(
                 message = "This is my message",
                 profileName = "Vegard Aaberge",
-                created = 3424324,
-                createdBy = "vegard"
+                created = LocalDateTime.now(),
+                createdBy = "vegard",
+                receivers = emptyList()
             )
         )
     }

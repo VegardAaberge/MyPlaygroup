@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface ChatRepository {
 
     suspend fun getChatMessages(
-        fetchFromRemote: Boolean
+        fetchFromRemote: Boolean,
+        isAdmin: Boolean = false
     ) : Flow<Resource<List<Message>>>
 }

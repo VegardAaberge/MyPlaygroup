@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_main.domain.model.Message
 import java.lang.Float.min
+import java.time.LocalDateTime
 
 @Composable
 fun MessageBox(
@@ -101,8 +102,9 @@ fun MessageBoxPreview() {
             message = Message(
                 message = "This is my message",
                 profileName = "Vegard Aaberge",
-                created = 3424324,
-                createdBy = "vegard"
+                created = LocalDateTime.now(),
+                createdBy = "vegard",
+                receivers = emptyList()
             )
         )
     }

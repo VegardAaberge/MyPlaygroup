@@ -1,6 +1,7 @@
-package com.myplaygroup.app.feature_main.domain.interactors
+package com.myplaygroup.app.feature_main.domain.interactors.impl
 
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
+import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

@@ -9,25 +9,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun MessageDateItem(
-    created: Long
+    created: LocalDateTime
 ) {
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         var date by remember {
-            val date = LocalDateTime.ofEpochSecond(created, 0, ZoneOffset.UTC)
-
-            val pattern = if(date.plusDays(6) > LocalDateTime.now()){
+            val pattern = if(created.plusDays(6) > LocalDateTime.now()){
                 "EEE hh:mm a"
             } else "d/M/yy hh:mm a"
 
-            val text = date.format(DateTimeFormatter.ofPattern(pattern)).toString()
+            val text = created.format(DateTimeFormatter.ofPattern(pattern)).toString()
             mutableStateOf(text)
         }
 

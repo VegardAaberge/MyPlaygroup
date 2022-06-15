@@ -13,4 +13,5 @@ data class MessageEntity(
     val profileName: String?,
     val created: String,
     val createdBy: String,
+    val receivers: List<String>,
 )

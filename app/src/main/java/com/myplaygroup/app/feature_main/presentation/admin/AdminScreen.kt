@@ -14,8 +14,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_admin.presentation.NavDrawerHeader
-import com.myplaygroup.app.feature_main.presentation.admin.chat.ChatScreen
-import com.myplaygroup.app.feature_main.presentation.admin.chat.ChatViewModel
+import com.myplaygroup.app.feature_main.presentation.admin.chat_groups.ChatGroupsScreen
+import com.myplaygroup.app.feature_main.presentation.admin.chat_groups.ChatGroupsViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.classes.ClassesScreen
 import com.myplaygroup.app.feature_main.presentation.admin.classes.ClassesViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.monthly_plans.MonthlyPlanScreen
@@ -121,14 +121,14 @@ fun AdminScreen(
 fun DrawerNavigation(
     navController: NavHostController,
     adminViewModel: AdminViewModel,
-    chatViewModel: ChatViewModel = hiltViewModel(),
+    chatViewModel: ChatGroupsViewModel = hiltViewModel(),
     classesViewModel: ClassesViewModel = hiltViewModel(),
     monthlyPlansViewModel: MonthlyPlansViewModel = hiltViewModel(),
     usersViewModel: UsersViewModel = hiltViewModel()
 ) {
     NavHost(navController, startDestination = NavDrawer.CHAT) {
         composable(NavDrawer.CHAT) {
-            ChatScreen(adminViewModel, chatViewModel)
+            ChatGroupsScreen(adminViewModel, chatViewModel)
         }
         composable(NavDrawer.CLASSES) {
             ClassesScreen(adminViewModel, classesViewModel)

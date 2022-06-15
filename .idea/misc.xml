@@ -47,6 +47,8 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/chat/components/OwnerMessageItem.kt" value="0.375" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/chat/components/Test.kt" value="0.25" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/home/components/CalendarScreen.kt" value="0.20506329113924052" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/user/chat/components/MessageBox.kt" value="0.28055555555555556" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/user/chat/components/MessageItem.kt" value="0.1" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/create_profile/CreateProfileScreen.kt" value="0.6258992805755396" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/create_profile/components/ProfileImage.kt" value="0.4018181818181818" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />

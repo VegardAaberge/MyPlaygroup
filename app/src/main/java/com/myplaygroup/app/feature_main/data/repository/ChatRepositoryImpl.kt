@@ -27,14 +27,19 @@ class ChatRepositoryImpl @Inject constructor(
     private val dao = mainDatabase.mainDao()
 
     override suspend fun getChatMessages(
-        fetchFromRemote: Boolean
+        fetchFromRemote: Boolean,
+        isAdmin: Boolean
     ): Flow<Resource<List<Message>>> {
         return networkBoundResource(
             query = {
                 dao.getMessages().map { it.toMessage() }
             },
             fetch = {
-                api.getMessages()
+                if (isAdmin) {
+                    api.getMessagesForAdmin()
+                } else {
+                    api.getMessagesForUser()
+                }
             },
             saveFetchResult = { messages ->
                 dao.clearSyncedComments()

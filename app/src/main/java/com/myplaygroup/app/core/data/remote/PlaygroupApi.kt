@@ -46,8 +46,11 @@ interface PlaygroupApi {
         @Part image: MultipartBody.Part,
     ): Response<SimpleResponse>
 
-    @GET("/api/v1/chat")
-    suspend fun getMessages(): Response<MessagesResponse>
+    @GET("/api/v1/chat/user")
+    suspend fun getMessagesForUser(): Response<MessagesResponse>
+
+    @GET("/api/v1/chat/admin")
+    suspend fun getMessagesForAdmin(): Response<MessagesResponse>
 
     @POST("/api/v1/chat")
     suspend fun sendMessage(
