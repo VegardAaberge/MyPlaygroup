@@ -26,7 +26,7 @@ class MonthlyPlansViewModel @Inject constructor(
     fun init(userFlow: MutableStateFlow<List<MonthlyPlan>>) {
         userFlow.onEach { monthlyPlans ->
             state = state.copy(
-                monthlyPlans = monthlyPlans
+                monthlyPlans = getGroupedData(monthlyPlans)
             )
         }.launchIn(viewModelScope)
     }
@@ -55,7 +55,7 @@ class MonthlyPlansViewModel @Inject constructor(
         when(result){
             is Resource.Success -> {
                 state = state.copy(
-                    monthlyPlans = result.data!!
+                    monthlyPlans = getGroupedData(result.data!!)
                 )
             }
             is Resource.Error -> {
@@ -74,6 +74,12 @@ class MonthlyPlansViewModel @Inject constructor(
     fun getUnsyncedMonthlyPlans(): List<MonthlyPlan> {
         if(isBusy)
             return emptyList()
-        return state.monthlyPlans.filter { x -> x.modified }
+        return state.monthlyPlans.flatMap { x -> x.value }.filter { x -> x.modified }
+    }
+
+    fun getGroupedData(data: List<MonthlyPlan>) : Map<String, List<MonthlyPlan>> {
+        return data
+            .sortedByDescending { x -> x.startDate }
+            .groupBy { x -> "${x.startDate.month} ${x.startDate.year}" }
     }
 }

@@ -38,6 +38,7 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/SwitchParamItem.kt" value="0.6953703703703704" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/TextParamItem.kt" value="0.12962962962962962" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/TimeParamItem.kt" value="0.6953703703703704" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/monthly_plans/MonthlyPlansScreen.kt" value="0.335" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/monthly_plans/components/MonthlyPlanItem.kt" value="0.55" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/users/components/ShowAlertDialog.kt" value="0.45" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/users/components/UserItem.kt" value="0.3055555555555556" />
