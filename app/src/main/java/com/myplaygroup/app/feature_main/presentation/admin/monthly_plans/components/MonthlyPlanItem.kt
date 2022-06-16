@@ -39,7 +39,7 @@ fun MonthlyPlanItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "${monthlyPlan.planName} - $month",
+                    text = monthlyPlan.planName.lowercase().replaceFirstChar { x -> x.uppercase() }.replace('_', ' '),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     color = MaterialTheme.colors.onBackground,
@@ -102,7 +102,7 @@ fun SelectedClassDialogPreview() {
                     DayOfWeek.WEDNESDAY,
                     DayOfWeek.FRIDAY
                 ),
-                planName = "Evening v2",
+                planName = "EVENING_2",
                 cancelled = false,
                 planPrice = 790
             ),

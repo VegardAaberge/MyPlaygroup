@@ -8,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 @Composable
@@ -16,14 +15,7 @@ fun scaffoldColumnModifier(onClick: () -> Unit) : Modifier {
     return Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState())
-        .background(
-            Brush.verticalGradient(
-                colors = listOf(
-                    Color(0xFFAAFFFF),
-                    Color(0xFFEEFFFF),
-                )
-            )
-        )
+        .background(Color(0xFFFFFDFA))
         .clickable(
             interactionSource = MutableInteractionSource(),
             indication = null,

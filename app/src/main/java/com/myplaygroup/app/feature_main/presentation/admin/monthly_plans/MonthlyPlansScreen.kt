@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -111,7 +110,7 @@ fun MonthlyPlanLazyColumn(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(colorResource(id = R.color.keynote_green_3))
+                        .background(MaterialTheme.colors.primary)
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                 ) {
                     Text(

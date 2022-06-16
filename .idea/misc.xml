@@ -29,6 +29,7 @@
         <entry key="app/src/main/java/com/myplaygroup/app/core/presentation/components/CustomLoadingIndicator.kt" value="0.28055555555555556" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_admin/presentation/classes/ClassesScreen.kt" value="0.335" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_admin/presentation/classes/components/CalendarClassesScreen.kt" value="0.335" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_login/presentation/login/components/LoginImageAndText.kt" value="0.45" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/classes/components/CreateClassesSection.kt" value="0.25" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/classes/components/SelectedClassDialog.kt" value="0.625" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/create_plans/CreatePlansScreen.kt" value="0.335" />

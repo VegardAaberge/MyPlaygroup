@@ -49,7 +49,7 @@ fun LoginScreen(
                 .padding(horizontal = 30.dp)
 
             LoginImageAndText(
-                imageSize = 200.dp,
+                imageSize = 240.dp,
                 imageTextSpace = 30.dp,
                 fontSize = 30.sp
             )
