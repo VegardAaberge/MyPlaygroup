@@ -7,7 +7,10 @@ import com.myplaygroup.app.feature_main.domain.model.Message
 import kotlinx.coroutines.flow.Flow
 
 interface ChatInteractor {
-    suspend fun getChatGroups(users: List<AppUser>) : Flow<Resource<List<ChatGroup>>>
+    suspend fun getChatGroups(
+        users: List<AppUser>,
+        oldChatGroups: List<ChatGroup>
+    ) : Flow<Resource<List<ChatGroup>>>
 
     suspend fun getChatMessages(
         user: String

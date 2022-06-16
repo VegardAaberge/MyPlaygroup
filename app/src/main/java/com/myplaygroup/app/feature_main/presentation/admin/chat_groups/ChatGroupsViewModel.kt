@@ -25,6 +25,8 @@ class ChatGroupsViewModel @Inject constructor(
     private val imageRepository: ImageRepository
 ) : BaseViewModel() {
 
+    private val profileImageLoading = mutableSetOf<String>()
+
     var state by mutableStateOf(ChatGroupsState())
 
     fun init(userFlow: MutableStateFlow<List<AppUser>>) {
@@ -44,7 +46,7 @@ class ChatGroupsViewModel @Inject constructor(
             return@launch
         previousUsers = users
 
-        chatInteractor.getChatGroups(users)
+        chatInteractor.getChatGroups(users, state.chatGroups)
             .collect { collectChatGroups(it) }
     }
 
@@ -55,9 +57,6 @@ class ChatGroupsViewModel @Inject constructor(
                     chatGroups = result.data!!
                 )
                 state.chatGroups.toList().forEach { chatGroup ->
-                    if (chatGroup.icon != null)
-                        return@forEach
-
                     loadIcon(chatGroup.username)
                 }
             }
@@ -73,7 +72,16 @@ class ChatGroupsViewModel @Inject constructor(
     }
 
     fun loadIcon(username: String) = viewModelScope.launch(Dispatchers.IO){
+        if(profileImageLoading.contains(username))
+            return@launch
+
+        val chatGroup = state.chatGroups.firstOrNull { x -> x.username == username}
+        if(chatGroup == null || chatGroup.icon != null)
+            return@launch
+
+        profileImageLoading.add(username)
         val imageResult = imageRepository.getProfileImage(username)
+        profileImageLoading.remove(username)
 
         if (imageResult is Resource.Success) {
             saveIcon(

@@ -47,6 +47,7 @@ class AdminViewModel @Inject constructor(
         it.map { u -> u.profileName }
     }
 
+    var initDone = false
     val userFlow = MutableStateFlow(listOf<AppUser>())
     val monthlyPlansFlow = MutableStateFlow(listOf<MonthlyPlan>())
     val dailyClassesFlow = MutableStateFlow(listOf<DailyClass>())
@@ -54,6 +55,10 @@ class AdminViewModel @Inject constructor(
     var state by mutableStateOf(AdminState())
 
     fun init() {
+        if(initDone)
+            return
+        initDone = true
+
         updateTitle(NavDrawer.CHAT)
 
         loadDataFromServer()
