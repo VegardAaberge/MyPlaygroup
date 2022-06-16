@@ -55,6 +55,9 @@ class ChatGroupsViewModel @Inject constructor(
                     chatGroups = result.data!!
                 )
                 state.chatGroups.toList().forEach { chatGroup ->
+                    if (chatGroup.icon != null)
+                        return@forEach
+
                     loadIcon(chatGroup.username)
                 }
             }
@@ -69,8 +72,9 @@ class ChatGroupsViewModel @Inject constructor(
         }
     }
 
-    fun loadIcon(username: String) = viewModelScope.launch(Dispatchers.IO)  {
+    fun loadIcon(username: String) = viewModelScope.launch(Dispatchers.IO){
         val imageResult = imageRepository.getProfileImage(username)
+
         if (imageResult is Resource.Success) {
             saveIcon(
                 icon = imageResult.data!!,

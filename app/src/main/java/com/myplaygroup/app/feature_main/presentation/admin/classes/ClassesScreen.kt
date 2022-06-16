@@ -105,7 +105,7 @@ fun ClassesScreen(
             }
         }
 
-        if(viewModel.isBusy){
+        if(viewModel.isBusy || adminViewModel.isBusy){
             CustomProgressIndicator()
         }
     }

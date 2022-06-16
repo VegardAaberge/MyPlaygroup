@@ -1,6 +1,5 @@
 package com.myplaygroup.app.feature_main.presentation.admin.users
 
-import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +12,9 @@ import com.myplaygroup.app.feature_main.domain.model.AppUser
 import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,18 +24,24 @@ class UsersViewModel @Inject constructor(
     private val validators: MainValidationInteractors
 ) : BaseViewModel() {
 
-    private var lastRefresh: Long = 0
-
     var state by mutableStateOf(UsersState())
 
-    init {
-        fetchData(true)
+    fun init(userFlow: MutableStateFlow<List<AppUser>>) {
+        userFlow.onEach { appUsers ->
+            state = state.copy(
+                appUsers = appUsers
+            )
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: UsersScreenEvent) {
         when (event) {
             is UsersScreenEvent.RefreshData -> {
-                fetchData(false)
+                viewModelScope.launch(Dispatchers.IO) {
+                    repository
+                        .getAllUsers(false)
+                        .collect{ collectAppUsers(it, false) }
+                }
             }
             is UsersScreenEvent.CreateUserDialog -> {
                 state = state.copy(
@@ -59,19 +67,6 @@ class UsersViewModel @Inject constructor(
                         .collect{ collectAppUsers(it, true) }
                 }
             }
-        }
-    }
-
-    fun fetchData(fetchFromRemote: Boolean){
-        if (SystemClock.elapsedRealtime() - lastRefresh < 1000){
-            return;
-        }
-        lastRefresh = SystemClock.elapsedRealtime()
-
-        viewModelScope.launch(Dispatchers.IO) {
-            repository
-                .getAllUsers(fetchFromRemote)
-                .collect{ collectAppUsers(it, fetchFromRemote) }
         }
     }
 

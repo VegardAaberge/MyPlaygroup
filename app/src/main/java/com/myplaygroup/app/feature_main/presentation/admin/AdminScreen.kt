@@ -129,6 +129,9 @@ fun DrawerNavigation(
 ) {
     LaunchedEffect(key1 = adminViewModel){
         chatViewModel.init(adminViewModel.userFlow)
+        classesViewModel.init(adminViewModel.dailyClassesFlow)
+        monthlyPlansViewModel.init(adminViewModel.monthlyPlansFlow)
+        usersViewModel.init(adminViewModel.userFlow)
         adminViewModel.init()
     }
 

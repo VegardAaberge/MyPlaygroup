@@ -74,7 +74,7 @@ fun MonthlyPlanScreen(
             }
         }
 
-        if(viewModel.isBusy){
+        if(viewModel.isBusy || adminViewModel.isBusy){
             CustomProgressIndicator()
         }
     }

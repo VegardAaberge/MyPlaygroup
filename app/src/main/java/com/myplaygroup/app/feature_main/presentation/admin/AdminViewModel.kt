@@ -50,7 +50,6 @@ class AdminViewModel @Inject constructor(
     val userFlow = MutableStateFlow(listOf<AppUser>())
     val monthlyPlansFlow = MutableStateFlow(listOf<MonthlyPlan>())
     val dailyClassesFlow = MutableStateFlow(listOf<DailyClass>())
-    val standardPlanFlow = MutableStateFlow(listOf<StandardPlan>())
 
     var state by mutableStateOf(AdminState())
 
@@ -116,7 +115,7 @@ class AdminViewModel @Inject constructor(
                     )
                 }
                 is Resource.Loading -> {
-                    isBusy(true)
+                    isBusy(result.isLoading)
                 }
             }
         }.launchIn(viewModelScope)
@@ -138,11 +137,6 @@ class AdminViewModel @Inject constructor(
             is DailyClass -> {
                 dailyClassesFlow.emit(
                     data.filterIsInstance<DailyClass>()
-                )
-            }
-            is StandardPlan -> {
-                standardPlanFlow.emit(
-                    data.filterIsInstance<StandardPlan>()
                 )
             }
             else -> { }

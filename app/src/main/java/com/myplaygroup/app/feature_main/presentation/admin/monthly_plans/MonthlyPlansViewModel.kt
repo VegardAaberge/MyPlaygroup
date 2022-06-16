@@ -1,6 +1,5 @@
 package com.myplaygroup.app.feature_main.presentation.admin.monthly_plans
 
-import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,6 +10,9 @@ import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,18 +21,24 @@ class MonthlyPlansViewModel @Inject constructor(
     private val repository: MonthlyPlansRepository
 ) : BaseViewModel() {
 
-    private var lastRefresh: Long = 0
-
     var state by mutableStateOf(MonthlyPlansState())
 
-    init {
-        fetchData(true)
+    fun init(userFlow: MutableStateFlow<List<MonthlyPlan>>) {
+        userFlow.onEach { monthlyPlans ->
+            state = state.copy(
+                monthlyPlans = monthlyPlans
+            )
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: MonthlyPlansScreenEvent) {
         when (event) {
             is MonthlyPlansScreenEvent.RefreshData -> {
-                fetchData(false)
+                viewModelScope.launch(Dispatchers.IO) {
+                    repository
+                        .getMonthlyPlans(false)
+                        .collect{ collectMonthlyPlans(it, false) }
+                }
             }
             is MonthlyPlansScreenEvent.UploadMonthlyPlans -> {
                 val unsyncedMonthlyPlans = getUnsyncedMonthlyPlans()
@@ -40,19 +48,6 @@ class MonthlyPlansViewModel @Inject constructor(
                         .collect{ collectMonthlyPlans(it, true) }
                 }
             }
-        }
-    }
-
-    fun fetchData(fetchFromRemote: Boolean){
-        if (SystemClock.elapsedRealtime() - lastRefresh < 1000){
-            return;
-        }
-        lastRefresh = SystemClock.elapsedRealtime()
-
-        viewModelScope.launch(Dispatchers.IO) {
-            repository
-                .getMonthlyPlans(fetchFromRemote)
-                .collect{ collectMonthlyPlans(it, fetchFromRemote) }
         }
     }
 

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.chat_groups.components.ChatGroupItem
@@ -39,6 +40,10 @@ fun ChatGroupsScreen(
 
                 Divider(modifier = Modifier.fillMaxWidth())
             }
+        }
+
+        if(viewModel.isBusy || adminViewModel.isBusy){
+            CustomProgressIndicator()
         }
     }
 }

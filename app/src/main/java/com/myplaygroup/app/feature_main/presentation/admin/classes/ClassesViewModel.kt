@@ -1,6 +1,5 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes
 
-import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +11,9 @@ import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.DateTimeException
 import java.time.DayOfWeek
@@ -25,18 +27,24 @@ class ClassesViewModel @Inject constructor(
     private val repository: DailyClassesRepository
 ) : BaseViewModel() {
 
-    private var lastRefresh: Long = 0
-
     var state by mutableStateOf(ClassesState())
 
-    init {
-        fetchData(true)
+    fun init(userFlow: MutableStateFlow<List<DailyClass>>) {
+        userFlow.onEach { dailyClasses ->
+            state = state.copy(
+                dailyClasses = dailyClasses
+            )
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: ClassesScreenEvent) {
         when (event) {
             is ClassesScreenEvent.RefreshData -> {
-                fetchData(false)
+                viewModelScope.launch(Dispatchers.IO){
+                    repository
+                        .getAllDailyClasses(false)
+                        .collect{ collectDailyClasses(it, false) }
+                }
             }
             is ClassesScreenEvent.ToggleCreateClassesSection -> {
                 state = state.copy(isCreateVisible = !state.isCreateVisible)
@@ -96,19 +104,6 @@ class ClassesViewModel @Inject constructor(
                     )
                 }
             }
-        }
-    }
-
-    fun fetchData(fetchFromRemote: Boolean){
-        if (SystemClock.elapsedRealtime() - lastRefresh < 1000){
-            return;
-        }
-        lastRefresh = SystemClock.elapsedRealtime()
-
-        viewModelScope.launch(Dispatchers.IO) {
-            repository
-                .getAllDailyClasses(fetchFromRemote)
-                .collect{ collectDailyClasses(it, fetchFromRemote) }
         }
     }
 
