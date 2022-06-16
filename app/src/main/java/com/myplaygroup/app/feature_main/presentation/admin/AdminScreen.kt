@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -126,6 +127,11 @@ fun DrawerNavigation(
     monthlyPlansViewModel: MonthlyPlansViewModel = hiltViewModel(),
     usersViewModel: UsersViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = adminViewModel){
+        chatViewModel.init(adminViewModel.userFlow)
+        adminViewModel.init()
+    }
+
     NavHost(navController, startDestination = NavDrawer.CHAT) {
         composable(NavDrawer.CHAT) {
             ChatGroupsScreen(adminViewModel, chatViewModel)

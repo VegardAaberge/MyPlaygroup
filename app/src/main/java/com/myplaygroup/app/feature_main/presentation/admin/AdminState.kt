@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 data class AdminState (
     val adminUri: Uri? = null,
     val title: String = "",
-    val actionButtons: List<ActionButton> = listOf()
+    val actionButtons: List<ActionButton> = listOf(),
 ){
     data class ActionButton(
         val action: () -> Unit = {},

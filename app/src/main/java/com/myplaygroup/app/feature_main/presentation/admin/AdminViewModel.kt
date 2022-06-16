@@ -11,21 +11,29 @@ import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.destinations.*
+import com.myplaygroup.app.feature_main.domain.interactors.ChatInteractor
 import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
+import com.myplaygroup.app.feature_main.domain.model.AppUser
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.model.StandardPlan
+import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
+import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AdminViewModel @Inject constructor(
     private val userSettingsManager: UserSettingsManager,
+    private val usersRepository: UsersRepository,
     private val monthlyPlansRepository: MonthlyPlansRepository,
+    private val dailyClassesRepository: DailyClassesRepository,
+    private val chatInteractor: ChatInteractor,
     private val imageRepository: ImageRepository,
     private val basicAuthInterceptor: BasicAuthInterceptor,
     private val daoInteractor: MainDaoInteractor
@@ -39,23 +47,17 @@ class AdminViewModel @Inject constructor(
         it.map { u -> u.profileName }
     }
 
+    val userFlow = MutableStateFlow(listOf<AppUser>())
+    val monthlyPlansFlow = MutableStateFlow(listOf<MonthlyPlan>())
+    val dailyClassesFlow = MutableStateFlow(listOf<DailyClass>())
+    val standardPlanFlow = MutableStateFlow(listOf<StandardPlan>())
+
     var state by mutableStateOf(AdminState())
 
-    init {
+    fun init() {
         updateTitle(NavDrawer.CHAT)
 
-        viewModelScope.launch {
-            loadProfileImage(username.first()){
-                state = state.copy(
-                    adminUri = it.data!!
-                )
-            }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            monthlyPlansRepository.getStandardPlans(true)
-                .collect { collectStandardPlans(it) }
-        }
+        loadDataFromServer()
     }
 
     fun onEvent(event: AdminScreenEvent) {
@@ -86,6 +88,64 @@ class AdminViewModel @Inject constructor(
                     UiEvent.NavigateTo(CreatePlansScreenDestination)
                 )
             }
+        }
+    }
+
+    fun loadDataFromServer() = viewModelScope.launch(Dispatchers.IO){
+        val usersResult = usersRepository.getAllUsers(true)
+        val monthlyResult = monthlyPlansRepository.getMonthlyPlans(true)
+        val dailyClassesResult = dailyClassesRepository.getAllDailyClasses(true)
+        val standardPlansResult = monthlyPlansRepository.getStandardPlans(true)
+
+        launch {
+            loadProfileImage(username.first()){
+                state = state.copy(
+                    adminUri = it.data!!
+                )
+            }
+        }
+
+        merge(usersResult, monthlyResult, dailyClassesResult, standardPlansResult).onEach { result ->
+            when(result){
+                is Resource.Success -> {
+                    onMergeFlowSuccess(result.data!!)
+                }
+                is Resource.Error -> {
+                    setUIEvent(
+                        UiEvent.ShowSnackbar(result.message!!)
+                    )
+                }
+                is Resource.Loading -> {
+                    isBusy(true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private suspend fun onMergeFlowSuccess(data: List<Any>) {
+
+        when(data.firstOrNull()){
+            is AppUser -> {
+                userFlow.emit(
+                    data.filterIsInstance<AppUser>()
+                )
+            }
+            is MonthlyPlan -> {
+                monthlyPlansFlow.emit(
+                    data.filterIsInstance<MonthlyPlan>()
+                )
+            }
+            is DailyClass -> {
+                dailyClassesFlow.emit(
+                    data.filterIsInstance<DailyClass>()
+                )
+            }
+            is StandardPlan -> {
+                standardPlanFlow.emit(
+                    data.filterIsInstance<StandardPlan>()
+                )
+            }
+            else -> { }
         }
     }
 
