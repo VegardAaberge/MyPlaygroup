@@ -15,6 +15,7 @@ import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.chat_groups.components.ChatGroupItem
+import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 
 @Composable
 fun ChatGroupsScreen(
@@ -23,9 +24,14 @@ fun ChatGroupsScreen(
 ) {
     val scaffoldState = collectEventFlow(viewModel = viewModel)
 
-    adminViewModel.state = adminViewModel.state.copy(
-        actionButtons = listOf()
-    )
+    val currentNavItem = NavDrawer.items[NavDrawer.CHAT]
+    if(adminViewModel.state.updateIcons && currentNavItem?.title == adminViewModel.state.title){
+        adminViewModel.state = adminViewModel.state.copy(
+            actionButtons = listOf(),
+            updateIcons = false
+        )
+    }
+
     val state = viewModel.state
 
     Scaffold(

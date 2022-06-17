@@ -33,6 +33,7 @@ import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
+import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import com.plcoding.stockmarketapp.presentation.company_listings.components.MonthlyPlanItem
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -129,29 +130,33 @@ private fun CreateToolbarActionItems(
     viewModel: MonthlyPlansViewModel,
     adminViewModel: AdminViewModel
 ){
-    val actionButtons = mutableListOf<AdminState.ActionButton>()
-    if(viewModel.getUnsyncedMonthlyPlans().any()){
+    val currentNavItem = NavDrawer.items[NavDrawer.PLANS]
+    if(adminViewModel.state.updateIcons && currentNavItem?.title == adminViewModel.state.title){
+        val actionButtons = mutableListOf<AdminState.ActionButton>()
+        if(viewModel.getUnsyncedMonthlyPlans().any()){
+            actionButtons.add(
+                AdminState.ActionButton(
+                    action = {
+                        viewModel.onEvent(MonthlyPlansScreenEvent.UploadMonthlyPlans)
+                    },
+                    icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+                ),
+            )
+        }
         actionButtons.add(
             AdminState.ActionButton(
                 action = {
-                    viewModel.onEvent(MonthlyPlansScreenEvent.UploadMonthlyPlans)
+                    adminViewModel.onEvent(AdminScreenEvent.NavigateToCreateMonthlyPlan)
                 },
-                icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
-            ),
+                icon = Icons.Default.Add
+            )
+        )
+
+        adminViewModel.state = adminViewModel.state.copy(
+            actionButtons = actionButtons,
+            updateIcons = false
         )
     }
-    actionButtons.add(
-        AdminState.ActionButton(
-            action = {
-                adminViewModel.onEvent(AdminScreenEvent.NavigateToCreateMonthlyPlan)
-            },
-            icon = Icons.Default.Add
-        )
-    )
-
-    adminViewModel.state = adminViewModel.state.copy(
-        actionButtons = actionButtons
-    )
 }
 
 @Composable

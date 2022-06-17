@@ -27,6 +27,7 @@ import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.CreateClassesSection
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.SelectedClassDialog
+import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 
@@ -116,29 +117,33 @@ private fun CreateToolbarActionItems(
     viewModel: ClassesViewModel,
     adminViewModel: AdminViewModel
 ){
-    val actionButtons = mutableListOf<AdminState.ActionButton>()
-    if(viewModel.getUnsyncedDailyClasses().any()){
+    val currentNavItem = NavDrawer.items[NavDrawer.CLASSES]
+    if(adminViewModel.state.updateIcons && currentNavItem?.title == adminViewModel.state.title){
+        val actionButtons = mutableListOf<AdminState.ActionButton>()
+        if(viewModel.getUnsyncedDailyClasses().any()){
+            actionButtons.add(
+                AdminState.ActionButton(
+                    action = {
+                        viewModel.onEvent(ClassesScreenEvent.UploadCreatedClasses)
+                    },
+                    icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+                ),
+            )
+        }
         actionButtons.add(
             AdminState.ActionButton(
                 action = {
-                    viewModel.onEvent(ClassesScreenEvent.UploadCreatedClasses)
+                    viewModel.onEvent(ClassesScreenEvent.ToggleCreateClassesSection)
                 },
-                icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
-            ),
+                icon = Icons.Default.DateRange
+            )
+        )
+
+        adminViewModel.state = adminViewModel.state.copy(
+            actionButtons = actionButtons,
+            updateIcons = false
         )
     }
-    actionButtons.add(
-        AdminState.ActionButton(
-            action = {
-                viewModel.onEvent(ClassesScreenEvent.ToggleCreateClassesSection)
-            },
-            icon = Icons.Default.DateRange
-        )
-    )
-
-    adminViewModel.state = adminViewModel.state.copy(
-        actionButtons = actionButtons
-    )
 }
 
 @Composable

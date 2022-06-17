@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 data class AdminState (
     val adminUri: Uri? = null,
+    val updateIcons: Boolean = true,
     val title: String = "",
     val actionButtons: List<ActionButton> = listOf(),
 ){
