@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
@@ -50,8 +50,24 @@ fun EditParametersScreen(
                     ) {
                         Text(text = "Save")
                     }
-                }
+                },
             )
+        },
+        floatingActionButton = {
+            if(state.parameterItems.any { x -> x.type.name == DELETE.name }){
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.onEvent(EditParametersScreenEvent.DeleteItem)
+                    },
+                    backgroundColor = MaterialTheme.colors.error
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            }
         }
     ) {
 

@@ -17,6 +17,11 @@ import javax.inject.Inject
 class EditParametersInteractorImpl @Inject constructor(
     private val dao: MainDao
 ) : EditParametersInteractor {
+
+    companion object{
+        const val DELETE_KEY = "Delete"
+    }
+
     private val phoneNumberValidator = PhoneNumberValidator()
     private val profileNameValidator = ProfileNameValidator()
 
@@ -37,11 +42,15 @@ class EditParametersInteractorImpl @Inject constructor(
                     ParameterItem(DATE, dailyClass::date.name, dailyClass.date),
                     ParameterItem(TIME, dailyClass::startTime.name, dailyClass.startTime),
                     ParameterItem(TIME, dailyClass::endTime.name, dailyClass.endTime),
-                    ParameterItem(SWITCH, dailyClass::cancelled.name, dailyClass.cancelled),
+                    ParameterItem(SWITCH, dailyClass::cancelled.name, dailyClass.cancelled)
                 )
             }
             ParametersType.PLANS -> {
                 val monthlyPlan = dao.getMonthlyPlanById(id).toMonthlyPlan()
+
+                val cancelDeleteParameterItem = if(monthlyPlan.id == -1L){
+                    ParameterItem(DELETE, DELETE_KEY, false)
+                } else ParameterItem(SWITCH, monthlyPlan::cancelled.name, monthlyPlan.cancelled)
 
                 listOf(
                     ParameterItem(HIDDEN, monthlyPlan::id.name, monthlyPlan.clientId),
@@ -51,13 +60,13 @@ class EditParametersInteractorImpl @Inject constructor(
                     ParameterItem(INFO, monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek),
                     ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
                     ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice),
-                    ParameterItem(SWITCH, monthlyPlan::cancelled.name, monthlyPlan.cancelled),
+                    cancelDeleteParameterItem,
                 )
             }
             ParametersType.USERS -> {
                 val appUser = dao.getAppUserById(id).toAppUser()
 
-                listOf(
+                val list = mutableListOf(
                     ParameterItem(HIDDEN, appUser::id.name, appUser.clientId),
                     ParameterItem(INFO, appUser::username.name, appUser.username),
                     ParameterItem(STRING, appUser::phoneNumber.name, appUser.phoneNumber),
@@ -66,6 +75,10 @@ class EditParametersInteractorImpl @Inject constructor(
                     ParameterItem(SWITCH, appUser::locked.name, appUser.locked),
                     ParameterItem(SWITCH, appUser::resetPassword.name, appUser.resetPassword),
                 )
+                if(appUser.id == -1L){
+                    list.add(ParameterItem(DELETE, DELETE_KEY, false))
+                }
+                list
             }
             ParametersType.UNDEFINED -> {
                 listOf()
@@ -138,7 +151,9 @@ class EditParametersInteractorImpl @Inject constructor(
                 val date = parameterItems.getValue(dailyClass::date.name, dailyClass.date)
                 val startTime = parameterItems.getValue(dailyClass::startTime.name, dailyClass.startTime)
                 val endTime = parameterItems.getValue(dailyClass::endTime.name, dailyClass.endTime)
-                val cancelled = parameterItems.getValue(dailyClass::cancelled.name, dailyClass.cancelled)
+                val cancelled = if(dailyClass.id != -1L) {
+                    parameterItems.getValue(dailyClass::cancelled.name, dailyClass.cancelled)
+                } else false
 
                 val dailyClassEntity = dailyClass.copy(
                     date = date,
@@ -156,7 +171,9 @@ class EditParametersInteractorImpl @Inject constructor(
 
                 val kidName = parameterItems.getValue(monthlyPlan::kidName.name, monthlyPlan.kidName)
                 val planPrice = parameterItems.getValue(monthlyPlan::planPrice.name, monthlyPlan.planPrice)
-                val cancelled = parameterItems.getValue(monthlyPlan::cancelled.name, monthlyPlan.cancelled)
+                val cancelled = if(monthlyPlan.id != -1L) {
+                    parameterItems.getValue(monthlyPlan::cancelled.name, monthlyPlan.cancelled)
+                } else false
 
                 val monthlyPlanEntity = monthlyPlan.copy(
                     kidName = kidName,
@@ -191,6 +208,25 @@ class EditParametersInteractorImpl @Inject constructor(
             }
             ParametersType.UNDEFINED -> {
                 Resource.Error("Parameter type is not defined,")
+            }
+        }
+    }
+
+    override suspend fun deleteItem(
+        id: String,
+        type: ParametersType
+    ): Resource<Unit> {
+        return when(type){
+            ParametersType.USERS -> {
+                dao.deleteAppUsersById(id)
+                Resource.Success()
+            }
+            ParametersType.PLANS -> {
+                dao.deleteMonthlyPlansById(id)
+                Resource.Success()
+            }
+            else -> {
+                Resource.Error("Type was invalid")
             }
         }
     }

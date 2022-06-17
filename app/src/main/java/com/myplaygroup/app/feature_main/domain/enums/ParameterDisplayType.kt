@@ -7,5 +7,6 @@ enum class ParameterDisplayType {
     NUMBER,
     TIME,
     DATE,
-    SWITCH
+    SWITCH,
+    DELETE
 }

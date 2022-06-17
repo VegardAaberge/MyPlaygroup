@@ -20,4 +20,9 @@ interface EditParametersInteractor {
         parameterItems: List<ParameterItem>,
         type: ParametersType,
     ): Resource<Unit>
+
+    suspend fun deleteItem(
+        id: String,
+        type: ParametersType
+    ): Resource<Unit>
 }

@@ -76,6 +76,9 @@ interface MainDao {
     @Query("SELECT * FROM monthlyplanentity ORDER BY id")
     suspend fun getMonthlyPlans() : List<MonthlyPlanEntity>
 
+    @Query("DELETE FROM monthlyplanentity WHERE clientId = :clientId")
+    suspend fun deleteMonthlyPlansById(clientId: String)
+
     @Query("DELETE FROM monthlyplanentity WHERE modified != 1")
     suspend fun clearSyncedMonthlyPlans()
 
@@ -103,6 +106,9 @@ interface MainDao {
 
     @Query("SELECT * FROM appuserentity WHERE clientId IN (:clientIds)")
     suspend fun getAppUsersByClientId(clientIds: List<String> ) : List<AppUserEntity>
+
+    @Query("DELETE FROM appuserentity WHERE clientId = :clientId")
+    suspend fun deleteAppUsersById(clientId: String)
 
     @Query("DELETE FROM appuserentity WHERE modified != 1")
     fun clearSyncedAppUsers()

@@ -58,6 +58,16 @@ class EditParametersViewModel @Inject constructor(
                     updateValue(event.value, it)
                 }
             }
+            is EditParametersScreenEvent.DeleteItem -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val id = state.parameterItems.firstOrNull{ x -> x.key == "id" }!!.value.toString()
+                    editUseCases.deleteItem(id, state.type)
+
+                    setUIEvent(
+                        UiEvent.PopPage
+                    )
+                }
+            }
         }
     }
 
