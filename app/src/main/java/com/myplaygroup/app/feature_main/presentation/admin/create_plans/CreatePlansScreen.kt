@@ -1,16 +1,14 @@
 package com.myplaygroup.app.feature_main.presentation.admin.create_plans
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
@@ -86,7 +84,6 @@ fun CreatePlansScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CreateMultiplePlansBody(
     viewModel: CreatePlansViewModel,
@@ -104,7 +101,7 @@ fun CreateMultiplePlansBody(
     LazyColumn{
         items(state.baseMonthlyPlans){ item ->
 
-            val daysOfWeek = item.daysOfWeek.map { x -> x.name.take(1) }.joinToString()
+            val daysOfWeek = item.daysOfWeek.joinToString { x -> x.name.take(1) }
             UserCheckbox(
                 user = "${item.username} - ${item.kidName} ($daysOfWeek)",
                 isChecked = state.basePlansSelected[item.kidName] ?: false,
@@ -117,7 +114,7 @@ fun CreateMultiplePlansBody(
 }
 
 @Composable
-fun CreateSinglePlanBody(
+fun ColumnScope.CreateSinglePlanBody(
     viewModel: CreatePlansViewModel,
     state: CreatePlansState
 ) {
@@ -130,6 +127,7 @@ fun CreateSinglePlanBody(
         label = "User",
         items = state.users.map { x -> x.username },
         selected = state.user,
+        errorMessage = state.userError,
         selectedChanged = {
             viewModel.onEvent(CreatePlansScreenEvent.UserChanged(it))
         }
@@ -140,6 +138,7 @@ fun CreateSinglePlanBody(
     PlansTextFieldItem(
         label = "Kid",
         selected = state.kid,
+        errorMessage = state.kidError,
         selectedChanged = {
             viewModel.onEvent(CreatePlansScreenEvent.KidChanged(it))
         }
@@ -151,6 +150,7 @@ fun CreateSinglePlanBody(
         label = "Plans",
         items = state.standardPlans.map { x -> x.name },
         selected = state.plan,
+        errorMessage = state.planError,
         selectedChanged = {
             viewModel.onEvent(CreatePlansScreenEvent.PlanChanged(it))
         }
@@ -178,11 +178,20 @@ fun CreateSinglePlanBody(
         }
     }
 
+    state.weekdaysError?.let{ weekdaysError ->
+        Text(
+            text = weekdaysError,
+            color = MaterialTheme.colors.error,
+            modifier = Modifier.align(Alignment.Start)
+        )
+    }
+
     Spacer(modifier = Modifier.height(8.dp))
 
     OutlinedDateField(
         label = "Start Date",
         selected = state.startDate,
+        errorMessage = state.startDateError,
         timeChanged = {
             viewModel.onEvent(CreatePlansScreenEvent.StartDateChanged(it))
         }
@@ -193,16 +202,19 @@ fun CreateSinglePlanBody(
     OutlinedDateField(
         label = "End Date",
         selected = state.endDate,
+        errorMessage = state.endDateError,
         timeChanged = {
             viewModel.onEvent(CreatePlansScreenEvent.EndDateChanged(it))
-        }
+        },
     )
 
     Spacer(modifier = Modifier.height(8.dp))
 
     PlansTextFieldItem(
         label = "Price",
-        selected = state.price,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        selected = state.price.toString(),
+        errorMessage = state.priceError,
         selectedChanged = {
             viewModel.onEvent(CreatePlansScreenEvent.PriceChanged(it))
         }

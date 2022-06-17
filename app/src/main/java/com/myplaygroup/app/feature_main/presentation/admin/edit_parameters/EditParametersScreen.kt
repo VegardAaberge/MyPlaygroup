@@ -106,8 +106,17 @@ fun EditParameterItem(
         INFO -> {
             InfoParamItem(item)
         }
-        STRING, NUMBER -> {
+        STRING -> {
             TextParamItem(item, valueChanged)
+        }
+        NUMBER -> {
+            TextParamItem(item){ value, key ->
+                try {
+                    valueChanged(value.toString().toLong(), key)
+                }catch (nfe: NumberFormatException) {
+                    // not a valid long
+                }
+            }
         }
         DATE -> {
             DateParamItem(item, valueChanged)

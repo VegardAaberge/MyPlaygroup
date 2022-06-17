@@ -1,6 +1,6 @@
 package com.myplaygroup.app.feature_profile.domain.interactors
 
-import com.myplaygroup.app.core.domain.validation.*
+import com.myplaygroup.app.core.domain.validation.user.*
 import javax.inject.Inject
 
 class ProfileValidationInteractors @Inject constructor() {

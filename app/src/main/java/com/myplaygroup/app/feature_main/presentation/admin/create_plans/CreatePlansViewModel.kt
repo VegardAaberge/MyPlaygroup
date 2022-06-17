@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_main.domain.interactors.CreatePlanValidation
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
@@ -24,7 +25,8 @@ import kotlin.math.roundToInt
 class CreatePlansViewModel @Inject constructor(
     private val monthlyPlansRepository: MonthlyPlansRepository,
     private val usersRepository: UsersRepository,
-    private val dailyClassesRepository: DailyClassesRepository
+    private val dailyClassesRepository: DailyClassesRepository,
+    private val createPlanValidation: CreatePlanValidation
 ) : BaseViewModel() {
 
     private var dailyClasses : List<DailyClass> = emptyList()
@@ -53,13 +55,19 @@ class CreatePlansViewModel @Inject constructor(
                 state.standardPlans.firstOrNull() { x -> x.name == event.plan }?.let { plan ->
                     state = state.copy(
                         plan = plan.name,
-                        price = plan.price.toString()
+                        price = plan.price
                     )
                 }
                 calculatePrice()
             }
             is CreatePlansScreenEvent.PriceChanged -> {
-                state = state.copy(price = event.price)
+                try {
+                    state = state.copy(
+                        price = event.price.toInt()
+                    )
+                }catch (nfe: NumberFormatException) {
+                    // not a valid int
+                }
             }
             is CreatePlansScreenEvent.WeekdayChanged -> {
                 setWeekdays(event.dayOfWeek)
@@ -102,6 +110,12 @@ class CreatePlansViewModel @Inject constructor(
             )
 
             val result = monthlyPlansRepository.addMonthlyPlanToDatabase(newMonthlyPlan)
+            if(result is Resource.Error){
+                setUIEvent(
+                    UiEvent.ShowSnackbar(result.message!!)
+                )
+                return@forEach
+            }
         }
 
         setUIEvent(
@@ -110,26 +124,51 @@ class CreatePlansViewModel @Inject constructor(
     }
 
     private fun addMonthlyPlanToDatabase() = viewModelScope.launch(Dispatchers.IO){
-        val monthlyPlan = MonthlyPlan(
-            username = state.user,
-            kidName = state.kid,
-            startDate = state.startDate,
-            endDate = state.endDate,
-            planName = state.plan,
-            daysOfWeek = state.weekdays.keys.toList(),
-            planPrice = state.price.toLong()
+
+        val usernameResult = createPlanValidation.usernameValidator(state.user)
+        val kidNameResult = createPlanValidation.kidNameValidator(state.kid)
+        val startDateResult = createPlanValidation.startDateValidator(state.startDate)
+        val endDateResult = createPlanValidation.endDateValidator(state.endDate, state.startDate)
+        val planNameResult = createPlanValidation.planNameValidator(state.plan)
+        val dayOfWeekResult = createPlanValidation.dayOfWeekValidator(state.weekdays)
+        val planPriceResult = createPlanValidation.planPriceValidator(state.price)
+
+        val hasError = listOf(
+            usernameResult, kidNameResult, startDateResult, endDateResult, planNameResult, dayOfWeekResult, planPriceResult
+        ).any { !it.successful }
+
+        state = state.copy(
+            userError = usernameResult.errorMessage,
+            kidError = kidNameResult.errorMessage,
+            startDateError = startDateResult.errorMessage,
+            endDateError = endDateResult.errorMessage,
+            planError = planNameResult.errorMessage,
+            weekdaysError = dayOfWeekResult.errorMessage,
+            priceError = planPriceResult.errorMessage,
         )
 
-        val result = monthlyPlansRepository.addMonthlyPlanToDatabase(monthlyPlan)
+        if(!hasError){
+            val monthlyPlan = MonthlyPlan(
+                username = state.user,
+                kidName = state.kid,
+                startDate = state.startDate,
+                endDate = state.endDate,
+                planName = state.plan,
+                daysOfWeek = state.weekdays.keys.toList(),
+                planPrice = state.price.toLong()
+            )
 
-        if (result is Resource.Success) {
-            setUIEvent(
-                UiEvent.PopPage
-            )
-        } else if (result is Resource.Error) {
-            setUIEvent(
-                UiEvent.ShowSnackbar(result.message!!)
-            )
+            val result = monthlyPlansRepository.addMonthlyPlanToDatabase(monthlyPlan)
+
+            if (result is Resource.Success) {
+                setUIEvent(
+                    UiEvent.PopPage
+                )
+            } else if (result is Resource.Error) {
+                setUIEvent(
+                    UiEvent.ShowSnackbar(result.message!!)
+                )
+            }
         }
     }
 
@@ -151,7 +190,7 @@ class CreatePlansViewModel @Inject constructor(
 
         val adjustedPrice = price / (classesChosen / classesInMonth)
         state = state.copy(
-            price = adjustedPrice.roundToInt().toString()
+            price = adjustedPrice.roundToInt()
         )
     }
 

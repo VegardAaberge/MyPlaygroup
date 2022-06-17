@@ -1,7 +1,7 @@
 package com.myplaygroup.app.feature_profile.domain.interactors.validators
 
 import com.google.common.truth.Truth
-import com.myplaygroup.app.core.domain.validation.PasswordValidator
+import com.myplaygroup.app.core.domain.validation.user.PasswordValidator
 import org.junit.Before
 import org.junit.Test
 

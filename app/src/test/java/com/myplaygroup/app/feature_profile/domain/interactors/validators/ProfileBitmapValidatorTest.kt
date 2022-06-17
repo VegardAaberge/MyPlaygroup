@@ -2,7 +2,7 @@ package com.myplaygroup.app.feature_profile.domain.interactors.validators
 
 import android.graphics.Bitmap
 import com.google.common.truth.Truth
-import com.myplaygroup.app.core.domain.validation.ProfileBitmapValidator
+import com.myplaygroup.app.core.domain.validation.user.ProfileBitmapValidator
 
 import org.junit.Before
 import org.junit.Test

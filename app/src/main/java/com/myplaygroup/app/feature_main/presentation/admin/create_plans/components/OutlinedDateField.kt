@@ -2,12 +2,16 @@ package com.myplaygroup.app.feature_main.presentation.admin.create_plans.compone
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -16,10 +20,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun OutlinedDateField(
+fun ColumnScope.OutlinedDateField(
     label: String,
     selected: LocalDate,
-    timeChanged: (LocalDate) -> Unit
+    timeChanged: (LocalDate) -> Unit,
+    errorMessage: String?
 ) {
     val context = LocalContext.current
     val itemDate = selected
@@ -42,6 +47,7 @@ fun OutlinedDateField(
                 contentDescription = null
             )
         },
+        isError = errorMessage != null,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent,
             unfocusedIndicatorColor = Color.LightGray,
@@ -50,5 +56,13 @@ fun OutlinedDateField(
             .fillMaxWidth()
     ) {
         datePickerDialog.show()
+    }
+
+    if(errorMessage != null){
+        Text(
+            text = errorMessage,
+            color = MaterialTheme.colors.error,
+            modifier = Modifier.align(Alignment.Start)
+        )
     }
 }

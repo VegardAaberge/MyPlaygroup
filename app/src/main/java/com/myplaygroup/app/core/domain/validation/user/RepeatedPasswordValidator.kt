@@ -1,4 +1,6 @@
-package com.myplaygroup.app.core.domain.validation
+package com.myplaygroup.app.core.domain.validation.user
+
+import com.myplaygroup.app.core.domain.validation.ValidationResult
 
 class RepeatedPasswordValidator {
     operator fun invoke(password: String, repeatedPassword: String) : ValidationResult {

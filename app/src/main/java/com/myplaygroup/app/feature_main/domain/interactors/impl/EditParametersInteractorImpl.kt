@@ -1,16 +1,25 @@
 package com.myplaygroup.app.feature_main.domain.interactors.impl
 
 import com.myplaygroup.app.core.data.mapper.*
-import com.myplaygroup.app.core.domain.validation.PhoneNumberValidator
-import com.myplaygroup.app.core.domain.validation.ProfileNameValidator
 import com.myplaygroup.app.core.domain.validation.ValidationResult
+import com.myplaygroup.app.core.domain.validation.daily_class.DateValidator
+import com.myplaygroup.app.core.domain.validation.daily_class.EndTimeValidator
+import com.myplaygroup.app.core.domain.validation.daily_class.StartTimeValidator
+import com.myplaygroup.app.core.domain.validation.monthly_plans.KidNameValidator
+import com.myplaygroup.app.core.domain.validation.monthly_plans.PlanPriceValidator
+import com.myplaygroup.app.core.domain.validation.user.PhoneNumberValidator
+import com.myplaygroup.app.core.domain.validation.user.ProfileNameValidator
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.local.MainDao
 import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.*
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.domain.interactors.EditParametersInteractor
 import com.myplaygroup.app.feature_main.domain.model.AppUser
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.model.ParameterItem
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
@@ -22,8 +31,20 @@ class EditParametersInteractorImpl @Inject constructor(
         const val DELETE_KEY = "Delete"
     }
 
+    // Classes
+    private val dateValidator = DateValidator()
+    private val startTimeValidator = StartTimeValidator()
+    private val endTimeValidator = EndTimeValidator()
+
+    // Plans
+    private val kidNameValidator = KidNameValidator()
+    private val planPriceValidator = PlanPriceValidator()
+
+    // Users
     private val phoneNumberValidator = PhoneNumberValidator()
     private val profileNameValidator = ProfileNameValidator()
+
+
 
     override suspend fun fetchParameterItems(
         type: ParametersType,
@@ -97,10 +118,24 @@ class EditParametersInteractorImpl @Inject constructor(
 
         when(type){
             ParametersType.CLASSES -> {
-
+                items.updateError(DailyClass::date.name){
+                    dateValidator(it as LocalDate)
+                }
+                items.updateError(DailyClass::startTime.name){
+                    startTimeValidator(it as LocalTime)
+                }
+                items.updateError(DailyClass::endTime.name){
+                    val startTime = items.firstOrNull{ x -> x.key == DailyClass::startTime.name}?.value as? LocalTime ?: LocalTime.of(1970, 1, 1)
+                    endTimeValidator(it as LocalTime, startTime)
+                }
             }
             ParametersType.PLANS -> {
-
+                items.updateError(MonthlyPlan::kidName.name){
+                    kidNameValidator(it.toString())
+                }
+                items.updateError(MonthlyPlan::planPrice.name){
+                    planPriceValidator(it.toString().toInt())
+                }
             }
             ParametersType.USERS -> {
                 items.updateError(AppUser::phoneNumber.name){
@@ -115,7 +150,7 @@ class EditParametersInteractorImpl @Inject constructor(
             }
         }
 
-        return items;
+        return items
     }
 
     override suspend fun storeParameterItems(
@@ -124,7 +159,7 @@ class EditParametersInteractorImpl @Inject constructor(
     ): Resource<Unit> {
 
         return try {
-            val id = parameterItems.firstOrNull { x -> x.key == "id" }?.value.toString() ?: ""
+            val id = parameterItems.firstOrNull { x -> x.key == "id" }?.value.toString()
 
             storeParameterItemBody(
                 id = id,
@@ -235,7 +270,7 @@ class EditParametersInteractorImpl @Inject constructor(
 
         val item = this.firstOrNull { x -> x.key == name } ?: return
 
-        val error = if(!item.value.toString().isEmpty()){
+        val error = if(item.value.toString().isNotEmpty()){
             validator(item.value).errorMessage
         }else null
 
@@ -245,11 +280,8 @@ class EditParametersInteractorImpl @Inject constructor(
         )
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun <T> List<ParameterItem>.getValue(name: String, value : T) : T {
         return this.first { x -> x.key == name }.value as T
-    }
-
-    private fun List<ParameterItem>.getItem(name: String) : ParameterItem {
-        return this.first { x -> x.key == name }
     }
 }

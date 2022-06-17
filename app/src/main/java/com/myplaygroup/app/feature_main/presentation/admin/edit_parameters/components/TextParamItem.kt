@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -10,9 +11,11 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
-import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType
+import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.NUMBER
+import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.STRING
 import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 
 @Composable
@@ -29,6 +32,11 @@ fun TextParamItem(
         onValueChange = {
             valueChanged(it, item.key)
         },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = if(item.type == NUMBER){
+                KeyboardType.Number
+            } else KeyboardType.Text
+        ),
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.Edit,
@@ -50,7 +58,7 @@ fun TextParamItemPreview() {
     MyPlaygroupTheme {
         TextParamItem(
             item = ParameterItem(
-                ParameterDisplayType.STRING,
+                STRING,
                 key = "classData",
                 value = "text"
             ),
