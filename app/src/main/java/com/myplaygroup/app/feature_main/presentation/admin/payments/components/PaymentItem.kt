@@ -1,4 +1,4 @@
-package com.plcoding.stockmarketapp.presentation.company_listings.components
+package com.myplaygroup.app.feature_main.presentation.admin.payments.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -17,16 +17,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
-import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
-import java.time.DayOfWeek
+import com.myplaygroup.app.feature_main.domain.model.Payment
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun MonthlyPlanItem(
-    monthlyPlan: MonthlyPlan,
+fun PaymentItem(
+    payment: Payment,
     modifier: Modifier = Modifier
 ) {
-    val month = monthlyPlan.startDate.month.name.lowercase().replaceFirstChar { x -> x.uppercase() }
+    val month = payment.date.month.name.lowercase().replaceFirstChar { x -> x.uppercase() }
 
     Row(
         modifier = modifier,
@@ -39,7 +39,7 @@ fun MonthlyPlanItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = monthlyPlan.planName.lowercase().replaceFirstChar { x -> x.uppercase() }.replace('_', ' '),
+                    text = payment.username,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     color = MaterialTheme.colors.onBackground,
@@ -49,9 +49,7 @@ fun MonthlyPlanItem(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = monthlyPlan.daysOfWeek
-                        .map { x -> x.name.take(1) }
-                        .joinToString(", "),
+                    text = payment.date.format(DateTimeFormatter.ofPattern("EEEE dd")),
                     fontWeight = FontWeight.Light,
                     color = MaterialTheme.colors.onBackground
                 )
@@ -61,20 +59,20 @@ fun MonthlyPlanItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = monthlyPlan.kidName,
+                    text = payment.amount.toString(),
                     fontStyle = FontStyle.Italic,
                     color = MaterialTheme.colors.onBackground,
                     modifier = Modifier.weight(1f)
                 )
 
-                if(monthlyPlan.modified){
+                if(payment.modified){
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24),
                         tint = MaterialTheme.colors.primary,
                         contentDescription = null
                     )
                 }
-                else if(monthlyPlan.cancelled){
+                else if(payment.cancelled){
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_baseline_block_24),
                         tint = MaterialTheme.colors.error,
@@ -88,24 +86,16 @@ fun MonthlyPlanItem(
 
 @Preview(showBackground = true)
 @Composable
-fun MonthlyPlanItemPreview() {
+fun PaymentItemPreview() {
     MyPlaygroupTheme {
-        MonthlyPlanItem(
-            monthlyPlan = MonthlyPlan(
+        PaymentItem(
+            payment = Payment(
                 id = -1,
                 username = "meng",
-                kidName = "emma",
-                startDate = LocalDate.now(),
-                endDate = LocalDate.now().plusMonths(1).minusDays(1),
-                daysOfWeek = listOf(
-                    DayOfWeek.MONDAY,
-                    DayOfWeek.WEDNESDAY,
-                    DayOfWeek.FRIDAY
-                ),
-                planName = "EVENING_2",
+                date = LocalDate.now(),
                 cancelled = false,
-                planPrice = 790
-            ),
+                amount = 790
+            )
         )
     }
 }

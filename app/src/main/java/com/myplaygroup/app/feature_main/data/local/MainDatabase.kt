@@ -11,7 +11,8 @@ import com.myplaygroup.app.feature_main.data.model.*
         DailyClassEntity::class,
         MonthlyPlanEntity::class,
         AppUserEntity::class,
-        StandardPlanEntity::class
+        StandardPlanEntity::class,
+        PaymentEntity::class
     ],
     version = 1
 )

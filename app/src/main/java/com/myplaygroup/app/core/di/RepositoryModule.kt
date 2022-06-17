@@ -79,4 +79,10 @@ abstract class RepositoryModule {
     abstract fun bindScheduleRepository(
         dailyClassesRepository: ScheduleRepositoryImpl
     ): ScheduleRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPaymentRepository(
+        paymentRepository: PaymentRepositoryImpl
+    ): PaymentRepository
 }

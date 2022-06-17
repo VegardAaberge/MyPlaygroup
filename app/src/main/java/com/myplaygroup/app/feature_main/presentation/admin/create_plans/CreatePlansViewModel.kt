@@ -249,7 +249,7 @@ class CreatePlansViewModel @Inject constructor(
         }
     }
 
-    private fun getUsers() = viewModelScope.launch {
+    private fun getUsers() = viewModelScope.launch(Dispatchers.IO) {
         val monthlyPlanFlow = usersRepository.getAllUsers(false)
 
         monthlyPlanFlow.collect { result ->

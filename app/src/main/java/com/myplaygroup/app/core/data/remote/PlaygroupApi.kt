@@ -89,4 +89,12 @@ interface PlaygroupApi {
     suspend fun uploadAppUsers(
         @Body unsyncedClasses: List<AppUserEntity>
     ): Response<List<AppUserEntity>>
+
+    @GET("api/v1/payments")
+    suspend fun getPayments() : Response<List<PaymentEntity>>
+
+    @POST("api/v1/payments")
+    suspend fun uploadPayments(
+        @Body unsyncedPayments: List<PaymentEntity>
+    ): Response<List<PaymentEntity>>
 }

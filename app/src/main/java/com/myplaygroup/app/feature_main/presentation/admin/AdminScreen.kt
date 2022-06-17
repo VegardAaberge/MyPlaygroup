@@ -23,6 +23,8 @@ import com.myplaygroup.app.feature_main.presentation.admin.monthly_plans.Monthly
 import com.myplaygroup.app.feature_main.presentation.admin.monthly_plans.MonthlyPlansViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawerBody
+import com.myplaygroup.app.feature_main.presentation.admin.payments.PaymentScreen
+import com.myplaygroup.app.feature_main.presentation.admin.payments.PaymentsViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.users.UsersScreen
 import com.myplaygroup.app.feature_main.presentation.admin.users.UsersViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -125,12 +127,14 @@ fun DrawerNavigation(
     chatViewModel: ChatGroupsViewModel = hiltViewModel(),
     classesViewModel: ClassesViewModel = hiltViewModel(),
     monthlyPlansViewModel: MonthlyPlansViewModel = hiltViewModel(),
+    paymentsViewModel: PaymentsViewModel = hiltViewModel(),
     usersViewModel: UsersViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = adminViewModel){
         chatViewModel.init(adminViewModel.userFlow)
         classesViewModel.init(adminViewModel.dailyClassesFlow)
         monthlyPlansViewModel.init(adminViewModel.monthlyPlansFlow)
+        paymentsViewModel.init(adminViewModel.paymentFlow)
         usersViewModel.init(adminViewModel.userFlow)
         adminViewModel.init()
     }
@@ -144,6 +148,9 @@ fun DrawerNavigation(
         }
         composable(NavDrawer.PLANS) {
             MonthlyPlanScreen(adminViewModel, monthlyPlansViewModel)
+        }
+        composable(NavDrawer.PAYMENTS) {
+            PaymentScreen(adminViewModel, paymentsViewModel)
         }
         composable(NavDrawer.USERS) {
             UsersScreen(adminViewModel,usersViewModel)

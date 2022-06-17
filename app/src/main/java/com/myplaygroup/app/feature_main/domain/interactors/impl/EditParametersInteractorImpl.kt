@@ -7,17 +7,17 @@ import com.myplaygroup.app.core.domain.validation.daily_class.EndTimeValidator
 import com.myplaygroup.app.core.domain.validation.daily_class.StartTimeValidator
 import com.myplaygroup.app.core.domain.validation.monthly_plans.KidNameValidator
 import com.myplaygroup.app.core.domain.validation.monthly_plans.PlanPriceValidator
+import com.myplaygroup.app.core.domain.validation.payments.AmountValidator
 import com.myplaygroup.app.core.domain.validation.user.PhoneNumberValidator
 import com.myplaygroup.app.core.domain.validation.user.ProfileNameValidator
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.local.MainDao
+import com.myplaygroup.app.feature_main.data.mapper.toPayment
+import com.myplaygroup.app.feature_main.data.mapper.toPaymentEntity
 import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.*
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.domain.interactors.EditParametersInteractor
-import com.myplaygroup.app.feature_main.domain.model.AppUser
-import com.myplaygroup.app.feature_main.domain.model.DailyClass
-import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
-import com.myplaygroup.app.feature_main.domain.model.ParameterItem
+import com.myplaygroup.app.feature_main.domain.model.*
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -44,7 +44,8 @@ class EditParametersInteractorImpl @Inject constructor(
     private val phoneNumberValidator = PhoneNumberValidator()
     private val profileNameValidator = ProfileNameValidator()
 
-
+    // Payments
+    private val amuntValidator = AmountValidator()
 
     override suspend fun fetchParameterItems(
         type: ParametersType,
@@ -101,6 +102,21 @@ class EditParametersInteractorImpl @Inject constructor(
                 }
                 list
             }
+            ParametersType.PAYMENTS -> {
+                val payment = dao.getPaymentById(id).toPayment()
+
+                val cancelDeleteParameterItem = if(payment.id == -1L){
+                    ParameterItem(DELETE, DELETE_KEY, false)
+                } else ParameterItem(SWITCH, payment::cancelled.name, payment.cancelled)
+
+                listOf(
+                    ParameterItem(HIDDEN, payment::id.name, payment.clientId),
+                    ParameterItem(INFO, payment::username.name, payment.username),
+                    ParameterItem(DATE, payment::date.name, payment.date),
+                    ParameterItem(NUMBER, payment::amount.name, payment.amount),
+                    cancelDeleteParameterItem,
+                )
+            }
             ParametersType.UNDEFINED -> {
                 listOf()
             }
@@ -143,6 +159,14 @@ class EditParametersInteractorImpl @Inject constructor(
                 }
                 items.updateError(AppUser::profileName.name){
                     profileNameValidator(it.toString())
+                }
+            }
+            ParametersType.PAYMENTS -> {
+                items.updateError(Payment::amount.name){
+                    amuntValidator(it.toString().toInt())
+                }
+                items.updateError(DailyClass::date.name){
+                    dateValidator(it as LocalDate)
                 }
             }
             ParametersType.UNDEFINED -> {
@@ -241,6 +265,25 @@ class EditParametersInteractorImpl @Inject constructor(
                 dao.insertAppUser(appUserEntity)
                 Resource.Success()
             }
+            ParametersType.PAYMENTS -> {
+                val payment = dao.getPaymentById(id).toPayment()
+
+                val amount = parameterItems.getValue(payment::amount.name, payment.amount)
+                val date = parameterItems.getValue(payment::date.name, payment.date)
+                val cancelled = if(payment.id != -1L) {
+                    parameterItems.getValue(payment::cancelled.name, payment.cancelled)
+                } else false
+
+                val paymentEntity = payment.copy(
+                    amount = amount,
+                    date = date,
+                    cancelled = cancelled,
+                    modified = true
+                ).toPaymentEntity()
+
+                dao.insertPayment(paymentEntity)
+                Resource.Success()
+            }
             ParametersType.UNDEFINED -> {
                 Resource.Error("Parameter type is not defined,")
             }
@@ -258,6 +301,10 @@ class EditParametersInteractorImpl @Inject constructor(
             }
             ParametersType.PLANS -> {
                 dao.deleteMonthlyPlansById(id)
+                Resource.Success()
+            }
+            ParametersType.PAYMENTS -> {
+                dao.deletePaymentEntityById(id)
                 Resource.Success()
             }
             else -> {

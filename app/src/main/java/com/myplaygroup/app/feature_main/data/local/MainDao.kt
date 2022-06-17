@@ -129,4 +129,35 @@ interface MainDao {
 
     @Query("DELETE FROM standardplanentity")
     suspend fun clearStandardPlans()
+
+    //
+    // Payments
+    //
+    @Insert(onConflict = IGNORE)
+    suspend fun insertPayments(
+        users: List<PaymentEntity>
+    )
+
+    @Insert(onConflict = REPLACE)
+    suspend fun insertPayment(
+        user: PaymentEntity
+    )
+
+    @Query("SELECT * FROM paymententity ORDER BY id")
+    suspend fun getPayments() : List<PaymentEntity>
+
+    @Query("SELECT * FROM paymententity WHERE clientId = :clientId")
+    suspend fun getPaymentById(clientId: String) : PaymentEntity
+
+    @Query("SELECT * FROM paymententity WHERE clientId IN (:clientIds)")
+    suspend fun getPaymentsByClientId(clientIds: List<String> ) : List<PaymentEntity>
+
+    @Query("DELETE FROM paymententity WHERE clientId = :clientId")
+    suspend fun deletePaymentEntityById(clientId: String)
+
+    @Query("DELETE FROM paymententity WHERE modified != 1")
+    fun clearSyncedPayments()
+
+    @Query("DELETE FROM paymententity")
+    suspend fun clearAllPayments()
 }

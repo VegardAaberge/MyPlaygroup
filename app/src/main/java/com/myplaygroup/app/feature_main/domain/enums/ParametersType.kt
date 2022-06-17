@@ -4,5 +4,6 @@ enum class ParametersType {
     UNDEFINED,
     USERS,
     PLANS,
-    CLASSES
+    CLASSES,
+    PAYMENTS
 }
