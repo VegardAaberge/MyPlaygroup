@@ -134,7 +134,7 @@ fun DrawerNavigation(
         chatViewModel.init(adminViewModel.userFlow)
         classesViewModel.init(adminViewModel.dailyClassesFlow)
         monthlyPlansViewModel.init(adminViewModel.monthlyPlansFlow)
-        paymentsViewModel.init(adminViewModel.paymentFlow)
+        paymentsViewModel.init(adminViewModel.paymentFlow, adminViewModel.userFlow)
         usersViewModel.init(adminViewModel.userFlow)
         adminViewModel.init()
     }

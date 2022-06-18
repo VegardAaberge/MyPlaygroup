@@ -4,6 +4,7 @@ import com.myplaygroup.app.feature_main.domain.model.Payment
 
 data class PaymentsState (
     val payments: Map<String, List<Payment>> = emptyMap(),
+    val users: List<String> = emptyList(),
     val showCreatePayment: Boolean = false,
     val createErrorMessage: String? = null,
 )

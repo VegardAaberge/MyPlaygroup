@@ -16,7 +16,7 @@ import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 
 @Composable
-fun ShowAlertDialog(
+fun ShowCreateUserDialog(
     createErrorMessage: String?,
     createUser: (String) -> Unit
 ) {
@@ -100,7 +100,7 @@ fun ShowAlertDialog(
 @Composable
 fun ShowAlertDialogPreview2() {
     MyPlaygroupTheme {
-        ShowAlertDialog("Username is not valid"){
+        ShowCreateUserDialog("Username is not valid"){
 
         }
     }

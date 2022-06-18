@@ -44,6 +44,7 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/payments/PaymentsScreen.kt" value="0.1891891891891892" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/payments/components/MonthlyPlanItem.kt" value="0.19537037037037036" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/payments/components/PaymentItem.kt" value="0.19537037037037036" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/payments/components/ShowCreatePaymentDialog.kt" value="0.5" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/users/components/ShowAlertDialog.kt" value="0.45" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/users/components/UserItem.kt" value="0.3055555555555556" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/chat/components/MessageBox.kt" value="0.375" />

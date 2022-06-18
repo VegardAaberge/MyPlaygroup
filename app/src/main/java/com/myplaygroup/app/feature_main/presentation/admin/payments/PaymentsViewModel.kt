@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_main.domain.model.AppUser
 import com.myplaygroup.app.feature_main.domain.model.Payment
 import com.myplaygroup.app.feature_main.domain.repository.PaymentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,10 +25,19 @@ class PaymentsViewModel @Inject constructor(
 
     var state by mutableStateOf(PaymentsState())
 
-    fun init(userFlow: MutableStateFlow<List<Payment>>) {
-        userFlow.onEach { payments ->
+    fun init(
+        paymentFlow: MutableStateFlow<List<Payment>>,
+        usersFlow: MutableStateFlow<List<AppUser>>,
+    ) {
+        paymentFlow.onEach { payments ->
             state = state.copy(
                 payments = getGroupedData(payments)
+            )
+        }.launchIn(viewModelScope)
+
+        usersFlow.onEach { users ->
+            state = state.copy(
+                users = users.map { x -> x.username }
             )
         }.launchIn(viewModelScope)
     }
@@ -54,7 +65,32 @@ class PaymentsViewModel @Inject constructor(
                     createErrorMessage = null
                 )
             }
+            is PaymentsScreenEvent.CreatePayment -> {
+                addPayment(
+                    username = event.username,
+                    amount = event.amount,
+                    date = event.date
+                )
+            }
         }
+    }
+
+    private fun addPayment(
+        username: String,
+        amount: Int,
+        date: LocalDate
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        val result = repository.addPaymentToDatabase(
+            Payment(
+                username = username,
+                amount = amount.toLong(),
+                date = date
+            )
+        );
+
+        state = state.copy(
+            showCreatePayment = false,
+        )
     }
 
     private fun collectPayments(result: Resource<List<Payment>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {

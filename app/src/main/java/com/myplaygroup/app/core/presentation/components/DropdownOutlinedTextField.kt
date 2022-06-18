@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_main.presentation.admin.create_plans.components
+package com.myplaygroup.app.core.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
@@ -15,15 +15,15 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.toSize
-import com.myplaygroup.app.core.presentation.components.ReadonlyOutlinedTextField
 
 @Composable
-fun ColumnScope.PlansDropdownMenuItem(
+fun ColumnScope.DropdownOutlinedTextField(
     label: String,
     items: List<String>,
     selected: String,
     errorMessage: String?,
-    selectedChanged: (String) -> Unit
+    selectedChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
     var expanded by remember { mutableStateOf(false) }
@@ -32,7 +32,9 @@ fun ColumnScope.PlansDropdownMenuItem(
     else
         Icons.Filled.KeyboardArrowDown
 
-    Box() {
+    Box(
+        modifier = modifier
+    ) {
         ReadonlyOutlinedTextField(
             label = label,
             fieldValue = selected,
@@ -44,6 +46,7 @@ fun ColumnScope.PlansDropdownMenuItem(
             },
             isError = errorMessage != null,
             modifier = Modifier
+                .align(Alignment.Center)
                 .fillMaxWidth()
                 .onGloballyPositioned { coordinates ->
                     mTextFieldSize = coordinates.size.toSize()
@@ -58,6 +61,7 @@ fun ColumnScope.PlansDropdownMenuItem(
                 expanded = false
             },
             modifier = Modifier
+                .align(Alignment.Center)
                 .width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
         ) {
             items.forEach { user ->

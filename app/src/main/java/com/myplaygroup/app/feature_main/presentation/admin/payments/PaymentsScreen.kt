@@ -22,6 +22,8 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.R
@@ -35,6 +37,7 @@ import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import com.myplaygroup.app.feature_main.presentation.admin.payments.components.PaymentItem
+import com.myplaygroup.app.feature_main.presentation.admin.payments.components.ShowCreatePaymentDialog
 import java.time.LocalDate
 
 @Composable
@@ -67,6 +70,25 @@ fun PaymentScreen(
                 )
             }
         )
+
+        if(state.showCreatePayment){
+            Dialog(
+                onDismissRequest = {
+                    viewModel.onEvent(PaymentsScreenEvent.CreatePaymentDialog(false))
+                },
+                properties = DialogProperties()
+            ) {
+                ShowCreatePaymentDialog(
+                    usernameError = null,
+                    dateError = null,
+                    amountError = null,
+                    usernameOptions = state.users,
+                    createPayment = { username, date, amount ->
+                        viewModel.onEvent(PaymentsScreenEvent.CreatePayment(username, date, amount))
+                    }
+                )
+            }
+        }
 
         if(viewModel.isBusy || adminViewModel.isBusy){
             CustomProgressIndicator()

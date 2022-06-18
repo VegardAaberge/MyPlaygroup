@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatGroupsViewModel @Inject constructor(
     private val chatInteractor: ChatInteractor,
-    private val imageRepository: ImageRepository
+    private val imageRepository: ImageRepository,
 ) : BaseViewModel() {
 
     private val profileImageLoading = mutableSetOf<String>()

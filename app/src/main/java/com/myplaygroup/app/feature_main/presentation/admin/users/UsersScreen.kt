@@ -28,7 +28,7 @@ import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
-import com.myplaygroup.app.feature_main.presentation.admin.users.components.ShowAlertDialog
+import com.myplaygroup.app.feature_main.presentation.admin.users.components.ShowCreateUserDialog
 import com.plcoding.stockmarketapp.presentation.company_listings.components.UserItem
 
 @Composable
@@ -84,7 +84,7 @@ fun UsersScreen(
                 },
                 properties = DialogProperties()
             ) {
-                ShowAlertDialog(
+                ShowCreateUserDialog(
                     createErrorMessage = state.createErrorMessage,
                     createUser = {
                         viewModel.onEvent(UsersScreenEvent.CreateUser(it))

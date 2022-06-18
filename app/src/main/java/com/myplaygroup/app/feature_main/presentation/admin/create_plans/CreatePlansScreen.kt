@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
+import com.myplaygroup.app.core.presentation.components.DropdownOutlinedTextField
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.LabelledCheckbox
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.OutlinedDateField
-import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.PlansDropdownMenuItem
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.PlansTextFieldItem
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.UserCheckbox
 import com.ramcosta.composedestinations.annotation.Destination
@@ -123,7 +123,7 @@ fun ColumnScope.CreateSinglePlanBody(
         viewModel.onEvent(CreatePlansScreenEvent.WeekdayChanged(dayOfWeek))
     }
 
-    PlansDropdownMenuItem(
+    DropdownOutlinedTextField(
         label = "User",
         items = state.users.map { x -> x.username },
         selected = state.user,
@@ -146,7 +146,7 @@ fun ColumnScope.CreateSinglePlanBody(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    PlansDropdownMenuItem(
+    DropdownOutlinedTextField(
         label = "Plans",
         items = state.standardPlans.map { x -> x.name },
         selected = state.plan,
@@ -194,7 +194,8 @@ fun ColumnScope.CreateSinglePlanBody(
         errorMessage = state.startDateError,
         timeChanged = {
             viewModel.onEvent(CreatePlansScreenEvent.StartDateChanged(it))
-        }
+        },
+        modifier = Modifier.fillMaxWidth(),
     )
 
     Spacer(modifier = Modifier.height(8.dp))
@@ -206,6 +207,7 @@ fun ColumnScope.CreateSinglePlanBody(
         timeChanged = {
             viewModel.onEvent(CreatePlansScreenEvent.EndDateChanged(it))
         },
+        modifier = Modifier.fillMaxWidth(),
     )
 
     Spacer(modifier = Modifier.height(8.dp))
