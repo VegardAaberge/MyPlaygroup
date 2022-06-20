@@ -9,12 +9,14 @@ import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.domain.interactors.MainValidationInteractors
 import com.myplaygroup.app.feature_main.domain.model.AppUser
+import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
+import com.myplaygroup.app.feature_main.domain.model.Payment
 import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,10 +28,23 @@ class UsersViewModel @Inject constructor(
 
     var state by mutableStateOf(UsersState())
 
-    fun init(userFlow: MutableStateFlow<List<AppUser>>) {
-        userFlow.onEach { appUsers ->
+    lateinit var userFlow: MutableStateFlow<List<AppUser>>
+    var payments: List<Payment> = emptyList()
+    var monthlyPlans: List<MonthlyPlan> = emptyList()
+
+
+    fun init(
+        userFlow: MutableStateFlow<List<AppUser>>,
+        paymentFlow: MutableStateFlow<List<Payment>>,
+        monthlyPlanFlow: MutableStateFlow<List<MonthlyPlan>>,
+    ) {
+        this.userFlow = userFlow
+
+        combine(userFlow, paymentFlow, monthlyPlanFlow){ users, payments, plans ->
+            this.payments = payments
+            this.monthlyPlans = plans
             state = state.copy(
-                appUsers = appUsers
+                appUsers = calculateAndModifyBalance(users)
             )
         }.launchIn(viewModelScope)
     }
@@ -74,16 +89,27 @@ class UsersViewModel @Inject constructor(
         return state.appUsers.filter { x -> x.modified }
     }
 
+    private fun calculateAndModifyBalance(users: List<AppUser>): List<AppUser> {
+        return users.map { user ->
+            val userPayments = payments.filter { !it.cancelled && it.username == user.username }
+            val userPlans = monthlyPlans.filter { !it.cancelled && it.username == user.username }
+            val balance = userPayments.sumOf { it.amount } - userPlans.sumOf { it.planPrice }
+
+            user.copy(
+                balance = balance
+            )
+        }
+    }
+
     private fun createUser(username: String) = viewModelScope.launch {
         val result = repository.addUserToDatabase(username = username)
 
         if (result is Resource.Success) {
-            val users = state.appUsers.toMutableStateList()
+            var users = state.appUsers.toMutableStateList()
             users.add(result.data!!)
 
-            state = state.copy(
-                appUsers = users
-            )
+            userFlow.emit(users)
+
         } else if (result is Resource.Error) {
             setUIEvent(
                 UiEvent.ShowSnackbar(result.message!!)
@@ -94,9 +120,10 @@ class UsersViewModel @Inject constructor(
     private fun collectAppUsers(result: Resource<List<AppUser>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
-                state = state.copy(
-                    appUsers = result.data!!
-                )
+                val users = calculateAndModifyBalance(result.data!!)
+                if(state.appUsers != users){
+                    userFlow.emit(result.data)
+                }
             }
             is Resource.Error -> {
                 setUIEvent(

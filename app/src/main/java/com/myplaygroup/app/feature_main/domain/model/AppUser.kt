@@ -9,8 +9,8 @@ data class AppUser(
     val phoneNumber: String,
     val profileCreated: Boolean,
     val profileName: String,
-    val userCredit: Long,
     val username: String,
+    val balance: Long = 0,
     val resetPassword: Boolean = false,
     val modified: Boolean = id == -1L
 )

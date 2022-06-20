@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_main.domain.model.AppUser
+import kotlin.math.absoluteValue
 
 @Composable
 fun UserItem(
@@ -44,10 +45,15 @@ fun UserItem(
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
+
+                val preText = if(appUser.balance > 0){
+                    "Credit: ¥"
+                }else if(appUser.balance < 0) {
+                    "Outstanding: ¥"
+                }else "¥"
+
                 Text(
-                    text = "Credit: ¥" + appUser.userCredit.toString(),
-                    fontWeight = FontWeight.Light,
-                    color = MaterialTheme.colors.onBackground
+                    text = preText + appUser.balance.absoluteValue
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -91,7 +97,7 @@ fun UserItemPreview() {
                 phoneNumber = "null",
                 profileName = "null",
                 profileCreated = false,
-                userCredit = 500,
+                balance = 0,
                 username = "meng"
             ),
         )

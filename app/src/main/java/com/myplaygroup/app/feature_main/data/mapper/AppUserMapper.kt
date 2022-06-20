@@ -12,7 +12,6 @@ fun AppUserEntity.toAppUser() : AppUser {
         phoneNumber = phoneNumber?: "",
         profileCreated = profileCreated,
         profileName = profileName?: "",
-        userCredit = userCredit,
         username = username,
         modified = modified,
         resetPassword = resetPassword
@@ -28,7 +27,6 @@ fun AppUser.toAppUserEntity() : AppUserEntity {
         phoneNumber = phoneNumber,
         profileCreated = profileCreated,
         profileName = profileName,
-        userCredit = userCredit,
         username = username,
         modified = modified,
         resetPassword = resetPassword

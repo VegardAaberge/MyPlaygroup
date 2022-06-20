@@ -23,10 +23,16 @@ class MonthlyPlansViewModel @Inject constructor(
 
     var state by mutableStateOf(MonthlyPlansState())
 
-    fun init(userFlow: MutableStateFlow<List<MonthlyPlan>>) {
-        userFlow.onEach { monthlyPlans ->
+    lateinit var monthlyPlanFlow : MutableStateFlow<List<MonthlyPlan>>
+
+    fun init(
+        monthlyPlanFlow: MutableStateFlow<List<MonthlyPlan>>
+    ) {
+        this.monthlyPlanFlow = monthlyPlanFlow
+
+        monthlyPlanFlow.onEach { payments ->
             state = state.copy(
-                monthlyPlans = getGroupedData(monthlyPlans)
+                monthlyPlans = getGroupedData(payments)
             )
         }.launchIn(viewModelScope)
     }
@@ -54,9 +60,10 @@ class MonthlyPlansViewModel @Inject constructor(
     private fun collectMonthlyPlans(result: Resource<List<MonthlyPlan>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
-                state = state.copy(
-                    monthlyPlans = getGroupedData(result.data!!)
-                )
+                val paymentGroups = getGroupedData(result.data!!)
+                if(state.monthlyPlans != paymentGroups){
+                    monthlyPlanFlow.emit(result.data)
+                }
             }
             is Resource.Error -> {
                 setUIEvent(

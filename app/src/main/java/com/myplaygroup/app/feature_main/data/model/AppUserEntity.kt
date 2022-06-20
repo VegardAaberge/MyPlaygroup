@@ -13,7 +13,6 @@ data class AppUserEntity(
     val id: Long = -1,
     val username: String,
     val locked: Boolean = false,
-    val userCredit: Long = 0,
     val profileCreated: Boolean = false,
     val profileName: String? = null,
     val phoneNumber: String? = null,

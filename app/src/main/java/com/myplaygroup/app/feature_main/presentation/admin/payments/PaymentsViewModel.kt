@@ -27,12 +27,17 @@ class PaymentsViewModel @Inject constructor(
 
     var state by mutableStateOf(PaymentsState())
 
+    lateinit var paymentFlow : MutableStateFlow<List<Payment>>
+
     fun init(
         paymentFlow: MutableStateFlow<List<Payment>>,
         usersFlow: MutableStateFlow<List<AppUser>>,
     ) {
+        this.paymentFlow = paymentFlow
+
         paymentFlow.onEach { payments ->
             state = state.copy(
+                showCreatePayment = false,
                 payments = getGroupedData(payments)
             )
         }.launchIn(viewModelScope)
@@ -111,10 +116,7 @@ class PaymentsViewModel @Inject constructor(
                 val payments = state.payments.flatMap { it.value }.toMutableList()
                 payments.add(result.data!!)
 
-                state = state.copy(
-                    showCreatePayment = false,
-                    payments = getGroupedData(payments)
-                )
+                paymentFlow.emit(payments)
             } else {
                 setUIEvent(
                     UiEvent.ShowSnackbar(result.message!!)
@@ -126,9 +128,10 @@ class PaymentsViewModel @Inject constructor(
     private fun collectPayments(result: Resource<List<Payment>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
-                state = state.copy(
-                    payments = getGroupedData(result.data!!)
-                )
+                val paymentGroups = getGroupedData(result.data!!)
+                if(state.payments != paymentGroups){
+                    paymentFlow.emit(result.data)
+                }
             }
             is Resource.Error -> {
                 setUIEvent(

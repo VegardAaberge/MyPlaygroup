@@ -29,8 +29,12 @@ class ClassesViewModel @Inject constructor(
 
     var state by mutableStateOf(ClassesState())
 
-    fun init(userFlow: MutableStateFlow<List<DailyClass>>) {
-        userFlow.onEach { dailyClasses ->
+    lateinit var dailyClassFlow : MutableStateFlow<List<DailyClass>>
+
+    fun init(dailyClassFlow: MutableStateFlow<List<DailyClass>>) {
+        this.dailyClassFlow = dailyClassFlow
+
+        dailyClassFlow.onEach { dailyClasses ->
             state = state.copy(
                 dailyClasses = dailyClasses
             )
@@ -167,9 +171,13 @@ class ClassesViewModel @Inject constructor(
     private fun collectDailyClasses(result: Resource<List<DailyClass>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
-                state = state.copy(
-                    dailyClasses = result.data!!
-                )
+                if(fetchFromRemote){
+                    dailyClassFlow.emit(result.data!!)
+                }else{
+                    state = state.copy(
+                        dailyClasses = result.data!!
+                    )
+                }
             }
             is Resource.Error -> {
                 setUIEvent(
