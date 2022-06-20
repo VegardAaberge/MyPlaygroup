@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 
 @Composable
 fun UserCheckbox(
@@ -16,6 +17,8 @@ fun UserCheckbox(
     userChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -24,6 +27,7 @@ fun UserCheckbox(
         Checkbox(
             checked = isChecked,
             onCheckedChange = {
+                focusManager.clearFocus()
                 userChanged(it)
             },
             enabled = true,

@@ -20,18 +20,5 @@ data class ClassesState (
     val dailyClassType: DailyClassType = DailyClassType.MORNING,
     val startTime: LocalTime = LocalTime.of(9, 30),
     val endTime: LocalTime = LocalTime.of(11, 30),
-    val weekdays: EnumMap<DayOfWeek, Boolean> = initWeekdays(),
-){
-    companion object{
-        private fun initWeekdays() : EnumMap<DayOfWeek, Boolean> {
-            val weekdays : EnumMap<DayOfWeek, Boolean> = EnumMap(DayOfWeek::class.java)
-            weekdays.put(DayOfWeek.MONDAY, true)
-            weekdays.put(DayOfWeek.TUESDAY, true)
-            weekdays.put(DayOfWeek.WEDNESDAY, true)
-            weekdays.put(DayOfWeek.THURSDAY, true)
-            weekdays.put(DayOfWeek.FRIDAY, true)
-            weekdays.put(DayOfWeek.SATURDAY, false)
-            return weekdays
-        }
-    }
-}
+    val weekdays: EnumMap<DayOfWeek, Boolean> = EnumMap(DayOfWeek::class.java),
+)

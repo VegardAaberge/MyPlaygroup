@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
@@ -18,6 +19,7 @@ fun SwitchParamItem(
     item: ParameterItem,
     switchChanged: (Any, String) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     val checked = item.value as Boolean
 
     Row(
@@ -32,6 +34,7 @@ fun SwitchParamItem(
         Switch(
             checked = checked,
             onCheckedChange = {
+                focusManager.clearFocus()
                 switchChanged(it, item.key)
             }
         )

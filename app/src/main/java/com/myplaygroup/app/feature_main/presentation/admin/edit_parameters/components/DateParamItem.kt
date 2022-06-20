@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import com.myplaygroup.app.core.presentation.components.ReadonlyTextField
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
@@ -24,6 +25,7 @@ fun DateParamItem(
     item: ParameterItem,
     timeChanged: (Any, String) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val itemDate = item.value as LocalDate
 
@@ -53,6 +55,7 @@ fun DateParamItem(
         modifier = Modifier
             .fillMaxWidth()
     ) {
+        focusManager.clearFocus()
         datePickerDialog.show()
     }
 }

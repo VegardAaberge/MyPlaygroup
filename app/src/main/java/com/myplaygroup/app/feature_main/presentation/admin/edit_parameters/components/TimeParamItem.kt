@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import com.myplaygroup.app.core.presentation.components.ReadonlyTextField
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
@@ -23,6 +24,7 @@ fun TimeParamItem(
     item: ParameterItem,
     timeChanged: (Any, String) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     val context = LocalContext.current
 
     val itemTime = item.value as LocalTime
@@ -52,6 +54,7 @@ fun TimeParamItem(
         modifier = Modifier
             .fillMaxWidth()
     ) {
+        focusManager.clearFocus()
         timePickerDialog.show()
     }
 }

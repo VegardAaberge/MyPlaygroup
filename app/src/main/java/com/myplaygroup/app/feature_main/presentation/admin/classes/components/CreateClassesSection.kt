@@ -32,7 +32,11 @@ fun CreateClassesSection(
             .fillMaxWidth(),
     ) {
         LabeledRadioGroup(
-            options = listOf(DailyClassType.MORNING.name, DailyClassType.EVENING.name),
+            options = listOf(
+                DailyClassType.MORNING.name,
+                DailyClassType.EVENING.name,
+                DailyClassType.WEEKEND.name
+            ),
             classType = classType,
             classChanged = classChanged,
             modifier = Modifier.padding(start = 14.dp)

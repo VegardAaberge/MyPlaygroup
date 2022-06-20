@@ -39,6 +39,8 @@ class ClassesViewModel @Inject constructor(
                 dailyClasses = dailyClasses
             )
         }.launchIn(viewModelScope)
+
+        setDailyClassType(DailyClassType.MORNING)
     }
 
     fun onEvent(event: ClassesScreenEvent) {
@@ -127,16 +129,27 @@ class ClassesViewModel @Inject constructor(
     }
 
     private fun setDailyClassType(type: DailyClassType){
-        val startTime = if (type == DailyClassType.MORNING) {
+
+        val isWeekend = type == DailyClassType.WEEKEND
+        val startTime = if (type == DailyClassType.MORNING || isWeekend) {
             LocalTime.of(9, 30)
         } else LocalTime.of(17, 30)
 
         val endTime = startTime.plusHours(2)
 
+        val weekdays : EnumMap<DayOfWeek, Boolean> = EnumMap(DayOfWeek::class.java)
+        weekdays.put(DayOfWeek.MONDAY, !isWeekend)
+        weekdays.put(DayOfWeek.TUESDAY, !isWeekend)
+        weekdays.put(DayOfWeek.WEDNESDAY, !isWeekend)
+        weekdays.put(DayOfWeek.THURSDAY, !isWeekend)
+        weekdays.put(DayOfWeek.FRIDAY, !isWeekend)
+        weekdays.put(DayOfWeek.SATURDAY, isWeekend)
+
         state = state.copy(
             startTime = startTime,
             endTime = endTime,
-            dailyClassType = type
+            dailyClassType = type,
+            weekdays = weekdays
         )
     }
 

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
@@ -23,6 +24,7 @@ fun TextParamItem(
     item: ParameterItem,
     valueChanged: (Any, String) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     TextField(
         value = item.value.toString(),
         label = {

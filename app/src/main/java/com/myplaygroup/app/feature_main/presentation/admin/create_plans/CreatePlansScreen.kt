@@ -1,5 +1,7 @@
 package com.myplaygroup.app.feature_main.presentation.admin.create_plans
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +32,7 @@ fun CreatePlansScreen(
     navigator: DestinationsNavigator,
     viewModel: CreatePlansViewModel = hiltViewModel()
 ) {
+    val focusManager = LocalFocusManager.current
     val state = viewModel.state
     val scaffoldState = collectEventFlow(viewModel, navigator)
 
@@ -50,7 +54,15 @@ fun CreatePlansScreen(
                     }
                 }
             )
-        }
+        },
+        modifier = Modifier
+            .clickable (
+                interactionSource = MutableInteractionSource(),
+                indication = null,
+                onClick = {
+                    focusManager.clearFocus()
+                }
+            ),
     ) {
         Column(
             verticalArrangement = Arrangement.Top,

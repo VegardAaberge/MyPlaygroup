@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import com.myplaygroup.app.core.presentation.components.ReadonlyOutlinedTextField
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -28,6 +29,7 @@ fun ColumnScope.OutlinedDateField(
     modifier: Modifier = Modifier,
     errorModifier: Modifier = Modifier,
 ) {
+    val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val itemDate = selected
 
@@ -56,6 +58,7 @@ fun ColumnScope.OutlinedDateField(
         ),
         modifier = modifier
     ) {
+        focusManager.clearFocus()
         datePickerDialog.show()
     }
 
