@@ -123,37 +123,37 @@ fun AdminScreen(
 @Composable
 fun DrawerNavigation(
     navController: NavHostController,
-    adminViewModel: AdminViewModel,
+    adminVM: AdminViewModel,
     chatViewModel: ChatGroupsViewModel = hiltViewModel(),
     classesViewModel: ClassesViewModel = hiltViewModel(),
     monthlyPlansViewModel: MonthlyPlansViewModel = hiltViewModel(),
     paymentsViewModel: PaymentsViewModel = hiltViewModel(),
     usersViewModel: UsersViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(key1 = adminViewModel){
-        chatViewModel.init(adminViewModel.userFlow)
-        classesViewModel.init(adminViewModel.dailyClassesFlow)
-        monthlyPlansViewModel.init(adminViewModel.monthlyPlansFlow)
-        paymentsViewModel.init(adminViewModel.paymentFlow, adminViewModel.userFlow)
-        usersViewModel.init(adminViewModel.userFlow, adminViewModel.paymentFlow, adminViewModel.monthlyPlansFlow)
-        adminViewModel.init()
+    LaunchedEffect(key1 = adminVM){
+        chatViewModel.init(adminVM.userFlow)
+        classesViewModel.init(adminVM.dailyClassesFlow)
+        monthlyPlansViewModel.init(adminVM.monthlyPlansFlow)
+        paymentsViewModel.init(adminVM.paymentFlow, adminVM.userFlow)
+        usersViewModel.init(adminVM.userFlow, adminVM.paymentFlow, adminVM.monthlyPlansFlow)
+        adminVM.init()
     }
 
     NavHost(navController, startDestination = NavDrawer.CHAT) {
         composable(NavDrawer.CHAT) {
-            ChatGroupsScreen(adminViewModel, chatViewModel)
+            ChatGroupsScreen(adminVM, chatViewModel)
         }
         composable(NavDrawer.CLASSES) {
-            ClassesScreen(adminViewModel, classesViewModel)
+            ClassesScreen(adminVM, classesViewModel)
         }
         composable(NavDrawer.PLANS) {
-            MonthlyPlanScreen(adminViewModel, monthlyPlansViewModel)
+            MonthlyPlanScreen(adminVM, monthlyPlansViewModel)
         }
         composable(NavDrawer.PAYMENTS) {
-            PaymentScreen(adminViewModel, paymentsViewModel)
+            PaymentScreen(adminVM, paymentsViewModel)
         }
         composable(NavDrawer.USERS) {
-            UsersScreen(adminViewModel,usersViewModel)
+            UsersScreen(adminVM,usersViewModel)
         }
     }
 }
