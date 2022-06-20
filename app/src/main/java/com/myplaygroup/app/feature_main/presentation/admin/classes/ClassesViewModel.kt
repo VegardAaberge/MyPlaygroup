@@ -120,7 +120,7 @@ class ClassesViewModel @Inject constructor(
     }
 
     private fun setWeekdays(dayOfWeek: DayOfWeek){
-        val weekdays = state.weekdays
+        val weekdays = state.weekdays.toMutableMap()
         val currentValue = weekdays[dayOfWeek] ?: false
         weekdays.put(dayOfWeek, !currentValue)
         state = state.copy(

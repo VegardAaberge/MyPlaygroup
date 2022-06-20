@@ -17,8 +17,8 @@ object Constants {
     const val SERVER_URL = "https://vegardaaberge.no:8080"
     const val LOCALHOST_SOCKET_URL = "wss://192.168.50.91:8080"
     const val SERVER_SOCKET_URL = "wss://vegardaaberge.no:8080"
-    const val BASE_URL = LOCALHOST_URL
-    const val BASE_SOCKET_URL = LOCALHOST_SOCKET_URL
+    const val BASE_URL = SERVER_URL
+    const val BASE_SOCKET_URL = SERVER_SOCKET_URL
 
     const val AUTHENTICATION_ERROR_MESSAGE = "Token was invalid, fetched new token"
 

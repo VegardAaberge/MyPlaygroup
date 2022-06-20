@@ -1,9 +1,10 @@
 package com.myplaygroup.app.feature_main.presentation.admin.classes.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,7 @@ fun LabeledRadioGroup(
     classType: DailyClassType,
     classChanged: (DailyClassType) -> Unit
 ){
-    Row(modifier = modifier) {
+    Column(modifier = modifier) {
         options.forEach { option ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -32,7 +33,7 @@ fun LabeledRadioGroup(
                 RadioButton(selected = classType.name == option, onClick = null)
                 Text(text = option)
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

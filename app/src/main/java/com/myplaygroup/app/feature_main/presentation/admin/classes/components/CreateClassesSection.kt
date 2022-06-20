@@ -11,14 +11,13 @@ import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 import java.time.DayOfWeek
 import java.time.DayOfWeek.*
 import java.time.LocalTime
-import java.util.*
 
 @Composable
 fun CreateClassesSection(
     classType: DailyClassType,
     startTime: LocalTime,
     endTime: LocalTime,
-    weekdays: EnumMap<DayOfWeek, Boolean>,
+    weekdays: Map<DayOfWeek, Boolean>,
     classChanged: (DailyClassType) -> Unit,
     startTimeChanged: (LocalTime) -> Unit,
     endTimeChanged: (LocalTime) -> Unit,

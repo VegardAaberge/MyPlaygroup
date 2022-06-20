@@ -7,7 +7,6 @@ import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.*
 
 data class ClassesState (
     val calendarState: CalendarState<DynamicSelectionState>? = null,
@@ -20,5 +19,5 @@ data class ClassesState (
     val dailyClassType: DailyClassType = DailyClassType.MORNING,
     val startTime: LocalTime = LocalTime.of(9, 30),
     val endTime: LocalTime = LocalTime.of(11, 30),
-    val weekdays: EnumMap<DayOfWeek, Boolean> = EnumMap(DayOfWeek::class.java),
+    val weekdays: Map<DayOfWeek, Boolean> = mapOf()
 )
