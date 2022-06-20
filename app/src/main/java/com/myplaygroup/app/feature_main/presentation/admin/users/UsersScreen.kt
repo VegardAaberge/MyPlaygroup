@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -27,7 +28,6 @@ import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
-import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import com.myplaygroup.app.feature_main.presentation.admin.users.components.ShowCreateUserDialog
 import com.plcoding.stockmarketapp.presentation.company_listings.components.UserItem
 
@@ -104,9 +104,8 @@ private fun CreateToolbarActionItems(
     viewModel: UsersViewModel,
     adminViewModel: AdminViewModel
 ){
-    val currentNavItem = NavDrawer.items[NavDrawer.USERS]
-    if(adminViewModel.state.updateIcons && currentNavItem?.title == adminViewModel.state.title){
-        val icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+    val icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+    LaunchedEffect(key1 = viewModel.getUnsyncedUsers()){
         val actionButtons = mutableListOf<AdminState.ActionButton>()
         if(viewModel.getUnsyncedUsers().any()){
             actionButtons.add(
@@ -128,8 +127,7 @@ private fun CreateToolbarActionItems(
         )
 
         adminViewModel.state = adminViewModel.state.copy(
-            actionButtons = actionButtons,
-            updateIcons = false
+            actionButtons = actionButtons
         )
     }
 }

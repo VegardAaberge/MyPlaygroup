@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,7 +36,6 @@ import com.myplaygroup.app.feature_main.domain.model.Payment
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
-import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import com.myplaygroup.app.feature_main.presentation.admin.payments.components.PaymentItem
 import com.myplaygroup.app.feature_main.presentation.admin.payments.components.ShowCreatePaymentDialog
 import java.time.LocalDate
@@ -151,8 +151,9 @@ private fun CreateToolbarActionItems(
     viewModel: PaymentsViewModel,
     adminViewModel: AdminViewModel
 ){
-    val currentNavItem = NavDrawer.items[NavDrawer.PAYMENTS]
-    if(adminViewModel.state.updateIcons && currentNavItem?.title == adminViewModel.state.title){
+    val icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+    LaunchedEffect(key1 = viewModel.getUnsyncedPayments()){
+
         val actionButtons = mutableListOf<AdminState.ActionButton>()
         if(viewModel.getUnsyncedPayments().any()){
             actionButtons.add(
@@ -160,7 +161,7 @@ private fun CreateToolbarActionItems(
                     action = {
                         viewModel.onEvent(PaymentsScreenEvent.UploadPayments)
                     },
-                    icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+                    icon = icon
                 ),
             )
         }
@@ -174,8 +175,7 @@ private fun CreateToolbarActionItems(
         )
 
         adminViewModel.state = adminViewModel.state.copy(
-            actionButtons = actionButtons,
-            updateIcons = false
+            actionButtons = actionButtons
         )
     }
 }

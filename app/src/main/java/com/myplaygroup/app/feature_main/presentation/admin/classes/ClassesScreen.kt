@@ -27,7 +27,6 @@ import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.CreateClassesSection
 import com.myplaygroup.app.feature_main.presentation.admin.classes.components.SelectedClassDialog
-import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 
@@ -117,8 +116,8 @@ private fun CreateToolbarActionItems(
     viewModel: ClassesViewModel,
     adminViewModel: AdminViewModel
 ){
-    val currentNavItem = NavDrawer.items[NavDrawer.CLASSES]
-    if(adminViewModel.state.updateIcons && currentNavItem?.title == adminViewModel.state.title){
+    val icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+    LaunchedEffect(key1 = viewModel.getUnsyncedDailyClasses()){
         val actionButtons = mutableListOf<AdminState.ActionButton>()
         if(viewModel.getUnsyncedDailyClasses().any()){
             actionButtons.add(
@@ -126,7 +125,7 @@ private fun CreateToolbarActionItems(
                     action = {
                         viewModel.onEvent(ClassesScreenEvent.UploadCreatedClasses)
                     },
-                    icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+                    icon = icon
                 ),
             )
         }
@@ -140,8 +139,7 @@ private fun CreateToolbarActionItems(
         )
 
         adminViewModel.state = adminViewModel.state.copy(
-            actionButtons = actionButtons,
-            updateIcons = false
+            actionButtons = actionButtons
         )
     }
 }

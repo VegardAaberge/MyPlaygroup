@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,7 +34,6 @@ import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminState
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
-import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 import com.plcoding.stockmarketapp.presentation.company_listings.components.MonthlyPlanItem
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -130,8 +130,9 @@ private fun CreateToolbarActionItems(
     viewModel: MonthlyPlansViewModel,
     adminViewModel: AdminViewModel
 ){
-    val currentNavItem = NavDrawer.items[NavDrawer.PLANS]
-    if(adminViewModel.state.updateIcons && currentNavItem?.title == adminViewModel.state.title){
+    val icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+    LaunchedEffect(key1 = viewModel.getUnsyncedMonthlyPlans()){
+
         val actionButtons = mutableListOf<AdminState.ActionButton>()
         if(viewModel.getUnsyncedMonthlyPlans().any()){
             actionButtons.add(
@@ -139,7 +140,7 @@ private fun CreateToolbarActionItems(
                     action = {
                         viewModel.onEvent(MonthlyPlansScreenEvent.UploadMonthlyPlans)
                     },
-                    icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
+                    icon = icon
                 ),
             )
         }
@@ -153,8 +154,7 @@ private fun CreateToolbarActionItems(
         )
 
         adminViewModel.state = adminViewModel.state.copy(
-            actionButtons = actionButtons,
-            updateIcons = false
+            actionButtons = actionButtons
         )
     }
 }

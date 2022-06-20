@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,7 +16,6 @@ import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.chat_groups.components.ChatGroupItem
-import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
 
 @Composable
 fun ChatGroupsScreen(
@@ -24,11 +24,9 @@ fun ChatGroupsScreen(
 ) {
     val scaffoldState = collectEventFlow(viewModel = viewModel)
 
-    val currentNavItem = NavDrawer.items[NavDrawer.CHAT]
-    if(adminViewModel.state.updateIcons && currentNavItem?.title == adminViewModel.state.title){
+    LaunchedEffect(key1 = adminViewModel.state.title){
         adminViewModel.state = adminViewModel.state.copy(
             actionButtons = listOf(),
-            updateIcons = false
         )
     }
 

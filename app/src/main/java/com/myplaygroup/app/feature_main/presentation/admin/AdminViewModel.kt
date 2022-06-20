@@ -177,7 +177,6 @@ class AdminViewModel @Inject constructor(
         val currentNavItem = NavDrawer.items[route]
         val newTitle = currentNavItem?.title ?: "Admin Panel"
         state = state.copy(
-            updateIcons = true,
             title = newTitle
         )
     }
