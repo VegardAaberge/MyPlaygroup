@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_main.domain.interactors.MainValidationInteractors
 import com.myplaygroup.app.feature_main.domain.model.AppUser
 import com.myplaygroup.app.feature_main.domain.model.Payment
 import com.myplaygroup.app.feature_main.domain.repository.PaymentRepository
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PaymentsViewModel @Inject constructor(
-    private val repository: PaymentRepository
+    private val repository: PaymentRepository,
+    private val mainValidationInteractors: MainValidationInteractors
 ) : BaseViewModel() {
 
     var state by mutableStateOf(PaymentsState())
@@ -62,7 +64,9 @@ class PaymentsViewModel @Inject constructor(
             is PaymentsScreenEvent.CreatePaymentDialog -> {
                 state = state.copy(
                     showCreatePayment = event.show,
-                    createErrorMessage = null
+                    usernameError = null,
+                    amountError = null,
+                    dateError = null
                 )
             }
             is PaymentsScreenEvent.CreatePayment -> {
@@ -79,18 +83,44 @@ class PaymentsViewModel @Inject constructor(
         username: String,
         amount: Int,
         date: LocalDate
-    ) = viewModelScope.launch(Dispatchers.IO) {
-        val result = repository.addPaymentToDatabase(
-            Payment(
-                username = username,
-                amount = amount.toLong(),
-                date = date
-            )
-        );
+    ) = viewModelScope.launch {
+        val usernameResult = mainValidationInteractors.usernameValidator(username)
+        val amountResult = mainValidationInteractors.amountValidator(amount)
+        val dateResult = mainValidationInteractors.dateValidator(date)
+
+        val hasError = listOf(
+            usernameResult, amountResult, dateResult
+        ).any { !it.successful }
 
         state = state.copy(
-            showCreatePayment = false,
+            usernameError = usernameResult.errorMessage,
+            amountError = amountResult.errorMessage,
+            dateError = dateResult.errorMessage
         )
+
+        if (!hasError) {
+            val result = repository.addPaymentToDatabase(
+                Payment(
+                    username = username,
+                    amount = amount.toLong(),
+                    date = date
+                )
+            );
+
+            if (result is Resource.Success) {
+                val payments = state.payments.flatMap { it.value }.toMutableList()
+                payments.add(result.data!!)
+
+                state = state.copy(
+                    showCreatePayment = false,
+                    payments = getGroupedData(payments)
+                )
+            } else {
+                setUIEvent(
+                    UiEvent.ShowSnackbar(result.message!!)
+                )
+            }
+        }
     }
 
     private fun collectPayments(result: Resource<List<Payment>>, fetchFromRemote: Boolean) = viewModelScope.launch(Dispatchers.Main) {

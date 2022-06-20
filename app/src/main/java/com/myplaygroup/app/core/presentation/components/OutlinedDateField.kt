@@ -2,7 +2,9 @@ package com.myplaygroup.app.feature_main.presentation.admin.create_plans.compone
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -10,7 +12,6 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,7 +25,8 @@ fun ColumnScope.OutlinedDateField(
     selected: LocalDate,
     timeChanged: (LocalDate) -> Unit,
     errorMessage: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    errorModifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val itemDate = selected
@@ -57,11 +59,14 @@ fun ColumnScope.OutlinedDateField(
         datePickerDialog.show()
     }
 
-    if(errorMessage != null){
-        Text(
-            text = errorMessage,
-            color = MaterialTheme.colors.error,
-            modifier = Modifier.align(Alignment.Start)
-        )
+    Box(
+        modifier = errorModifier.fillMaxWidth(),
+    ) {
+        if(errorMessage != null){
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colors.error,
+            )
+        }
     }
 }

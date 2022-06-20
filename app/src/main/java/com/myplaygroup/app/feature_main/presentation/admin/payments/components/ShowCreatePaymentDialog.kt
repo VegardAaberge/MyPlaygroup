@@ -2,6 +2,7 @@ package com.myplaygroup.app.feature_main.presentation.admin.payments.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +38,10 @@ fun ShowCreatePaymentDialog(
         shape = RoundedCornerShape(5.dp),
         color = Color.White
     ) {
+        val commonModifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+
         Column(
             modifier = Modifier.padding(5.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,12 +64,9 @@ fun ShowCreatePaymentDialog(
                 selectedChanged = {
                     username = it
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                modifier = commonModifier,
+                errorModifier = commonModifier.height(25.dp)
             )
-
-            PaymentErrorMessage(usernameError)
 
             OutlinedTextField(
                 value = amount.toString(),
@@ -82,14 +85,22 @@ fun ShowCreatePaymentDialog(
                 },
                 label = { Text(text = "Amount") },
                 placeholder = { Text(text = "Amount") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                modifier = commonModifier,
                 isError = amountError != null
             )
 
-            PaymentErrorMessage(usernameError)
+            Box(
+                modifier = commonModifier.height(25.dp)
+            ) {
+                if(amountError != null){
+                    Text(
+                        text = amountError,
+                        color = MaterialTheme.colors.error,
+                    )
+                }
+            }
 
             OutlinedDateField(
                 label = "Date",
@@ -98,9 +109,8 @@ fun ShowCreatePaymentDialog(
                 timeChanged = {
                     date = it
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                modifier = commonModifier,
+                errorModifier = commonModifier.height(25.dp)
             )
 
             Button(
@@ -108,7 +118,7 @@ fun ShowCreatePaymentDialog(
                     createPayment(username, date, amount)
                 },
                 modifier = Modifier
-                    .fillMaxWidth(0.5f)
+                    .width(200.dp)
                     .height(60.dp)
                     .padding(10.dp),
                 shape = RoundedCornerShape(5.dp),
@@ -124,35 +134,14 @@ fun ShowCreatePaymentDialog(
     }
 }
 
-@Composable
-fun PaymentErrorMessage(errorMessage: String?) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(25.dp)
-    ) {
-        if(errorMessage != null){
-            Text(
-                text = errorMessage,
-                color = MaterialTheme.colors.error,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .align(Alignment.TopCenter)
-            )
-        }
-    }
-}
-
-
-
 @Preview
 @Composable
 fun ShowCreatePaymentDialogPreview() {
     MyPlaygroupTheme {
         ShowCreatePaymentDialog(
-            usernameError = null,
-            dateError = null,
-            amountError = null,
+            usernameError = "Username Error",
+            dateError = "Date Error",
+            amountError = "Amount Error",
             usernameOptions = listOf(
                 "EVENING_2",
                 "EVENING_3",

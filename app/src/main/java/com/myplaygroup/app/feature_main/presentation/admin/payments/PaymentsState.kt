@@ -6,5 +6,7 @@ data class PaymentsState (
     val payments: Map<String, List<Payment>> = emptyMap(),
     val users: List<String> = emptyList(),
     val showCreatePayment: Boolean = false,
-    val createErrorMessage: String? = null,
+    val usernameError: String? = null,
+    val amountError: String? = null,
+    val dateError: String? = null,
 )

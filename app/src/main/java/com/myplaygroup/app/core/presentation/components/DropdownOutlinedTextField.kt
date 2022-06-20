@@ -23,7 +23,8 @@ fun ColumnScope.DropdownOutlinedTextField(
     selected: String,
     errorMessage: String?,
     selectedChanged: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    errorModifier: Modifier = Modifier
 ) {
     var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
     var expanded by remember { mutableStateOf(false) }
@@ -75,11 +76,14 @@ fun ColumnScope.DropdownOutlinedTextField(
         }
     }
 
-    if(errorMessage != null){
-        Text(
-            text = errorMessage,
-            color = MaterialTheme.colors.error,
-            modifier = Modifier.align(Alignment.Start)
-        )
+    Box(
+        modifier = errorModifier.fillMaxWidth(),
+    ) {
+        if(errorMessage != null){
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colors.error,
+            )
+        }
     }
 }

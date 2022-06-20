@@ -79,9 +79,9 @@ fun PaymentScreen(
                 properties = DialogProperties()
             ) {
                 ShowCreatePaymentDialog(
-                    usernameError = null,
-                    dateError = null,
-                    amountError = null,
+                    usernameError = state.usernameError,
+                    dateError = state.dateError,
+                    amountError = state.amountError,
                     usernameOptions = state.users,
                     createPayment = { username, date, amount ->
                         viewModel.onEvent(PaymentsScreenEvent.CreatePayment(username, date, amount))

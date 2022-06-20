@@ -4,10 +4,10 @@ import com.myplaygroup.app.core.domain.validation.ValidationResult
 
 class AmountValidator {
     operator fun invoke(amount: Int) : ValidationResult {
-        if(amount < 0){
+        if(amount <= 0){
             return ValidationResult(
                 successful = false,
-                errorMessage = "Payments cannot be negative"
+                errorMessage = "Payments must be larger than 0"
             )
         }
 
