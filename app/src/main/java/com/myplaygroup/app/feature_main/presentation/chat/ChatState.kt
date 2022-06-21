@@ -8,5 +8,6 @@ data class ChatState (
     val showProgressIndicator: Boolean = false,
     val newMessage: String = "",
     val profileImage: Uri? = null,
-    val messages: List<Message> = emptyList()
+    val messages: List<Message> = emptyList(),
+    val userUri: Map<String, Uri> = emptyMap(),
 )

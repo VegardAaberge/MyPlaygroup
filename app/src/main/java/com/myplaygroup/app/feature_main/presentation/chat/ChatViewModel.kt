@@ -1,9 +1,9 @@
 package com.myplaygroup.app.feature_main.presentation.chat
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
@@ -13,13 +13,9 @@ import com.myplaygroup.app.feature_main.data.mapper.toMessageEntity
 import com.myplaygroup.app.feature_main.data.repository.ChatSocketRepositoryImpl
 import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
-import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,13 +23,40 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val repository: ChatRepository,
     private val socketRepository: ChatSocketRepositoryImpl,
-    private val imageRepository: ImageRepository,
-    private val userSettingsManager: UserSettingsManager
-) : ViewModel() {
-
-    lateinit var mainViewModel: MainViewModel
+    private val userSettingsManager: UserSettingsManager,
+    private var imageRepository: ImageRepository
+) : BaseViewModel() {
 
     var state by mutableStateOf(ChatState())
+
+    val username = userSettingsManager.getFlow {
+        it.map { u -> u.username }
+    }
+
+    var receivers : List<String> = emptyList()
+    var isAdmin : Boolean = false
+
+    fun init(receiver: List<String>, isAdmin: Boolean) {
+        this.receivers = receiver
+        this.isAdmin = isAdmin
+
+        viewModelScope.launch {
+            val users = receivers.toMutableList()
+            users.add(username.first())
+
+            users.forEach { user ->
+                loadProfileImage(user){ result ->
+                    result.data?.let { uri ->
+                        val userUri = state.userUri.toMutableMap()
+                        userUri[user] = uri
+                        state = state.copy(
+                            userUri = userUri
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     fun onEvent(event: ChatScreenEvent){
         when(event){
@@ -44,12 +67,12 @@ class ChatViewModel @Inject constructor(
                 viewModelScope.launch {
                     socketRepository.sendMessage(
                         message = state.newMessage,
-                        receivers = listOf(mainViewModel.state.receiver)
+                        receivers = receivers
                     ).collect{ collectInsertMessages(it) }
                 }
             }
             is ChatScreenEvent.ConnectToChat -> {
-                refreshChat()
+                refreshChat(event.username)
             }
             is ChatScreenEvent.DisconnectFromChat -> {
                 viewModelScope.launch {
@@ -63,7 +86,7 @@ class ChatViewModel @Inject constructor(
 
                     socketRepository.sendMessage(
                         messageEntity = messageEntity,
-                        receivers = listOf(mainViewModel.state.receiver),
+                        receivers = receivers,
                         userSettings = userSettings
                     ).collect{ collectInsertMessages(it) }
                 }
@@ -71,7 +94,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun refreshChat(){
+    private fun refreshChat(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repository
                 .getChatMessages(true, true)
@@ -79,14 +102,14 @@ class ChatViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO){
-            val result = socketRepository.initSession(mainViewModel.username.first())
+            val result = socketRepository.initSession(username)
             when(result){
                 is Resource.Success -> {
                     observeMessages(result)
                 }
                 is Resource.Error -> {
-                    mainViewModel.setUIEvent(
-                        BaseViewModel.UiEvent.ShowSnackbar(result.message ?: "Unknown error")
+                    setUIEvent(
+                        UiEvent.ShowSnackbar(result.message ?: "Unknown error")
                     )
                 }
                 else -> {}
@@ -103,8 +126,8 @@ class ChatViewModel @Inject constructor(
                 )
             }
             is Resource.Error -> {
-                mainViewModel.setUIEvent(
-                    BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
+                setUIEvent(
+                    UiEvent.ShowSnackbar(result.message!!)
                 )
             }
             is Resource.Loading -> {
@@ -128,7 +151,27 @@ class ChatViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun collectInsertMessages(result: Resource<Message>) {
+    private fun loadProfileImage(
+        user: String,
+        setState: (Resource<Uri?>) -> Unit
+    ) = viewModelScope.launch(Dispatchers.IO) {
+
+        val result = imageRepository.getProfileImage(
+            user = user
+        )
+
+        if (result is Resource.Success) {
+            launch(Dispatchers.Main) {
+                setState(result)
+            }
+        } else if (result is Resource.Error) {
+            setUIEvent(
+                UiEvent.ShowSnackbar(result.message!!)
+            )
+        }
+    }
+
+    private fun collectInsertMessages(result: Resource<Message>) = viewModelScope.launch(Dispatchers.Main) {
         when (result) {
             is Resource.Success -> {
                 val message = result.data!!
@@ -153,10 +196,10 @@ class ChatViewModel @Inject constructor(
                         messages = it
                     )
                 }
-                mainViewModel.setUIEvent(
-                    BaseViewModel.UiEvent.ShowSnackbar(result.message!!)
+                setUIEvent(
+                    UiEvent.ShowSnackbar(result.message!!)
                 )
-                refreshChat()
+                refreshChat(username.first())
             }
             is Resource.Loading -> {
                 state = state.copy(

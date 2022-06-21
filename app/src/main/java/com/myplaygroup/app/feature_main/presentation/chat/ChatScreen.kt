@@ -3,10 +3,7 @@ package com.myplaygroup.app.feature_main.presentation.chat
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
@@ -19,32 +16,36 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
-import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
+import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.presentation.chat.components.MessageItem
-import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
 @Composable
 fun ChatScreen(
-    mainViewModel: MainViewModel,
+    receivers: Array<String>,
+    isAdmin : Boolean,
+    navigator: DestinationsNavigator? = null,
     viewModel: ChatViewModel = hiltViewModel()
 ) {
-    viewModel.mainViewModel = mainViewModel
+    if(viewModel.receivers.isEmpty()){
+        viewModel.init(receivers.toList(), isAdmin)
+    }
 
-    val username = mainViewModel.username.collectAsState(initial = Constants.NO_VALUE).value
-    val messages = viewModel.state.messages
-    val newMessage = viewModel.state.newMessage
-    val profileImage = viewModel.state.profileImage
+    val scaffoldState = collectEventFlow(viewModel, navigator)
 
-    val showProgressIndicator = viewModel.state.showProgressIndicator
+    val username = viewModel.username.collectAsState("").value
+    val state = viewModel.state
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(key1 = lifecycleOwner){
         val observer = LifecycleEventObserver { _, event ->
             if(event == Lifecycle.Event.ON_START) {
-                viewModel.onEvent(ChatScreenEvent.ConnectToChat)
+                viewModel.onEvent(ChatScreenEvent.ConnectToChat(username))
             }else if(event == Lifecycle.Event.ON_STOP){
                 viewModel.onEvent(ChatScreenEvent.DisconnectFromChat)
             }
@@ -55,8 +56,19 @@ fun ChatScreen(
         }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        scaffoldState = scaffoldState,
+        topBar = {
+            if(isAdmin){
+                DefaultTopAppBar(
+                    title = "Chat: " + viewModel.receivers.joinToString(),
+                    navigationIcon = {
+                        AppBarBackButton(navigator!!)
+                    }
+                )
+            }
+        }
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
@@ -70,14 +82,12 @@ fun ChatScreen(
                     .fillMaxWidth()
                     .weight(1f)
             ){
-                items(messages){ message ->
+                items(state.messages){ message ->
                     val isOwner = username == message.createdBy
                     MessageItem(
                         isOwner = isOwner,
                         message = message,
-                        iconUri = if(isOwner) {
-                            mainViewModel.state.usernameUri
-                        } else mainViewModel.state.receiverUri,
+                        iconUri = state.userUri[message.createdBy],
                         resendMessage = {
                             viewModel.onEvent(ChatScreenEvent.ResendMessage(message))
                         }
@@ -94,7 +104,7 @@ fun ChatScreen(
                         .weight(1f, false)
                 ) {
                     TextField(
-                        value = newMessage,
+                        value = state.newMessage,
                         placeholder = {
                             Text(text = "Enter Message")
                         },
@@ -119,7 +129,9 @@ fun ChatScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(65.dp))
+                if(!isAdmin){
+                    Spacer(modifier = Modifier.height(65.dp))
+                }
             }
         }
 

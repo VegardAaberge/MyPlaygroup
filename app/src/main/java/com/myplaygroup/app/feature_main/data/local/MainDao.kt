@@ -26,7 +26,7 @@ interface MainDao {
     @Query("DELETE FROM messageentity WHERE id != -1")
     fun clearSyncedComments()
 
-    @Query("SELECT * FROM messageentity ORDER BY created")
+    @Query("SELECT * FROM messageentity ORDER BY created DESC")
     suspend fun getMessages() : List<MessageEntity>
 
     //

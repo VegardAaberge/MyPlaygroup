@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.feature_main.presentation.chat.ChatScreen
 import com.myplaygroup.app.feature_main.presentation.user.home.HomeScreen
 import com.myplaygroup.app.feature_main.presentation.user.settings.SettingsScreen
@@ -108,7 +109,10 @@ private fun BottomNavigationScreen(
             HomeScreen(viewModel)
         }
         composable(Screen.ChatFragment.route){
-            ChatScreen(viewModel)
+            ChatScreen(
+                receivers = arrayOf(Constants.ADMIN),
+                isAdmin = false
+            )
         }
         composable(Screen.SettingsFragment.route){
             SettingsScreen(viewModel)

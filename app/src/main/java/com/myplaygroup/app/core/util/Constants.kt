@@ -10,6 +10,7 @@ object Constants {
     const val PREFERENCE_FILE = "master_key_preference"
     const val MASTER_KEY_URI = "android-keystore://master_key"
     const val DATASTORE_FILE = "user.pb"
+    const val ADMIN = "admin"
 
     const val NO_VALUE = "{NO_VALUE}"
 

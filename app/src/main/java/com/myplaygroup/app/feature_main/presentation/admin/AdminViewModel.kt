@@ -97,7 +97,10 @@ class AdminViewModel @Inject constructor(
             }
             is AdminScreenEvent.NavigateToChatScreen -> {
                 setUIEvent(
-                    UiEvent.NavigateTo(CreatePlansScreenDestination)
+                    UiEvent.NavigateTo(ChatScreenDestination(
+                        receivers = arrayOf(event.chatGroup.username),
+                        isAdmin = true
+                    ))
                 )
             }
         }
