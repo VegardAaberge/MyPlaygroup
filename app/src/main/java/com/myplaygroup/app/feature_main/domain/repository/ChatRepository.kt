@@ -8,6 +8,10 @@ interface ChatRepository {
 
     suspend fun getChatMessages(
         fetchFromRemote: Boolean,
-        isAdmin: Boolean = false
+        allMessages: Boolean
     ) : Flow<Resource<List<Message>>>
+
+    suspend fun getChatMessagesFromDB(
+        users: List<String>
+    ) : Resource<List<Message>>
 }

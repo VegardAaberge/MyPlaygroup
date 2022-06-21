@@ -96,9 +96,15 @@ class ChatViewModel @Inject constructor(
 
     private fun refreshChat(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository
-                .getChatMessages(true, true)
-                .collect { collectGetMessages(it)}
+            if(isAdmin){
+                val result = repository.getChatMessagesFromDB(receivers)
+                collectGetMessages(result)
+            }else{
+                repository
+                    .getChatMessages(true, false)
+                    .collect { collectGetMessages(it)}
+            }
+
         }
 
         viewModelScope.launch(Dispatchers.IO){

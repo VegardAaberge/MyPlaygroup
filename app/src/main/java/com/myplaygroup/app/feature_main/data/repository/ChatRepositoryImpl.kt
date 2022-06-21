@@ -28,14 +28,14 @@ class ChatRepositoryImpl @Inject constructor(
 
     override suspend fun getChatMessages(
         fetchFromRemote: Boolean,
-        isAdmin: Boolean
+        allMessages: Boolean
     ): Flow<Resource<List<Message>>> {
         return networkBoundResource(
             query = {
                 dao.getMessages().map { it.toMessage() }
             },
             fetch = {
-                if (isAdmin) {
+                if (allMessages) {
                     api.getMessagesForAdmin()
                 } else {
                     api.getMessagesForUser()
@@ -62,5 +62,16 @@ class ChatRepositoryImpl @Inject constructor(
                 }
             }
         )
+    }
+
+    override suspend fun getChatMessagesFromDB(users: List<String>): Resource<List<Message>> {
+        return try {
+            val messageEntities = dao.getMessagesForUser(users.first())
+            val messages = messageEntities.map { it.toMessage() }
+            Resource.Success(messages)
+        } catch (t: Throwable) {
+            t.printStackTrace()
+            Resource.Error(t.localizedMessage ?: "Unknown error")
+        }
     }
 }

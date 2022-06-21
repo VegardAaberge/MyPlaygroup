@@ -29,6 +29,12 @@ interface MainDao {
     @Query("SELECT * FROM messageentity ORDER BY created DESC")
     suspend fun getMessages() : List<MessageEntity>
 
+    @Query("SELECT * FROM messageentity" +
+            " WHERE createdBy=:user " +
+            " OR (createdBy='admin' AND receivers LIKE '%\"' || :user || '\"%') " +
+            "ORDER BY created DESC")
+    suspend fun getMessagesForUser(user: String) : List<MessageEntity>
+
     //
     // Daily Classes
     //
