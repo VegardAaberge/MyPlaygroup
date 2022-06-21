@@ -1,6 +1,8 @@
 package com.myplaygroup.app.feature_main.presentation.user
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,7 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
-import com.myplaygroup.app.feature_main.presentation.user.chat.ChatScreen
+import com.myplaygroup.app.feature_main.presentation.chat.ChatScreen
 import com.myplaygroup.app.feature_main.presentation.user.home.HomeScreen
 import com.myplaygroup.app.feature_main.presentation.user.settings.SettingsScreen
 import com.myplaygroup.app.feature_main.presentation.user.util.Screen

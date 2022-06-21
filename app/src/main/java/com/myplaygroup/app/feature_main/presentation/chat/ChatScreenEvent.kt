@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_main.presentation.user.chat
+package com.myplaygroup.app.feature_main.presentation.chat
 
 import com.myplaygroup.app.feature_main.domain.model.Message
 

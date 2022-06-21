@@ -1,4 +1,4 @@
-package com.myplaygroup.app.feature_main.presentation.user.chat.components
+package com.myplaygroup.app.feature_main.presentation.chat.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

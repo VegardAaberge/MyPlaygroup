@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
 import com.myplaygroup.app.feature_main.presentation.admin.AdminViewModel
 import com.myplaygroup.app.feature_main.presentation.admin.chat_groups.components.ChatGroupItem
 
@@ -40,7 +41,12 @@ fun ChatGroupsScreen(
             modifier = Modifier.padding(8.dp)
         ){
             items(state.chatGroups) { item ->
-                ChatGroupItem(item)
+                ChatGroupItem(
+                    item = item,
+                    navigateToChat = {
+                        adminViewModel.onEvent(AdminScreenEvent.NavigateToChatScreen(it))
+                    }
+                )
 
                 Divider(modifier = Modifier.fillMaxWidth())
             }

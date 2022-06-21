@@ -9,7 +9,7 @@ data class Message (
     val message: String,
     val profileName: String,
     val createdBy: String,
-    val receivers: List<String>,
+    val receivers: List<String> = emptyList(),
     val created: LocalDateTime,
     var isSending: Boolean = false
 ){
