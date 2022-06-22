@@ -24,6 +24,7 @@ object Constants {
     const val AUTHENTICATION_ERROR_MESSAGE = "Token was invalid, fetched new token"
 
     const val CHAT_SOCKET_URL = "$BASE_SOCKET_URL/chat-socket"
+    const val RECEIVE_ALL = "RECEIVE_ALL"
     val IGNORE_AUTH_URLS = listOf("/api/v1/login", "/api/v1/reset-password/send", "/api/v1/reset-password/verify")
 
     const val DATE_FORMAT = "yyyy-MM-dd"

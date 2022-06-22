@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface ChatSocketRepository {
 
+    fun isSocketActive(): Boolean
+
     suspend fun initSession(
         username: String,
         receivers: List<String>,

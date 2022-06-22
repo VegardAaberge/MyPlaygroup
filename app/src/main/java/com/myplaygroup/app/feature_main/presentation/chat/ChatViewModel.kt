@@ -107,18 +107,21 @@ class ChatViewModel @Inject constructor(
 
         }
 
-        viewModelScope.launch(Dispatchers.IO){
-            val result = socketRepository.initSession(username, receivers)
-            when(result){
-                is Resource.Success -> {
-                    observeMessages(result)
+        if(!socketRepository.isSocketActive()){
+            viewModelScope.launch(Dispatchers.IO){
+                val result = socketRepository.initSession(username, receivers)
+                when(result){
+                    is Resource.Success -> {
+                        observeMessages(result)
+                    }
+                    is Resource.Error -> {
+                        socketRepository.closeSession()
+                        setUIEvent(
+                            UiEvent.ShowSnackbar(result.message ?: "Unknown error")
+                        )
+                    }
+                    else -> {}
                 }
-                is Resource.Error -> {
-                    setUIEvent(
-                        UiEvent.ShowSnackbar(result.message ?: "Unknown error")
-                    )
-                }
-                else -> {}
             }
         }
     }

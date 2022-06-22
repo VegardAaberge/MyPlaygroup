@@ -45,6 +45,10 @@ class ChatSocketRepositoryImpl @Inject constructor(
     private var socket: WebSocketSession? = null
     private val sentMessages: HashSet<String> = HashSet()
 
+    override fun isSocketActive(): Boolean {
+        return socket?.isActive == true
+    }
+
     override suspend fun initSession(
         username: String,
         receivers: List<String>,
@@ -68,7 +72,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 }
             }
 
-            return if(socket?.isActive == true){
+            return if(isSocketActive()){
                 Log.d(Constants.DEBUG_KEY, "Observe Messages")
                 observeMessages()
             }else if(tryReconnect){
