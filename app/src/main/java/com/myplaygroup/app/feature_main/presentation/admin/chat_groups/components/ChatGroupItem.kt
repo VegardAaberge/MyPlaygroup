@@ -16,10 +16,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.myplaygroup.app.core.util.TextUtils
 import com.myplaygroup.app.feature_main.domain.model.ChatGroup
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ChatGroupItem(
@@ -77,7 +78,6 @@ fun FirstRow(
     updateTime: LocalDateTime?,
     modifier: Modifier = Modifier
 ){
-
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -92,16 +92,16 @@ fun FirstRow(
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .width(50.dp),
+                .requiredWidthIn(min = 60.dp),
             contentAlignment = Alignment.Center
         ) {
-            updateTime?.let {
-                Text(
-                    text = it.format(DateTimeFormatter.ofPattern("h:ss")),
-                    color = Color.Gray,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+            val date = TextUtils.displayShortMessageDate(updateTime)
+            Text(
+                text = date,
+                color = Color.Gray,
+                fontSize = if(date.length < 6) 14.sp else 13.sp,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
@@ -126,7 +126,7 @@ fun SecondRow(
         )
 
         Box(
-            modifier = Modifier.width(50.dp),
+            modifier = Modifier.width(60.dp),
             contentAlignment = Alignment.Center
         ) {
             if(notification > 0){
@@ -142,6 +142,8 @@ fun SecondRow(
                     Text(
                         color = Color.White,
                         text = notification.toString(),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
                         modifier = Modifier
                             .align(Alignment.Center)
                             .offset(y = -1.dp)
