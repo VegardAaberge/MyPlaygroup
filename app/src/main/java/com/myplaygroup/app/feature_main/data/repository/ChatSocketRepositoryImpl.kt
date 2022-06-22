@@ -7,6 +7,7 @@ import com.myplaygroup.app.core.data.settings.UserSettings
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Constants
+import com.myplaygroup.app.core.util.Constants.CHAT_SOCKET_URL
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
@@ -46,16 +47,21 @@ class ChatSocketRepositoryImpl @Inject constructor(
 
     override suspend fun initSession(
         username: String,
+        receivers: List<String>,
         tryReconnect: Boolean
     ): Resource<Flow<Message>> {
         return try {
             if(!checkForInternetConnection(context)){
                 return Resource.Error("No internet connection")
             }
+            val url = CHAT_SOCKET_URL + receivers.joinToString(
+                prefix = "?&listen=",
+                separator = "&listen="
+            )
 
             Log.d(Constants.DEBUG_KEY, "Init Session")
             socket = client.webSocketSession(
-                urlString = ChatSocketRepository.Endpoints.ChatSocket.url,
+                urlString = url
             ){
                 headers {
                     header("cookie", "Bearer " + authInterceptor.accessToken)
@@ -67,7 +73,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 observeMessages()
             }else if(tryReconnect){
                 Log.d(Constants.DEBUG_KEY, "Reconnect Session")
-                tryReconnect(username)
+                tryReconnect(username, receivers)
             }else{
                 Log.d(Constants.DEBUG_KEY, "Failed to connect to websocket")
                 Resource.Error("Failed to connect")
@@ -145,7 +151,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 }
 
                 if(socket == null || !socket!!.isActive){
-                    val result = tryReconnect(userSettings.username)
+                    val result = tryReconnect(userSettings.username, receivers)
                     if(socket == null || !socket!!.isActive){
                         throw IllegalStateException(result.message)
                     }
@@ -181,10 +187,10 @@ class ChatSocketRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun tryReconnect(username: String) : Resource<Flow<Message>> {
+    private suspend fun tryReconnect(username: String, receivers: List<String>) : Resource<Flow<Message>> {
         val result = tokenRepository.verifyRefreshToken()
         if(result is Resource.Success){
-            return initSession(username, false)
+            return initSession(username, receivers,false)
         }else{
             return Resource.Error(result.message!!)
         }

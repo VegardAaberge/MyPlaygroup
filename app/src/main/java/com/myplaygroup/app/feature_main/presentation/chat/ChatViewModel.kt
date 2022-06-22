@@ -108,7 +108,7 @@ class ChatViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO){
-            val result = socketRepository.initSession(username)
+            val result = socketRepository.initSession(username, receivers)
             when(result){
                 is Resource.Success -> {
                     observeMessages(result)

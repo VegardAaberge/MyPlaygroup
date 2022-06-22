@@ -1,7 +1,6 @@
 package com.myplaygroup.app.feature_main.domain.repository
 
 import com.myplaygroup.app.core.data.settings.UserSettings
-import com.myplaygroup.app.core.util.Constants.BASE_SOCKET_URL
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.data.model.MessageEntity
 import com.myplaygroup.app.feature_main.domain.model.Message
@@ -11,6 +10,7 @@ interface ChatSocketRepository {
 
     suspend fun initSession(
         username: String,
+        receivers: List<String>,
         tryReconnect: Boolean = true
     ): Resource<Flow<Message>>
 
@@ -26,8 +26,4 @@ interface ChatSocketRepository {
     ): Flow<Resource<Message>>
 
     suspend fun closeSession() : Resource<String>
-
-    sealed class Endpoints(val url: String){
-        object ChatSocket: Endpoints("$BASE_SOCKET_URL/chat-socket")
-    }
 }
