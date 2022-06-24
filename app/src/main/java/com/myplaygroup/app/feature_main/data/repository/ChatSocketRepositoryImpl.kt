@@ -3,7 +3,6 @@ package com.myplaygroup.app.feature_main.data.repository
 import android.content.Context
 import android.util.Log
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
-import com.myplaygroup.app.core.data.settings.UserSettings
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Constants
@@ -41,6 +40,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ChatSocketRepository {
 
+    private var receivedMessages: HashSet<LocalDateTime> = hashSetOf()
     private val dao = mainDatabase.mainDao()
     private var socket: WebSocketSession? = null
     private val sentMessages: HashSet<String> = HashSet()
@@ -89,7 +89,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
         }
     }
 
-    fun observeMessages(): Resource<Flow<Message>> {
+    suspend private fun observeMessages(): Resource<Flow<Message>> {
         return try {
             val flow = socket?.incoming
                 ?.receiveAsFlow()
@@ -97,9 +97,11 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 ?.map {
                     val json = (it as? Frame.Text)?.readText() ?: ""
                     Log.i(Constants.DEBUG_KEY, "ObserveMessages: " + json)
-                    val messageEntity = Json.decodeFromString<MessageEntity>(json)
-                    dao.insertMessage(messageEntity)
-                    sentMessages.removeAll { sm -> sm == messageEntity.clientId  }
+                    val jsonEntity = Json.decodeFromString<MessageEntity>(json)
+                    dao.insertMessage(jsonEntity)
+                    sentMessages.removeAll { sm -> sm == jsonEntity.clientId  }
+
+                    val messageEntity = dao.getMessageById(jsonEntity.clientId)
                     messageEntity.toMessage()
                 }
 
@@ -130,23 +132,24 @@ class ChatSocketRepositoryImpl @Inject constructor(
         ).toMessageEntity()
 
         return sendMessage(
-            messageEntity = messageEntity,
+            newMessage = messageEntity,
             receivers = receivers,
-            userSettings = userSettings
+            username = userSettings.username
         )
     }
 
     override suspend fun sendMessage(
-        messageEntity: MessageEntity,
+        newMessage: MessageEntity,
         receivers: List<String>,
-        userSettings: UserSettings
+        username: String
     ): Flow<Resource<Message>> {
 
         return flow {
             emit(Resource.Loading(true))
 
             try {
-                dao.insertMessage(messageEntity)
+                dao.insertMessage(newMessage)
+                val messageEntity = dao.getMessageById(newMessage.clientId)
                 sentMessages.add(messageEntity.clientId)
                 emit(Resource.Success(messageEntity.toMessage(true)))
 
@@ -155,13 +158,14 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 }
 
                 if(socket == null || !socket!!.isActive){
-                    val result = tryReconnect(userSettings.username, receivers)
+                    val result = tryReconnect(username, receivers)
                     if(socket == null || !socket!!.isActive){
                         throw IllegalStateException(result.message)
                     }
                 }
 
                 val sendMessageRequest = messageEntity.ToSendMessageRequest()
+                Log.d(Constants.DEBUG_KEY, "Sending message $sendMessageRequest")
                 socket?.send(Frame.Text(sendMessageRequest))
 
                 withTimeout(30000){
@@ -173,9 +177,9 @@ class ChatSocketRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 val errorMessage = e.localizedMessage ?: "Unknown error"
-                emit(Resource.Error(errorMessage, messageEntity.toMessage()))
+                emit(Resource.Error(errorMessage, newMessage.toMessage()))
             } finally {
-                sentMessages.removeAll { sm -> sm == messageEntity.clientId  }
+                sentMessages.removeAll { sm -> sm == newMessage.clientId  }
                 emit(Resource.Loading(false))
             }
         }

@@ -64,9 +64,9 @@ fun ChatGroupsScreen(
             items(state.chatGroups) { item ->
                 ChatGroupItem(
                     item = item,
+                    username = username,
                     navigateToChat = {
                         adminViewModel.onEvent(AdminScreenEvent.NavigateToChatScreen(it))
-                        viewModel.onEvent(ChatGroupsScreenEvent.ResetNotifications(it))
                     }
                 )
 

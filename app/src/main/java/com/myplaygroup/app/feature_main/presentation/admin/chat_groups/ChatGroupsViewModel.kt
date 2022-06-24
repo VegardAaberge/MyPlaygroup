@@ -16,7 +16,10 @@ import com.myplaygroup.app.feature_main.domain.model.ChatGroup
 import com.myplaygroup.app.feature_main.domain.model.Message
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -54,15 +57,6 @@ class ChatGroupsViewModel @Inject constructor(
                     socketRepository.closeSession()
                 }
             }
-            is ChatGroupsScreenEvent.ResetNotifications -> {
-                refreshChatGroupItem(
-                    chatGroups = state.chatGroups.toMutableList(),
-                    currentChatGroup = event.chatGroup,
-                    newChatGroup = event.chatGroup.copy(
-                        notification = 0
-                    )
-                )
-            }
         }
     }
 
@@ -70,7 +64,9 @@ class ChatGroupsViewModel @Inject constructor(
         val result = socketRepository.initSession(username, listOf("RECEIVE_ALL"))
         when(result){
             is Resource.Success -> {
-                observeMessages(result)
+                result.data!!.collect {
+                    collectObservedMessages(it)
+                }
             }
             is Resource.Error -> {
                 socketRepository.closeSession()
@@ -82,31 +78,28 @@ class ChatGroupsViewModel @Inject constructor(
         }
     }
 
-    private fun observeMessages(result: Resource<Flow<Message>>) {
-        result.data!!.onEach { message ->
-            val chatGroups = state.chatGroups.toMutableList()
-            chatGroups.firstOrNull{ it.username == message.createdBy }?.let { group ->
-                refreshChatGroupItem(
-                    chatGroups = chatGroups,
-                    currentChatGroup = group,
-                    newChatGroup = group.copy(
-                        notification = group.notification + 1,
-                        updateTime = message.created,
-                        lastMessage = message.message
-                    )
-                )
-            }
-        }.launchIn(viewModelScope)
-    }
+    private fun collectObservedMessages(message: Message) = viewModelScope.launch(Dispatchers.Main) {
+        val chatGroups = state.chatGroups.toMutableList()
+        chatGroups.firstOrNull{ it.username == message.createdBy }?.let { group ->
 
-    private fun refreshChatGroupItem(chatGroups: MutableList<ChatGroup>, currentChatGroup: ChatGroup, newChatGroup: ChatGroup) {
-        val newChatGroups = chatGroups.apply {
-            remove(currentChatGroup)
-            add(0, newChatGroup)
+            val newList = group.messages.toMutableList().apply {
+                removeIf { u -> u.clientId == message.clientId }
+                add(0, message)
+            }
+
+            val newChatGroup = group.copy(
+                messages = newList,
+                updateTime = message.created,
+                lastMessage = message.message
+            )
+            val newChatGroups = chatGroups.apply {
+                remove(group)
+                add(0, newChatGroup)
+            }
+            state = state.copy(
+                chatGroups = newChatGroups
+            )
         }
-        state = state.copy(
-            chatGroups = newChatGroups
-        )
     }
 
     private var previousUsers = emptyList<AppUser>()

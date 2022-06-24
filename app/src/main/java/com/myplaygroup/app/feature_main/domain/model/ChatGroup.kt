@@ -7,6 +7,6 @@ data class ChatGroup(
     val username: String,
     val lastMessage: String?,
     val updateTime: LocalDateTime?,
-    val notification: Int = 0,
+    val messages: List<Message>,
     val icon: Uri? = null,
 )

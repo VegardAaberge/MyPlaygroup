@@ -15,7 +15,9 @@ import com.myplaygroup.app.feature_main.domain.model.Message
 import com.myplaygroup.app.feature_main.domain.repository.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -64,7 +66,7 @@ class ChatViewModel @Inject constructor(
                 state = state.copy(newMessage = event.newMessage)
             }
             is ChatScreenEvent.SendMessageTapped -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     socketRepository.sendMessage(
                         message = state.newMessage,
                         receivers = receivers
@@ -80,14 +82,14 @@ class ChatViewModel @Inject constructor(
                 }
             }
             is ChatScreenEvent.ResendMessage -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     val messageEntity = event.message.toMessageEntity()
-                    val userSettings = userSettingsManager.getFlow().first()
+                    val username = username.first()
 
                     socketRepository.sendMessage(
-                        messageEntity = messageEntity,
+                        newMessage = messageEntity,
                         receivers = receivers,
-                        userSettings = userSettings
+                        username = username
                     ).collect{ collectInsertMessages(it) }
                 }
             }
@@ -112,7 +114,9 @@ class ChatViewModel @Inject constructor(
                 val result = socketRepository.initSession(username, receivers)
                 when(result){
                     is Resource.Success -> {
-                        observeMessages(result)
+                        result.data!!.collect {
+                            collectObservedMessages(it)
+                        }
                     }
                     is Resource.Error -> {
                         socketRepository.closeSession()
@@ -129,10 +133,14 @@ class ChatViewModel @Inject constructor(
     private fun collectGetMessages(result: Resource<List<Message>>) = viewModelScope.launch(Dispatchers.Main) {
         when (result) {
             is Resource.Success -> {
+                val messages = result.data!!
+                val newMessages = messages.filter { m -> state.messages.all { it.clientId != m.clientId } }
                 state = state.copy(
-                    messages = result.data!!,
-                    showProgressIndicator = state.isLoading && result.data.isEmpty()
+                    lastReadMessage = getLastReadMessage(messages),
+                    messages = messages,
+                    showProgressIndicator = state.isLoading && messages.isEmpty()
                 )
+                setMessagesAsRead(newMessages)
             }
             is Resource.Error -> {
                 setUIEvent(
@@ -148,16 +156,64 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun observeMessages(result: Resource<Flow<Message>>) {
-        result.data!!.onEach { message ->
-            val newList = state.messages.toMutableList().apply {
-                removeIf { u -> u.clientId == message.clientId }
-                add(0, message)
-            }
-            state = state.copy(
-                messages = newList
+    private fun setMessagesAsRead(messages: List<Message>) = viewModelScope.launch {
+        val username = username.first()
+        val notReadMessages = messages.filter {
+            it.createdBy != username && !it.readBy.contains(username)
+        }
+
+        notReadMessages.forEach { message ->
+            val readBy = message.readBy.toMutableList()
+            readBy.add(username)
+            val readMessage = message.copy(
+                readBy = readBy
             )
-        }.launchIn(viewModelScope)
+
+            viewModelScope.launch(Dispatchers.IO) {
+                socketRepository.sendMessage(
+                    newMessage = readMessage.toMessageEntity(),
+                    receivers = receivers,
+                    username = username
+                ).collect()
+            }
+        }
+    }
+
+    private fun getLastReadMessage(messages: List<Message>) : List<ChatState.LastRead> {
+        if(!isAdmin)
+            return emptyList()
+
+        return receivers.map { receiver ->
+            val message = messages.filter { it.readBy.contains(receiver) }.maxByOrNull { it.created }
+            message?.let {
+                ChatState.LastRead(
+                    messageClientId = message.clientId,
+                    profileName = receiver
+                )
+            }
+        }.filterNotNull()
+    }
+
+    private fun collectObservedMessages(message: Message) = viewModelScope.launch(Dispatchers.Main) {
+        val newList = state.messages.toMutableList().apply {
+            val index = indexOfFirst { it.clientId == message.clientId }
+            removeIf { u -> u.clientId == message.clientId }
+            if(index < 0){
+                add(0, message)
+            }else{
+                add(index, message)
+            }
+        }
+        val messageExist = state.messages.any { it.clientId == message.clientId }
+
+        state = state.copy(
+            lastReadMessage = getLastReadMessage(newList),
+            messages = newList
+        )
+
+        if(!messageExist){
+            setMessagesAsRead(listOf(message))
+        }
     }
 
     private fun loadProfileImage(

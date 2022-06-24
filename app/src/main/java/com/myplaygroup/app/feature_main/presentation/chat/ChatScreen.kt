@@ -87,6 +87,7 @@ fun ChatScreen(
                     MessageItem(
                         isOwner = isOwner,
                         message = message,
+                        lastReadMessage = state.lastReadMessage,
                         iconUri = state.userUri[message.createdBy],
                         resendMessage = {
                             viewModel.onEvent(ChatScreenEvent.ResendMessage(message))

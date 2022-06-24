@@ -11,7 +11,8 @@ data class Message (
     val createdBy: String,
     val receivers: List<String> = emptyList(),
     val created: LocalDateTime,
-    var isSending: Boolean = false
+    var isSending: Boolean = false,
+    val readBy: List<String> = emptyList(),
 ){
     fun isSynced() : Boolean {
         return id >= 0

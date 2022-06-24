@@ -27,6 +27,7 @@ fun MessageEntity.toMessage(
         created = parsedDate,
         profileName = profileName ?: "",
         isSending = isSending,
+        readBy = readBy
     )
 }
 
@@ -40,16 +41,20 @@ fun Message.toMessageEntity() : MessageEntity {
         receivers = receivers,
         createdBy = createdBy,
         created = created.format(dateFormat),
-        profileName = profileName
+        profileName = profileName,
+        readBy = readBy
     )
 }
 
 fun MessageEntity.ToSendMessageRequest() : String {
     return Json.encodeToString(
         SendMessageRequest(
+            id = id,
             clientId = clientId,
             message = message,
-            receivers = receivers
+            receivers = receivers,
+            readBy = readBy,
+            createdBy = createdBy
         )
     )
 }

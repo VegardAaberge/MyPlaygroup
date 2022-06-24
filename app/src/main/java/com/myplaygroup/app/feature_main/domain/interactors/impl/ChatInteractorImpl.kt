@@ -71,9 +71,8 @@ class ChatInteractorImpl @Inject constructor (
             .filter { x -> x.profileCreated }
             .map { appUser ->
 
-                val lastMessage = messages
-                    .filter { message -> hasMessage(message, appUser, username) }
-                    .maxByOrNull { x -> x.created }
+                val userMessages = messages.filter { message -> hasMessage(message, appUser, username) }
+                val lastMessage = userMessages.maxByOrNull { x -> x.created }
 
                 val currentIcon = currentChatGroups.firstOrNull {
                         chatGroup -> chatGroup.username == appUser.username
@@ -83,7 +82,8 @@ class ChatInteractorImpl @Inject constructor (
                     username = appUser.username,
                     lastMessage = lastMessage?.message,
                     updateTime = lastMessage?.created,
-                    icon = currentIcon
+                    icon = currentIcon,
+                    messages = userMessages,
                 )
             }
 

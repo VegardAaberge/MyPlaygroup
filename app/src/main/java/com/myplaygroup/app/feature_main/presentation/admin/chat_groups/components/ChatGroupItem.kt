@@ -25,8 +25,13 @@ import java.time.LocalDateTime
 @Composable
 fun ChatGroupItem(
     item: ChatGroup,
+    username: String,
     navigateToChat: (ChatGroup) -> Unit,
 ) {
+    val notifications = item.messages
+        .filter { it.createdBy != username }
+        .count { !it.readBy.contains(username) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,7 +70,7 @@ fun ChatGroupItem(
 
             SecondRow(
                 lastMessage = item.lastMessage,
-                notification = item.notification,
+                notification = notifications,
                 modifier = Modifier.weight(1f)
             )
         }

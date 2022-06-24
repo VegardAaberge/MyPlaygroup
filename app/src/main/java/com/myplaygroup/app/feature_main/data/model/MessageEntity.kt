@@ -14,4 +14,5 @@ data class MessageEntity(
     val created: String,
     val createdBy: String,
     val receivers: List<String> = emptyList(),
+    val readBy: List<String> = emptyList(),
 )

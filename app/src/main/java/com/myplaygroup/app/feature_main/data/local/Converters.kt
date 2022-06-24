@@ -9,13 +9,20 @@ class Converters {
 
     @TypeConverter
     fun fromList(list: List<String>?) : String{
-        val listToJson = list ?: emptyList()
+        val listToJson = list?.toMutableList() ?: mutableListOf()
+        listToJson.removeAll { it.isBlank() }
         return Gson().toJson(listToJson)
     }
 
     @TypeConverter
     fun toList(string: String): List<String> {
-        return Gson().fromJson(string, object : TypeToken<List<String>>(){}.type)
+        val list = Gson().fromJson<List<String>>(
+            string,
+            object : TypeToken<List<String>>(){}.type
+        ).toMutableList()
+        list.removeAll { it.isBlank()}
+
+        return list
     }
 
     @TypeConverter
