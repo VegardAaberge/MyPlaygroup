@@ -87,7 +87,7 @@ class AdminViewModel @Inject constructor(
             }
             is AdminScreenEvent.NavigateToEditScreen -> {
                 setUIEvent(
-                    UiEvent.NavigateTo(EditParametersScreenDestination(event.clientId, event.type))
+                    UiEvent.NavigateTo(EditParametersScreenDestination(event.clientId, event.type.name))
                 )
             }
             is AdminScreenEvent.NavigateToCreateMonthlyPlan -> {

@@ -20,7 +20,6 @@ import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.*
-import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 import com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.components.*
 import com.ramcosta.composedestinations.annotation.Destination
@@ -30,7 +29,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun EditParametersScreen(
     id: String,
-    parametersType: ParametersType,
+    parametersType: String,
     navigator: DestinationsNavigator,
     viewModel: EditParametersViewModel = hiltViewModel(),
 ) {
