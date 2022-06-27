@@ -5,15 +5,12 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
-import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.core.util.FileUtils
 import com.myplaygroup.app.core.util.Resource
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -32,9 +29,11 @@ class ImageRepositoryImpl @Inject constructor(
     ) : Resource<Unit> {
 
         try {
+            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, true)
+
             // Get the bytes from the bitmap
             val outputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
             val bytes = outputStream.toByteArray()
 
             val profileFile = FileUtils.saveProfileFile(bytes, username)
