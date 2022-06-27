@@ -3,6 +3,7 @@ package com.myplaygroup.app.core.util
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -45,12 +46,33 @@ class BitmapUtils{
             val exifInterface = fileDescriptor?.let { ExifInterface(fileDescriptor) }
 
             return when (exifInterface?.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> TransformationUtils.rotateImage(bitmap!!, 90)
-                ExifInterface.ORIENTATION_ROTATE_180 -> TransformationUtils.rotateImage(bitmap!!, 180)
-                ExifInterface.ORIENTATION_ROTATE_270 -> TransformationUtils.rotateImage(bitmap!!, 270)
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap!!, 90)
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap!!, 180)
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap!!, 270)
+                ExifInterface.ORIENTATION_FLIP_VERTICAL -> rotateImage(bitmap!!, 180, true)
+                ExifInterface.ORIENTATION_TRANSPOSE -> rotateImage(bitmap!!, 90, true)
+                ExifInterface.ORIENTATION_TRANSVERSE -> rotateImage(bitmap!!, 270, true)
                 ExifInterface.ORIENTATION_NORMAL -> bitmap!!
                 else -> bitmap!!
             }
+        }
+
+        private fun rotateImage(
+            bitmap : Bitmap,
+            degrees: Int,
+            shouldFlip: Boolean = false
+        ) : Bitmap {
+            var rotatedImage = TransformationUtils.rotateImage(bitmap, degrees)
+            val width = rotatedImage.width
+            val height = rotatedImage.height
+
+            if(shouldFlip){
+                val matrix = Matrix()
+                matrix.postScale(-1f, 1f, width.toFloat(), height.toFloat());
+                rotatedImage = Bitmap.createBitmap(rotatedImage, 0, 0, width, height, matrix, true);
+            }
+
+            return rotatedImage
         }
     }
 }
