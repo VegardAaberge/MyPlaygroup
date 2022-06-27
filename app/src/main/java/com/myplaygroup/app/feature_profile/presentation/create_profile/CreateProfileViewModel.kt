@@ -83,12 +83,14 @@ class CreateProfileViewModel @Inject constructor(
             val username = userSettingsManager.getFlow { x -> x.map { u -> u.username } }.first()
 
             state.profileBitmap?.let {
+                isBusy(true)
                 val response = imageRepository.storeProfileImage(username, it)
                 if(response is Resource.Error){
                     setUIEvent(
                         UiEvent.ShowSnackbar(response.message!!)
                     )
                 }
+                isBusy(false)
             }
 
             launch(Dispatchers.IO) {

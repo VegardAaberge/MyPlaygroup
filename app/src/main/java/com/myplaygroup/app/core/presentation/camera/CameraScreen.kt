@@ -26,13 +26,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.camera.components.CameraFooter
 import com.myplaygroup.app.core.presentation.camera.components.CameraUIAction
 import com.myplaygroup.app.core.presentation.camera.components.CameraView
+import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 
 @Composable
 fun CameraScreen(
     shouldCrop: Boolean,
     scaffoldState: ScaffoldState,
     viewModel: CameraViewModel = hiltViewModel(),
-    takePhotoCallback: (Bitmap) -> Unit
+    isBusy: Boolean = false,
+    takePhotoCallback: (Bitmap) -> Unit,
 ) {
     viewModel.takePhotoCallback = takePhotoCallback
     viewModel.setShouldCrop(shouldCrop)
@@ -161,6 +163,10 @@ fun CameraScreen(
                 viewModel.onEvent(CameraScreenEvent.TakePhoto(uri, fromGallery))
             }, onError = { imageCaptureException ->
             })
+        }
+
+        if(isBusy){
+            CustomProgressIndicator()
         }
     }
 }

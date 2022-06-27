@@ -17,7 +17,8 @@ fun ProfileSelectorScreen(
 
     CameraScreen(
         shouldCrop = true,
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
+        isBusy = viewModel.isBusy
     ){
         viewModel.onEvent(
             ProfileSelectorScreenEvent.TakePictureDone(it)
