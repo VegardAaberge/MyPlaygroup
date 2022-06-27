@@ -1,6 +1,5 @@
 package com.myplaygroup.app.feature_profile.presentation.profile_selector
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.camera.CameraScreen
