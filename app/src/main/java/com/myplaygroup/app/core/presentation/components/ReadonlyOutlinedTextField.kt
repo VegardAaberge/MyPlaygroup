@@ -16,6 +16,7 @@ fun ReadonlyOutlinedTextField(
     fieldValue: String,
     modifier : Modifier = Modifier,
     isError: Boolean = false,
+    enabled: Boolean = true,
     colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(),
     trailingIcon: @Composable (() -> Unit)? = null,
     action: () -> Unit = {},
@@ -25,6 +26,7 @@ fun ReadonlyOutlinedTextField(
             value = fieldValue,
             onValueChange = {  },
             trailingIcon = trailingIcon,
+            enabled = enabled,
             isError = isError,
             label = {
                 Text(text = label)

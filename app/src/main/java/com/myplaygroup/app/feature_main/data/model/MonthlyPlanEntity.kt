@@ -19,6 +19,7 @@ data class MonthlyPlanEntity(
     val daysOfWeek: List<String>,
     val planPrice: Long,
     val cancelled: Boolean,
+    val changeDays: Boolean = false,
 
     @Transient
     val modified: Boolean = id == -1L

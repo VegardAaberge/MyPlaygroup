@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Switch
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,13 +21,12 @@ import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.DropdownOutlinedTextField
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
-import com.myplaygroup.app.feature_main.presentation.admin.classes.components.LabelledCheckbox
+import com.myplaygroup.app.core.presentation.select_weekdays.SelectWeekdays
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.OutlinedDateField
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.PlansTextFieldItem
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.UserCheckbox
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import java.time.DayOfWeek
 
 @Destination
 @Composable
@@ -130,11 +132,6 @@ fun ColumnScope.CreateSinglePlanBody(
     viewModel: CreatePlansViewModel,
     state: CreatePlansState
 ) {
-    val weekdays = state.weekdays
-    val weekdayChanged: (DayOfWeek) -> Unit = { dayOfWeek ->
-        viewModel.onEvent(CreatePlansScreenEvent.WeekdayChanged(dayOfWeek))
-    }
-
     DropdownOutlinedTextField(
         label = "User",
         items = state.users.map { x -> x.username },
@@ -170,33 +167,13 @@ fun ColumnScope.CreateSinglePlanBody(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .padding(start = 3.dp, end = 16.dp)
-            .fillMaxWidth()
-    ) {
-        Column {
-            LabelledCheckbox(DayOfWeek.MONDAY, weekdays[DayOfWeek.MONDAY] ?: false, weekdayChanged)
-            LabelledCheckbox(DayOfWeek.THURSDAY, weekdays[DayOfWeek.THURSDAY] ?: false, weekdayChanged)
-        }
-        Column {
-            LabelledCheckbox(DayOfWeek.TUESDAY, weekdays[DayOfWeek.TUESDAY] ?: false, weekdayChanged)
-            LabelledCheckbox(DayOfWeek.FRIDAY, weekdays[DayOfWeek.FRIDAY] ?: false, weekdayChanged)
-        }
-        Column {
-            LabelledCheckbox(DayOfWeek.WEDNESDAY, weekdays[DayOfWeek.WEDNESDAY] ?: false, weekdayChanged)
-            LabelledCheckbox(DayOfWeek.SATURDAY, weekdays[DayOfWeek.SATURDAY] ?: false, weekdayChanged)
-        }
-    }
-
-    state.weekdaysError?.let{ weekdaysError ->
-        Text(
-            text = weekdaysError,
-            color = MaterialTheme.colors.error,
-            modifier = Modifier.align(Alignment.Start)
-        )
-    }
+    SelectWeekdays(
+        weekdays = state.weekdays,
+        weekdaysError = state.weekdaysError,
+        weekdayChanged = { dayOfWeek ->
+            viewModel.onEvent(CreatePlansScreenEvent.WeekdayChanged(dayOfWeek))
+        },
+    )
 
     Spacer(modifier = Modifier.height(8.dp))
 

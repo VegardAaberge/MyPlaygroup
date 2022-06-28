@@ -41,6 +41,7 @@ fun DateParamItem(
     ReadonlyTextField(
         label = item.getTitle(),
         fieldValue = time,
+        enabled = item.enabled,
         isError = item.error != null,
         trailingIcon = {
             Icon(
@@ -56,7 +57,9 @@ fun DateParamItem(
             .fillMaxWidth()
     ) {
         focusManager.clearFocus()
-        datePickerDialog.show()
+        if(item.enabled){
+            datePickerDialog.show()
+        }
     }
 }
 

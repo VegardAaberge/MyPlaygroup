@@ -14,7 +14,8 @@ fun LabelledCheckbox(
     dayOfWeek: DayOfWeek,
     isChecked: Boolean,
     weekdayChanged: (DayOfWeek) -> Unit,
-    modifier: Modifier = Modifier
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -25,7 +26,7 @@ fun LabelledCheckbox(
             onCheckedChange = {
                 weekdayChanged(dayOfWeek)
             },
-            enabled = true,
+            enabled = enabled,
             colors = CheckboxDefaults.colors()
         )
         Text(text = dayOfWeek.name.take(3))

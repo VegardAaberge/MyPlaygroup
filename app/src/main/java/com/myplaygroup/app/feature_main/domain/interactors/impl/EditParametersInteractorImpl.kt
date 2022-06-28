@@ -74,12 +74,16 @@ class EditParametersInteractorImpl @Inject constructor(
                     ParameterItem(DELETE, DELETE_KEY, false)
                 } else ParameterItem(SWITCH, monthlyPlan::cancelled.name, monthlyPlan.cancelled)
 
+                val standardPlans = dao.getStandardPlans().map { it.name }.toMutableList()
+                standardPlans.add(0, monthlyPlan.planName)
+
                 listOf(
                     ParameterItem(HIDDEN, monthlyPlan::id.name, monthlyPlan.clientId),
-                    ParameterItem(INFO, monthlyPlan::planName.name, monthlyPlan.planName),
-                    ParameterItem(INFO, monthlyPlan::startDate.name, monthlyPlan.startDate),
-                    ParameterItem(INFO, monthlyPlan::endDate.name, monthlyPlan.endDate),
-                    ParameterItem(INFO, monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek),
+                    ParameterItem(SWITCH, monthlyPlan::changeDays.name, monthlyPlan.changeDays),
+                    ParameterItem(OPTIONS, monthlyPlan::planName.name, standardPlans, monthlyPlan.changeDays),
+                    ParameterItem(DATE, monthlyPlan::startDate.name, monthlyPlan.startDate, monthlyPlan.changeDays),
+                    ParameterItem(DATE, monthlyPlan::endDate.name, monthlyPlan.endDate, monthlyPlan.changeDays),
+                    ParameterItem(WEEKDAYS, monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek, monthlyPlan.changeDays),
                     ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
                     ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice),
                     cancelDeleteParameterItem,
@@ -123,6 +127,29 @@ class EditParametersInteractorImpl @Inject constructor(
         }
 
         return Resource.Success(parameterItems)
+    }
+
+    override suspend fun processDataChanges(
+        parameterItems: List<ParameterItem>,
+        type: ParametersType,
+        key: String
+    ): Resource<List<ParameterItem>> {
+        val items = parameterItems.toMutableList()
+
+        when(type){
+            ParametersType.PLANS -> {
+                if(key == MonthlyPlan::changeDays.name){
+                    val changeDays = items.firstOrNull { x -> x.key == key }?.value as? Boolean ?: return Resource.Error("Key: $key not found")
+                    items.updateEnabled(MonthlyPlan::planName.name, changeDays)
+                    items.updateEnabled(MonthlyPlan::startDate.name, changeDays)
+                    items.updateEnabled(MonthlyPlan::endDate.name, changeDays)
+                    items.updateEnabled(MonthlyPlan::daysOfWeek.name, changeDays)
+                }
+            }
+            else -> { }
+        }
+
+        return Resource.Success(items)
     }
 
     override fun validateParameters(
@@ -324,6 +351,16 @@ class EditParametersInteractorImpl @Inject constructor(
         val itemIndex = this.indexOf(item)
         this[itemIndex] = item.copy(
             error = error
+        )
+    }
+
+    private fun MutableList<ParameterItem>.updateEnabled(name: String, enabled: Boolean){
+
+        val item = this.firstOrNull { x -> x.key == name } ?: return
+
+        val itemIndex = this.indexOf(item)
+        this[itemIndex] = item.copy(
+            enabled = enabled
         )
     }
 

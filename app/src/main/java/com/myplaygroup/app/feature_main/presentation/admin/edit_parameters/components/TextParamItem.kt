@@ -30,6 +30,7 @@ fun TextParamItem(
         label = {
             Text(text = item.getTitle())
         },
+        enabled = item.enabled,
         isError = item.error != null,
         onValueChange = {
             valueChanged(it, item.key)

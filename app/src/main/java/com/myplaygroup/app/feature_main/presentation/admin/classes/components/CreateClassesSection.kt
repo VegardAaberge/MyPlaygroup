@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.myplaygroup.app.core.presentation.select_weekdays.SelectWeekdays
 import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 import java.time.DayOfWeek
-import java.time.DayOfWeek.*
 import java.time.LocalTime
 
 @Composable
@@ -63,25 +63,10 @@ fun CreateClassesSection(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .padding(start = 3.dp, end = 16.dp)
-                .fillMaxWidth()
-        ) {
-            Column {
-                LabelledCheckbox(MONDAY, weekdays[MONDAY] ?: false, weekdayChanged)
-                LabelledCheckbox(THURSDAY, weekdays[THURSDAY] ?: false, weekdayChanged)
-            }
-            Column {
-                LabelledCheckbox(TUESDAY, weekdays[TUESDAY] ?: false, weekdayChanged)
-                LabelledCheckbox(FRIDAY, weekdays[FRIDAY] ?: false, weekdayChanged)
-            }
-            Column {
-                LabelledCheckbox(WEDNESDAY, weekdays[WEDNESDAY] ?: false, weekdayChanged)
-                LabelledCheckbox(SATURDAY, weekdays[SATURDAY] ?: false, weekdayChanged)
-            }
-        }
+        SelectWeekdays(
+            weekdays = weekdays,
+            weekdayChanged = weekdayChanged,
+        )
 
         Button(
             onClick = {

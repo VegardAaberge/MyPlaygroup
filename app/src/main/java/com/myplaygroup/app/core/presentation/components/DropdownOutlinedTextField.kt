@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.toSize
@@ -22,6 +23,8 @@ fun ColumnScope.DropdownOutlinedTextField(
     items: List<String>,
     selected: String,
     errorMessage: String?,
+    enabled: Boolean = true,
+    isOutlined: Boolean = true,
     selectedChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     errorModifier: Modifier = Modifier
@@ -36,25 +39,54 @@ fun ColumnScope.DropdownOutlinedTextField(
     Box(
         modifier = modifier
     ) {
-        ReadonlyOutlinedTextField(
-            label = label,
-            fieldValue = selected,
-            trailingIcon = {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                )
-            },
-            isError = errorMessage != null,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth()
-                .onGloballyPositioned { coordinates ->
-                    mTextFieldSize = coordinates.size.toSize()
+        if(isOutlined){
+            ReadonlyOutlinedTextField(
+                label = label,
+                fieldValue = selected,
+                enabled = enabled,
+                trailingIcon = {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                    )
                 },
-        ){
-            expanded = !expanded
+                isError = errorMessage != null,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        mTextFieldSize = coordinates.size.toSize()
+                    },
+            ){
+                expanded = !expanded
+            }
+        }else{
+            ReadonlyTextField(
+                label = label,
+                fieldValue = selected,
+                enabled = enabled,
+                trailingIcon = {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                    )
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.LightGray,
+                ),
+                isError = errorMessage != null,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        mTextFieldSize = coordinates.size.toSize()
+                    },
+            ){
+                expanded = !expanded
+            }
         }
+
 
         DropdownMenu(
             expanded = expanded,

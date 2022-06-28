@@ -138,5 +138,11 @@ fun EditParameterItem(
         TIME -> {
             TimeParamItem(item, valueChanged)
         }
+        WEEKDAYS -> {
+            SelectWeekdaysItem(item, valueChanged)
+        }
+        OPTIONS -> {
+            OptionsParamItem(item, valueChanged)
+        }
     }
 }

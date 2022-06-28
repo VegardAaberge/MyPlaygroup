@@ -8,5 +8,7 @@ enum class ParameterDisplayType {
     TIME,
     DATE,
     SWITCH,
+    WEEKDAYS,
+    OPTIONS,
     DELETE
 }

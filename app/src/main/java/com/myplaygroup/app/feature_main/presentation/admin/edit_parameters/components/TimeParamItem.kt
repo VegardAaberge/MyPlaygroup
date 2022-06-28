@@ -47,6 +47,7 @@ fun TimeParamItem(
                 contentDescription = null
             )
         },
+        enabled = item.enabled,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent,
             unfocusedIndicatorColor = Color.LightGray,
@@ -55,7 +56,9 @@ fun TimeParamItem(
             .fillMaxWidth()
     ) {
         focusManager.clearFocus()
-        timePickerDialog.show()
+        if(item.enabled){
+            timePickerDialog.show()
+        }
     }
 }
 

@@ -33,9 +33,12 @@ fun SwitchParamItem(
         Text(text = item.getTitle())
         Switch(
             checked = checked,
+            enabled = item.enabled,
             onCheckedChange = {
                 focusManager.clearFocus()
-                switchChanged(it, item.key)
+                if(item.enabled){
+                    switchChanged(it, item.key)
+                }
             }
         )
     }

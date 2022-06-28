@@ -14,6 +14,7 @@ data class MonthlyPlan(
     val planName: String,
     val daysOfWeek: List<DayOfWeek>,
     val planPrice: Long,
+    val changeDays: Boolean = false,
     val cancelled: Boolean = false,
     val modified: Boolean = id == -1L
 )

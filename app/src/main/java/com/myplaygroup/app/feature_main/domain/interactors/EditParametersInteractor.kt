@@ -11,6 +11,12 @@ interface EditParametersInteractor {
         id: String
     ) : Resource<List<ParameterItem>>
 
+    suspend fun processDataChanges(
+        parameterItems: List<ParameterItem>,
+        type: ParametersType,
+        key: String
+    ) : Resource<List<ParameterItem>>
+
     fun validateParameters(
         parameterItems: List<ParameterItem>,
         type: ParametersType,

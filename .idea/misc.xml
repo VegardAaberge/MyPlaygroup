@@ -36,6 +36,7 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/DateParamItem.kt" value="0.375" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/InfoListParamItem.kt" value="0.33611111111111114" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/InfoParamItem.kt" value="0.6953703703703704" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/SelectWeekdaysItem.kt" value="0.335" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/SwitchParamItem.kt" value="0.6953703703703704" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/TextParamItem.kt" value="0.12962962962962962" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/TimeParamItem.kt" value="0.6953703703703704" />

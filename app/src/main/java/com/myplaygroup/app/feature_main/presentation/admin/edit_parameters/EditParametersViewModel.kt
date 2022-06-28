@@ -71,7 +71,7 @@ class EditParametersViewModel @Inject constructor(
         }
     }
 
-    private fun updateValue(value: Any, item: ParameterItem) {
+    private fun updateValue(value: Any, item: ParameterItem) = viewModelScope.launch{
 
         val items = state.parameterItems.toMutableList()
         val itemIndex = items.indexOf(item)
@@ -79,9 +79,17 @@ class EditParametersViewModel @Inject constructor(
         items[itemIndex] = item.copy(
             value = value
         )
-        state = state.copy(
-            parameterItems = items
-        )
+
+        val result = editUseCases.processDataChanges(items, state.type, item.key)
+        if(result is Resource.Success){
+            state = state.copy(
+                parameterItems = result.data!!
+            )
+        }else if (result is Resource.Error){
+            setUIEvent(
+                UiEvent.ShowSnackbar(result.message!!)
+            )
+        }
     }
 
     fun saveData() = viewModelScope.launch(Dispatchers.IO){
