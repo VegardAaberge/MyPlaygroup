@@ -24,11 +24,14 @@ class MonthlyPlansViewModel @Inject constructor(
     var state by mutableStateOf(MonthlyPlansState())
 
     lateinit var monthlyPlanFlow : MutableStateFlow<List<MonthlyPlan>>
+    lateinit var monthlyPlanAdded: () -> Unit
 
     fun init(
-        monthlyPlanFlow: MutableStateFlow<List<MonthlyPlan>>
+        monthlyPlanFlow: MutableStateFlow<List<MonthlyPlan>>,
+        monthlyPlanAdded: () -> Unit
     ) {
         this.monthlyPlanFlow = monthlyPlanFlow
+        this.monthlyPlanAdded = monthlyPlanAdded
 
         monthlyPlanFlow.onEach { payments ->
             state = state.copy(
@@ -51,7 +54,10 @@ class MonthlyPlansViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     repository
                         .uploadMonthlyPlans(unsyncedMonthlyPlans)
-                        .collect{ collectMonthlyPlans(it, true) }
+                        .collect{
+                            collectMonthlyPlans(it, true)
+                            monthlyPlanAdded()
+                        }
                 }
             }
         }

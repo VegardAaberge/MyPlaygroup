@@ -133,9 +133,14 @@ fun DrawerNavigation(
     LaunchedEffect(key1 = adminVM){
         chatViewModel.init(adminVM.userFlow)
         classesViewModel.init(adminVM.dailyClassesFlow)
-        monthlyPlansViewModel.init(adminVM.monthlyPlansFlow)
         paymentsViewModel.init(adminVM.paymentFlow, adminVM.userFlow)
         usersViewModel.init(adminVM.userFlow, adminVM.paymentFlow, adminVM.monthlyPlansFlow)
+        monthlyPlansViewModel.init(
+            monthlyPlanFlow = adminVM.monthlyPlansFlow,
+            monthlyPlanAdded = {
+                adminVM.loadDailyClassesFromServer()
+            }
+        )
         adminVM.init()
     }
 

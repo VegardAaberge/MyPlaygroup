@@ -106,6 +106,11 @@ class AdminViewModel @Inject constructor(
         }
     }
 
+    fun loadDailyClassesFromServer() = viewModelScope.launch(Dispatchers.IO){
+        dailyClassesRepository.getAllDailyClasses(true)
+            .collect { collectMergeFlow(it) }
+    }
+
     fun loadDataFromServer() = viewModelScope.launch(Dispatchers.IO){
         val usersResult = usersRepository.getAllUsers(true)
         val monthlyResult = monthlyPlansRepository.getMonthlyPlans(true)
