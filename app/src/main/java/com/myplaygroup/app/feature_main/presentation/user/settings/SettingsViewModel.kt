@@ -29,9 +29,11 @@ class SettingsViewModel @Inject constructor(
     lateinit var mainViewModel: MainViewModel
 
     val profileName: Flow<String>
+    val phoneNumber: Flow<String>
 
     init {
         profileName = userSettingsManager.getFlow { it.map { u -> u.profileName } }
+        phoneNumber = userSettingsManager.getFlow { it.map { u -> u.phoneNumber } }
     }
 
     fun onEvent(event: SettingsScreenEvent){
@@ -41,7 +43,7 @@ class SettingsViewModel @Inject constructor(
             }
             is SettingsScreenEvent.EditProfileTapped -> {
                 mainViewModel.setUIEvent(
-                    BaseViewModel.UiEvent.NavigateTo(EditProfileScreenDestination)
+                    BaseViewModel.UiEvent.NavigateTo(EditProfileScreenDestination(event.editProfileType.name))
                 )
             }
             is SettingsScreenEvent.EditProfilePictureTapped -> {

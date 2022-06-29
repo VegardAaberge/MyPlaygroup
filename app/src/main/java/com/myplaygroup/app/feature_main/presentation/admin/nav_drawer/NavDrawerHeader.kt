@@ -2,7 +2,7 @@
 
 package com.myplaygroup.app.feature_admin.presentation
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -23,6 +23,7 @@ fun NavDrawerHeader(
         profileImage = profileImage,
         username = username,
         profileName = profileName,
+        isAdminScreen = true,
         editProfileEvent ={
             viewModel.onEvent(AdminScreenEvent.EditProfileTapped)
         },

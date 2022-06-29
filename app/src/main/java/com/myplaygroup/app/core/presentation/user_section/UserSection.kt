@@ -18,9 +18,10 @@ fun UserSection(
     profileImage: Uri?,
     username: String,
     profileName: String,
+    isAdminScreen: Boolean,
     editProfilePictureEvent: () -> Unit,
-    editProfileEvent: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    editProfileEvent: () -> Unit = {},
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -42,12 +43,15 @@ fun UserSection(
             modifier = Modifier
                 .weight(1f)
         )
-        Spacer(modifier = Modifier.width(16.dp))
-        EditProfileArrow(
-            editProfileEvent = {
-                editProfileEvent()
-            }
-        )
+
+        if(isAdminScreen){
+            Spacer(modifier = Modifier.width(16.dp))
+            EditProfileArrow(
+                editProfileEvent = {
+                    editProfileEvent()
+                }
+            )
+        }
     }
 }
 

@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.user_section.UserSection
 import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
+import com.myplaygroup.app.feature_main.presentation.user.settings.components.EditProfileSection
 
 @Composable
 fun SettingsScreen(
@@ -21,6 +22,7 @@ fun SettingsScreen(
     val profileImage = viewModel.mainViewModel.state.usernameUri
     val username = viewModel.mainViewModel.username.collectAsState("").value
     val profileName = viewModel.profileName.collectAsState("").value
+    val phoneNumber = viewModel.phoneNumber.collectAsState("").value
 
     Column(modifier = Modifier
         .fillMaxSize()) {
@@ -30,13 +32,19 @@ fun SettingsScreen(
             profileImage = profileImage,
             username = username,
             profileName = profileName,
-            editProfileEvent ={
-                viewModel.onEvent(SettingsScreenEvent.EditProfileTapped)
-            },
+            isAdminScreen = false,
             editProfilePictureEvent = {
                 viewModel.onEvent(SettingsScreenEvent.EditProfilePictureTapped)
             },
             modifier = Modifier.padding(horizontal = 20.dp)
+        )
+        
+        EditProfileSection(
+            profileName = profileName,
+            phoneNumber = phoneNumber,
+            editProfileData = {
+                viewModel.onEvent(SettingsScreenEvent.EditProfileTapped(it))
+            }
         )
 
         Button(

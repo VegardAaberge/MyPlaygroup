@@ -97,9 +97,7 @@ fun ColumnScope.EditTextFields(
                 label = stringResource(id = R.string.confirm_password_label),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 isPassword = true,
-                onTextChange = {
-                    enteredRepeatedPassword(it)
-                },
+                onTextChange = enteredRepeatedPassword,
                 modifier = widthModifier,
                 errorMessage = state.repeatedPasswordError
             )

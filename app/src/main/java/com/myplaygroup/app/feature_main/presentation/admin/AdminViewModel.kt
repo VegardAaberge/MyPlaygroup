@@ -24,6 +24,7 @@ import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import com.myplaygroup.app.feature_main.domain.repository.PaymentRepository
 import com.myplaygroup.app.feature_main.domain.repository.UsersRepository
 import com.myplaygroup.app.feature_main.presentation.admin.nav_drawer.NavDrawer
+import com.myplaygroup.app.feature_profile.domain.model.EditProfileType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,7 +77,7 @@ class AdminViewModel @Inject constructor(
         when(event){
             is AdminScreenEvent.EditProfileTapped -> {
                 setUIEvent(
-                    UiEvent.NavigateTo(EditProfileScreenDestination)
+                    UiEvent.NavigateTo(EditProfileScreenDestination(EditProfileType.NONE.name))
                 )
             }
             is AdminScreenEvent.EditProfilePictureTapped -> {

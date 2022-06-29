@@ -3,6 +3,7 @@ package com.myplaygroup.app.feature_profile.presentation.edit_profile
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.domain.settings.UserRole
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
@@ -22,13 +23,20 @@ import javax.inject.Inject
 class EditProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val userSettingsManager: UserSettingsManager,
-    private val profileUseCases: ProfileValidationInteractors
+    private val profileUseCases: ProfileValidationInteractors,
+    private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     var state by mutableStateOf(EditProfileState())
 
     init {
         viewModelScope.launch {
+            val type = EditProfileType.valueOf(
+                savedStateHandle.get<String>("editProfileType")?: return@launch
+            )
+            state = state.copy(
+                editProfileType = type
+            )
             userSettingsManager.getFlow().collect {
                 state = state.copy(
                     isAdmin = it.userRole == UserRole.ADMIN.name,
@@ -48,10 +56,10 @@ class EditProfileViewModel @Inject constructor(
                 state = state.copy(phoneNumber = event.phoneNumber)
             }
             is EditProfileScreenEvent.EnteredPassword -> {
-                state = state.copy(phoneNumber = event.password)
+                state = state.copy(password = event.password)
             }
             is EditProfileScreenEvent.EnteredRepeatedPassword -> {
-                state = state.copy(phoneNumber = event.repeatedPassword)
+                state = state.copy(repeatedPassword = event.repeatedPassword)
             }
             is EditProfileScreenEvent.DropdownChanged -> {
                 state = state.copy(editProfileType = event.profileType)
