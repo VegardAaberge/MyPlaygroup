@@ -1,17 +1,14 @@
 package com.myplaygroup.app.feature_profile.presentation.edit_profile
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
@@ -19,7 +16,7 @@ import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.core.presentation.components.scaffoldColumnModifier
-import com.myplaygroup.app.feature_profile.presentation.create_profile.components.ProfileField
+import com.myplaygroup.app.feature_profile.presentation.edit_profile.components.EditTextFields
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -62,48 +59,29 @@ fun EditProfileScreen(
                 focusManager.clearFocus()
             }
         ) {
-            TextFields(viewModel)
+            EditTextFields(
+                state = viewModel.state,
+                isBusy = isBusy,
+                enteredProfileName = {
+                    viewModel.onEvent(EditProfileScreenEvent.EnteredProfileName(it))
+                },
+                enteredPhoneNumber = {
+                    viewModel.onEvent(EditProfileScreenEvent.EnteredPhoneNumber(it))
+                },
+                enteredPassword = {
+                    viewModel.onEvent(EditProfileScreenEvent.EnteredPassword(it))
+                },
+                enteredRepeatedPassword = {
+                    viewModel.onEvent(EditProfileScreenEvent.EnteredRepeatedPassword(it))
+                },
+                dropdownChanged = {
+                    viewModel.onEvent(EditProfileScreenEvent.DropdownChanged(it))
+                }
+            )
         }
 
         if(isBusy){
             CustomProgressIndicator()
         }
     }
-}
-
-@Composable
-fun ColumnScope.TextFields(
-    viewModel: EditProfileViewModel
-) {
-    val isBusy = viewModel.isBusy
-    val state = viewModel.state
-
-    val widthModifier = Modifier
-        .width(400.dp)
-        .padding(horizontal = 30.dp)
-
-    ProfileField(
-        value = state.profileName,
-        enabled = !isBusy,
-        placeholder = stringResource(id = R.string.profile_name_placeholder),
-        label = stringResource(id = R.string.profile_name_label),
-        onTextChange = {
-            viewModel.onEvent(EditProfileScreenEvent.EnteredProfileName(it))
-        },
-        modifier = widthModifier,
-        errorMessage = state.profileNameError
-    )
-
-    ProfileField(
-        value = state.phoneNumber,
-        enabled = !isBusy,
-        placeholder = stringResource(id = R.string.phone_number_placeholder),
-        label = stringResource(id = R.string.phone_number_label),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-        onTextChange = {
-            viewModel.onEvent(EditProfileScreenEvent.EnteredPhoneNumber(it))
-        },
-        modifier = widthModifier,
-        errorMessage = state.phoneNumberError
-    )
 }

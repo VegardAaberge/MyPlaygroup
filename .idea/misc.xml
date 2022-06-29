@@ -57,7 +57,11 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/user/chat/components/MessageBox.kt" value="0.28055555555555556" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/user/chat/components/MessageItem.kt" value="0.1" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/create_profile/CreateProfileScreen.kt" value="0.6258992805755396" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/create_profile/components/ProfileField.kt" value="0.55" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/create_profile/components/ProfileImage.kt" value="0.4018181818181818" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/edit_profile/EditProfileScreen.kt" value="0.5" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/edit_profile/components/EditTextFields.kt" value="0.45740740740740743" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/edit_profile/components/ProfileField.kt" value="0.45740740740740743" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_chat_bubble_24.xml" value="0.1" />

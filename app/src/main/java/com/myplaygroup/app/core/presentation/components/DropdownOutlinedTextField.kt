@@ -23,10 +23,11 @@ fun ColumnScope.DropdownOutlinedTextField(
     items: List<String>,
     selected: String,
     errorMessage: String?,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isOutlined: Boolean = true,
     selectedChanged: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(),
     errorModifier: Modifier = Modifier
 ) {
     var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
@@ -50,6 +51,7 @@ fun ColumnScope.DropdownOutlinedTextField(
                         contentDescription = null,
                     )
                 },
+                colors = colors,
                 isError = errorMessage != null,
                 modifier = Modifier
                     .align(Alignment.Center)

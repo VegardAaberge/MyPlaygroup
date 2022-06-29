@@ -15,7 +15,7 @@ class FakeUsersRepository : UsersRepository {
             phoneNumber = "null",
             profileName = "null",
             profileCreated = false,
-            userCredit = 500,
+            balance = 500,
             username = "meng"
         ),
         AppUser(
@@ -24,7 +24,7 @@ class FakeUsersRepository : UsersRepository {
             phoneNumber = "12345678901",
             profileName = "Vegard",
             profileCreated = true,
-            userCredit = 200,
+            balance = 200,
             username = "vegard"
         )
     )

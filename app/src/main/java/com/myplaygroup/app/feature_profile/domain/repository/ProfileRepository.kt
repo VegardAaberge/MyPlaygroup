@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_profile.domain.repository
 
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.feature_profile.domain.model.EditProfileType
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
@@ -15,5 +16,7 @@ interface ProfileRepository {
         username: String,
         profileName: String,
         phoneNumber: String,
+        newPassword: String,
+        editProfileType: EditProfileType
     ) : Flow<Resource<Unit>>
 }

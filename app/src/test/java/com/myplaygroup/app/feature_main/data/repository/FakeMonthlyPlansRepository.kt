@@ -2,6 +2,7 @@ package com.myplaygroup.app.feature_main.data.repository
 
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
+import com.myplaygroup.app.feature_main.domain.model.StandardPlan
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +18,6 @@ class FakeMonthlyPlansRepository : MonthlyPlansRepository {
             startDate = LocalDate.of(2022, 7, 1),
             endDate = LocalDate.of(2022, 7, 1).plusMonths(1).minusDays(1),
             kidName = "emma",
-            paid = true,
             daysOfWeek = listOf(
                 DayOfWeek.MONDAY,
                 DayOfWeek.WEDNESDAY,
@@ -32,7 +32,6 @@ class FakeMonthlyPlansRepository : MonthlyPlansRepository {
             startDate = LocalDate.of(2022, 7, 1),
             endDate = LocalDate.of(2022, 7, 1).plusMonths(1).minusDays(1),
             kidName = "ellie",
-            paid = false,
             daysOfWeek = listOf(
                 DayOfWeek.MONDAY,
                 DayOfWeek.FRIDAY
@@ -42,9 +41,21 @@ class FakeMonthlyPlansRepository : MonthlyPlansRepository {
         ),
     )
 
-    override fun getAllMonthlyPlans(fetchFromRemote: Boolean): Flow<Resource<List<MonthlyPlan>>> {
+    override suspend fun getMonthlyPlans(fetchFromRemote: Boolean): Flow<Resource<List<MonthlyPlan>>> {
         return flow {
             emit(Resource.Success(monthlyPlans))
         }
+    }
+
+    override suspend fun getStandardPlans(fetchFromRemote: Boolean): Flow<Resource<List<StandardPlan>>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addMonthlyPlanToDatabase(monthlyPlan: MonthlyPlan): Resource<MonthlyPlan> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun uploadMonthlyPlans(unsyncedMonthlyPlans: List<MonthlyPlan>): Flow<Resource<List<MonthlyPlan>>> {
+        TODO("Not yet implemented")
     }
 }

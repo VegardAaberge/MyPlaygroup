@@ -38,12 +38,14 @@ class AdminViewModelTest {
         userSettingsManager = FakeUserSettingsManager()
         mainDaoInteractor = FakeMainDaoInteractor()
 
+        /*
         viewModel = AdminViewModel(
             userSettingsManager,
             imageRepository,
             basicAuthInterceptor,
             mainDaoInteractor
         )
+        */
     }
 
     @Test

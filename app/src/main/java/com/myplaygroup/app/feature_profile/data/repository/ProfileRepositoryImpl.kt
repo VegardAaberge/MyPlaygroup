@@ -7,6 +7,8 @@ import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.fetchNetworkResource
 import com.myplaygroup.app.feature_profile.data.requests.ProfileRequest
+import com.myplaygroup.app.feature_profile.domain.model.EditProfileType
+import com.myplaygroup.app.feature_profile.domain.model.EditProfileType.*
 import com.myplaygroup.app.feature_profile.domain.repository.ProfileRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -34,7 +36,8 @@ class ProfileRepositoryImpl @Inject constructor(
                     ProfileRequest(
                         profileName = profileName,
                         phoneNumber = phoneNumber,
-                        password = newPassword
+                        password = newPassword,
+                        editProfileType = NONE
                     )
                 )
             },
@@ -62,7 +65,9 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun editProfile(
         username: String,
         profileName: String,
-        phoneNumber: String
+        phoneNumber: String,
+        newPassword: String,
+        editProfileType: EditProfileType
     ): Flow<Resource<Unit>> {
 
         return fetchNetworkResource(
@@ -70,8 +75,10 @@ class ProfileRepositoryImpl @Inject constructor(
                 api.editProfile(
                     username = username,
                     ProfileRequest(
-                        profileName = profileName,
-                        phoneNumber = phoneNumber
+                        profileName = if(editProfileType == PROFILE_NAME) profileName else null,
+                        phoneNumber = if(editProfileType == PHONE_NUMBER) phoneNumber else null,
+                        password = if(editProfileType == PASSWORD) newPassword else null,
+                        editProfileType = editProfileType
                     )
                 )
             },
