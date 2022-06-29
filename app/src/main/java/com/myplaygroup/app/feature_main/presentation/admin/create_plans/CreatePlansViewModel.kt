@@ -154,7 +154,7 @@ class CreatePlansViewModel @Inject constructor(
                 startDate = state.startDate,
                 endDate = state.endDate,
                 planName = state.plan,
-                daysOfWeek = state.weekdays.filter { it.value }.keys.toList(),
+                daysOfWeek = state.weekdays.filter { it.value }.keys.toList().sortedBy { it.value },
                 planPrice = state.price.toLong()
             )
 

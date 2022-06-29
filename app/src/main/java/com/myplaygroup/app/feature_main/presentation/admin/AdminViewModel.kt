@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_main.presentation.admin
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,11 +10,15 @@ import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
+import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.destinations.*
 import com.myplaygroup.app.feature_main.domain.interactors.ChatInteractor
 import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
-import com.myplaygroup.app.feature_main.domain.model.*
+import com.myplaygroup.app.feature_main.domain.model.AppUser
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
+import com.myplaygroup.app.feature_main.domain.model.Payment
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import com.myplaygroup.app.feature_main.domain.repository.PaymentRepository
@@ -136,9 +141,7 @@ class AdminViewModel @Inject constructor(
                 onMergeFlowSuccess(result.data!!)
             }
             is Resource.Error -> {
-                setUIEvent(
-                    UiEvent.ShowSnackbar(result.message!!)
-                )
+                Log.d(Constants.DEBUG_KEY, result.message!!)
             }
             is Resource.Loading -> {
                 isBusy(result.isLoading)
@@ -208,20 +211,7 @@ class AdminViewModel @Inject constructor(
                 setState(result)
             }
         } else if (result is Resource.Error) {
-            setUIEvent(
-                UiEvent.ShowSnackbar(result.message!!)
-            )
-        }
-    }
-
-    private fun collectStandardPlans(result: Resource<List<StandardPlan>>) = viewModelScope.launch(Dispatchers.Main) {
-        when(result){
-            is Resource.Error -> {
-                setUIEvent(
-                    UiEvent.ShowSnackbar(result.message!!)
-                )
-            }
-            else -> {}
+            Log.d(Constants.DEBUG_KEY, result.message!!)
         }
     }
 }

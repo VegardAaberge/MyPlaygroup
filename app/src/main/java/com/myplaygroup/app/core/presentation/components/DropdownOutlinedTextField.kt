@@ -58,7 +58,9 @@ fun ColumnScope.DropdownOutlinedTextField(
                         mTextFieldSize = coordinates.size.toSize()
                     },
             ){
-                expanded = !expanded
+                if(enabled){
+                    expanded = !expanded
+                }
             }
         }else{
             ReadonlyTextField(
@@ -83,7 +85,9 @@ fun ColumnScope.DropdownOutlinedTextField(
                         mTextFieldSize = coordinates.size.toSize()
                     },
             ){
-                expanded = !expanded
+                if(enabled){
+                    expanded = !expanded
+                }
             }
         }
 

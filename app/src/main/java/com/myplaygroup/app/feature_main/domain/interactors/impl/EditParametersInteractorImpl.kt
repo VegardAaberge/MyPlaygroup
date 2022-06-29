@@ -79,13 +79,14 @@ class EditParametersInteractorImpl @Inject constructor(
 
                 listOf(
                     ParameterItem(HIDDEN, monthlyPlan::id.name, monthlyPlan.clientId),
+                    ParameterItem(INFO, monthlyPlan::username.name, monthlyPlan.username),
+                    ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
+                    ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice),
                     ParameterItem(SWITCH, monthlyPlan::changeDays.name, monthlyPlan.changeDays),
                     ParameterItem(OPTIONS, monthlyPlan::planName.name, standardPlans, monthlyPlan.changeDays),
                     ParameterItem(DATE, monthlyPlan::startDate.name, monthlyPlan.startDate, monthlyPlan.changeDays),
                     ParameterItem(DATE, monthlyPlan::endDate.name, monthlyPlan.endDate, monthlyPlan.changeDays),
                     ParameterItem(WEEKDAYS, monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek, monthlyPlan.changeDays),
-                    ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
-                    ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice),
                     cancelDeleteParameterItem,
                 )
             }
@@ -256,17 +257,39 @@ class EditParametersInteractorImpl @Inject constructor(
                 val monthlyPlan = dao.getMonthlyPlanById(id).toMonthlyPlan()
 
                 val kidName = parameterItems.getValue(monthlyPlan::kidName.name, monthlyPlan.kidName)
+
                 val planPrice = parameterItems.getValue(monthlyPlan::planPrice.name, monthlyPlan.planPrice)
                 val cancelled = if(monthlyPlan.id != -1L) {
                     parameterItems.getValue(monthlyPlan::cancelled.name, monthlyPlan.cancelled)
                 } else false
 
-                val monthlyPlanEntity = monthlyPlan.copy(
-                    kidName = kidName,
-                    planPrice = planPrice,
-                    cancelled = cancelled,
-                    modified = true
-                ).toMonthlyPlanEntity()
+                val changeDays = parameterItems.getValue(monthlyPlan::changeDays.name, monthlyPlan.changeDays)
+                val monthlyPlanEntity = if(changeDays == true){
+                    val planName = parameterItems.getValue(monthlyPlan::planName.name, listOf<String>())
+                    val startDate = parameterItems.getValue(monthlyPlan::startDate.name, monthlyPlan.startDate)
+                    val endDate = parameterItems.getValue(monthlyPlan::endDate.name, monthlyPlan.endDate)
+                    val daysOfWeek = parameterItems.getValue(monthlyPlan::daysOfWeek.name, monthlyPlan.daysOfWeek).sortedBy { it.value }
+
+                    monthlyPlan.copy(
+                        changeDays = changeDays,
+                        planName = planName.first(),
+                        startDate = startDate,
+                        endDate = endDate,
+                        daysOfWeek = daysOfWeek,
+                        kidName = kidName,
+                        planPrice = planPrice,
+                        cancelled = cancelled,
+                        modified = true
+                    ).toMonthlyPlanEntity()
+                }else{
+                    monthlyPlan.copy(
+                        changeDays = changeDays,
+                        kidName = kidName,
+                        planPrice = planPrice,
+                        cancelled = cancelled,
+                        modified = true
+                    ).toMonthlyPlanEntity()
+                }
 
                 dao.insertMonthlyPlan(monthlyPlanEntity)
                 Resource.Success()
