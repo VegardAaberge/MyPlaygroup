@@ -37,7 +37,7 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/InfoListParamItem.kt" value="0.33611111111111114" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/InfoParamItem.kt" value="0.6953703703703704" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/SelectWeekdaysItem.kt" value="0.335" />
-        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/SwitchParamItem.kt" value="0.6953703703703704" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/SwitchParamItem.kt" value="0.45" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/TextParamItem.kt" value="0.12962962962962962" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/edit_parameters/components/TimeParamItem.kt" value="0.6953703703703704" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/admin/monthly_plans/MonthlyPlansScreen.kt" value="0.335" />
@@ -56,6 +56,8 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/home/components/CalendarScreen.kt" value="0.20506329113924052" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/user/chat/components/MessageBox.kt" value="0.28055555555555556" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/user/chat/components/MessageItem.kt" value="0.1" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/user/home/components/BalanceCard.kt" value="0.375" />
+        <entry key="app/src/main/java/com/myplaygroup/app/feature_main/presentation/user/home/components/MonthlyPlanItem.kt" value="0.4074074074074074" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/create_profile/CreateProfileScreen.kt" value="0.6258992805755396" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/create_profile/components/ProfileField.kt" value="0.55" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/create_profile/components/ProfileImage.kt" value="0.4018181818181818" />

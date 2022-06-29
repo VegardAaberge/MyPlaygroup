@@ -19,11 +19,31 @@ import com.myplaygroup.app.feature_profile.domain.model.EditProfileType
 fun EditProfileSection(
     profileName: String,
     phoneNumber: String,
-    editProfileData: (EditProfileType) -> Unit
+    editProfileData: (EditProfileType) -> Unit,
+    seeBalance: () -> Unit
 ) {
     Spacer(modifier = Modifier.height(16.dp))
 
     Divider(modifier = Modifier.fillMaxWidth())
+
+    ReadonlyTextField(
+        label = "Balance",
+        fieldValue = "¥755",
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null
+            )
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.LightGray,
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        seeBalance()
+    }
 
     ReadonlyTextField(
         label = "Profile Name",
