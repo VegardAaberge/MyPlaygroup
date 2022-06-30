@@ -21,7 +21,7 @@ data class CreatePlansState(
     var kidError: String? = null,
     var plan: String = "",
     var planError: String? = null,
-    var price: Int = 0,
+    var price: String = "",
     var priceError: String? = null,
     var startDate: LocalDate = LocalDate.now(),
     var startDateError: String? = null,

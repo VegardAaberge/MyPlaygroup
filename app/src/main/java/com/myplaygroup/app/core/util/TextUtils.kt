@@ -47,3 +47,14 @@ class TextUtils {
 fun String.display() : String {
     return this.lowercase().replaceFirstChar { x -> x.uppercase() }.replace('_', ' ')
 }
+
+fun String.isEmptyOrInt() : Boolean {
+    try {
+        if (this.isEmpty())
+            return true
+        this.toInt()
+        return true
+    } catch (nfe: NumberFormatException) {
+        return false
+    }
+}

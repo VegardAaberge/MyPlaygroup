@@ -81,7 +81,7 @@ class EditParametersInteractorImpl @Inject constructor(
                     ParameterItem(HIDDEN, monthlyPlan::id.name, monthlyPlan.clientId),
                     ParameterItem(INFO, monthlyPlan::username.name, monthlyPlan.username),
                     ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
-                    ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice),
+                    ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice.toString()),
                     ParameterItem(SWITCH, monthlyPlan::changeDays.name, monthlyPlan.changeDays),
                     ParameterItem(OPTIONS, monthlyPlan::planName.name, standardPlans, monthlyPlan.changeDays),
                     ParameterItem(DATE, monthlyPlan::startDate.name, monthlyPlan.startDate, monthlyPlan.changeDays),
@@ -118,7 +118,7 @@ class EditParametersInteractorImpl @Inject constructor(
                     ParameterItem(HIDDEN, payment::id.name, payment.clientId),
                     ParameterItem(INFO, payment::username.name, payment.username),
                     ParameterItem(DATE, payment::date.name, payment.date),
-                    ParameterItem(NUMBER, payment::amount.name, payment.amount),
+                    ParameterItem(NUMBER, payment::amount.name, payment.amount.toString()),
                     cancelDeleteParameterItem,
                 )
             }
@@ -178,7 +178,7 @@ class EditParametersInteractorImpl @Inject constructor(
                     kidNameValidator(it.toString())
                 }
                 items.updateError(MonthlyPlan::planPrice.name){
-                    planPriceValidator(it.toString().toInt())
+                    planPriceValidator(it.toString().toIntOrNull())
                 }
             }
             ParametersType.USERS -> {
@@ -191,7 +191,7 @@ class EditParametersInteractorImpl @Inject constructor(
             }
             ParametersType.PAYMENTS -> {
                 items.updateError(Payment::amount.name){
-                    amuntValidator(it.toString().toInt())
+                    amuntValidator(it.toString().toIntOrNull())
                 }
                 items.updateError(DailyClass::date.name){
                     dateValidator(it as LocalDate)
@@ -258,7 +258,7 @@ class EditParametersInteractorImpl @Inject constructor(
 
                 val kidName = parameterItems.getValue(monthlyPlan::kidName.name, monthlyPlan.kidName)
 
-                val planPrice = parameterItems.getValue(monthlyPlan::planPrice.name, monthlyPlan.planPrice)
+                val planPrice = parameterItems.getValue(monthlyPlan::planPrice.name, monthlyPlan.planPrice.toString()).toLong()
                 val cancelled = if(monthlyPlan.id != -1L) {
                     parameterItems.getValue(monthlyPlan::cancelled.name, monthlyPlan.cancelled)
                 } else false
@@ -318,7 +318,7 @@ class EditParametersInteractorImpl @Inject constructor(
             ParametersType.PAYMENTS -> {
                 val payment = dao.getPaymentById(id).toPayment()
 
-                val amount = parameterItems.getValue(payment::amount.name, payment.amount)
+                val amount = parameterItems.getValue(payment::amount.name, payment.amount.toString()).toLong()
                 val date = parameterItems.getValue(payment::date.name, payment.date)
                 val cancelled = if(payment.id != -1L) {
                     parameterItems.getValue(payment::cancelled.name, payment.cancelled)
@@ -367,9 +367,7 @@ class EditParametersInteractorImpl @Inject constructor(
 
         val item = this.firstOrNull { x -> x.key == name } ?: return
 
-        val error = if(item.value.toString().isNotEmpty()){
-            validator(item.value).errorMessage
-        }else null
+        val error = validator(item.value).errorMessage
 
         val itemIndex = this.indexOf(item)
         this[itemIndex] = item.copy(

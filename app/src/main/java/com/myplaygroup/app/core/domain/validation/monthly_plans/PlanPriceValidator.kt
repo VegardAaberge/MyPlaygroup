@@ -3,7 +3,14 @@ package com.myplaygroup.app.core.domain.validation.monthly_plans
 import com.myplaygroup.app.core.domain.validation.ValidationResult
 
 class PlanPriceValidator {
-    operator fun invoke(price: Int) : ValidationResult {
+    operator fun invoke(price: Int?) : ValidationResult {
+        if(price == null){
+            return ValidationResult(
+                successful = false,
+                errorMessage = "Price cannot be empty"
+            )
+        }
+
         if(price < 0){
             return ValidationResult(
                 successful = false,

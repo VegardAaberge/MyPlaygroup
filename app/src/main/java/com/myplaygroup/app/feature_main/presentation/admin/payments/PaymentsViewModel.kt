@@ -77,7 +77,7 @@ class PaymentsViewModel @Inject constructor(
             is PaymentsScreenEvent.CreatePayment -> {
                 addPayment(
                     username = event.username,
-                    amount = event.amount,
+                    amount = event.amount.toIntOrNull(),
                     date = event.date
                 )
             }
@@ -86,7 +86,7 @@ class PaymentsViewModel @Inject constructor(
 
     private fun addPayment(
         username: String,
-        amount: Int,
+        amount: Int?,
         date: LocalDate
     ) = viewModelScope.launch {
         val usernameResult = mainValidationInteractors.usernameValidator(username)
@@ -107,7 +107,7 @@ class PaymentsViewModel @Inject constructor(
             val result = repository.addPaymentToDatabase(
                 Payment(
                     username = username,
-                    amount = amount.toLong(),
+                    amount = amount!!.toLong(),
                     date = date
                 )
             );

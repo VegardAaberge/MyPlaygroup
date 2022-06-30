@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myplaygroup.app.core.presentation.components.DropdownOutlinedTextField
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
+import com.myplaygroup.app.core.util.isEmptyOrInt
 import com.myplaygroup.app.feature_main.presentation.admin.create_plans.components.OutlinedDateField
 import java.time.LocalDate
 
@@ -28,12 +29,12 @@ fun ShowCreatePaymentDialog(
     usernameError: String?,
     dateError: String?,
     amountError: String?,
-    createPayment: (String, LocalDate, Int) -> Unit,
+    createPayment: (String, LocalDate, String) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     var username by remember { mutableStateOf("") }
     var date by remember { mutableStateOf(LocalDate.now()) }
-    var amount by remember { mutableStateOf(0) }
+    var amount by remember { mutableStateOf("") }
 
     Surface(
         modifier = Modifier
@@ -80,12 +81,10 @@ fun ShowCreatePaymentDialog(
             )
 
             OutlinedTextField(
-                value = amount.toString(),
+                value = amount,
                 onValueChange = {
-                    try {
-                        amount = it.toInt()
-                    }catch (e: NumberFormatException){
-                        // Not Int
+                    if(amount.isEmptyOrInt()) {
+                        amount = it
                     }
                 },
                 trailingIcon = {

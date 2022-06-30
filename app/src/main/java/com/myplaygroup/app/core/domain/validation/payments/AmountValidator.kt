@@ -3,7 +3,14 @@ package com.myplaygroup.app.core.domain.validation.payments
 import com.myplaygroup.app.core.domain.validation.ValidationResult
 
 class AmountValidator {
-    operator fun invoke(amount: Int) : ValidationResult {
+    operator fun invoke(amount: Int?) : ValidationResult {
+        if(amount == null){
+            return ValidationResult(
+                successful = false,
+                errorMessage = "Payments cannot be empty"
+            )
+        }
+
         if(amount <= 0){
             return ValidationResult(
                 successful = false,

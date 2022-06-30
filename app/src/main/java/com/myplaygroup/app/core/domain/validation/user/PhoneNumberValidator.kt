@@ -7,7 +7,7 @@ class PhoneNumberValidator {
         if(phoneNumber.isBlank()){
             return ValidationResult(
                 successful = false,
-                errorMessage = "The phone number cannpt be blank"
+                errorMessage = "The phone number cannot be blank"
             )
         }
         if(phoneNumber.any{ x -> !x.isDigit() }){

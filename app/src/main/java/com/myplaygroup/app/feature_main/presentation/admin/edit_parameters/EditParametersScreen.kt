@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
+import com.myplaygroup.app.core.util.isEmptyOrInt
 import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.*
 import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 import com.myplaygroup.app.feature_main.presentation.admin.edit_parameters.components.*
@@ -122,10 +123,8 @@ fun EditParameterItem(
         }
         NUMBER -> {
             TextParamItem(item){ value, key ->
-                try {
-                    valueChanged(value.toString().toLong(), key)
-                }catch (nfe: NumberFormatException) {
-                    // not a valid long
+                if(value.toString().isEmptyOrInt()){
+                    valueChanged(value.toString(), key)
                 }
             }
         }

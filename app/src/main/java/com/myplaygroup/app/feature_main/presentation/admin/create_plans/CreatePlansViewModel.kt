@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.core.util.isEmptyOrInt
 import com.myplaygroup.app.feature_main.domain.interactors.CreatePlanValidation
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
@@ -55,18 +56,16 @@ class CreatePlansViewModel @Inject constructor(
                 state.standardPlans.firstOrNull() { x -> x.name == event.plan }?.let { plan ->
                     state = state.copy(
                         plan = plan.name,
-                        price = plan.price
+                        price = plan.price.toString()
                     )
                 }
                 calculatePrice()
             }
             is CreatePlansScreenEvent.PriceChanged -> {
-                try {
+                if(event.price.isEmptyOrInt()){
                     state = state.copy(
-                        price = event.price.toInt()
+                        price = event.price
                     )
-                }catch (nfe: NumberFormatException) {
-                    // not a valid int
                 }
             }
             is CreatePlansScreenEvent.WeekdayChanged -> {
@@ -131,7 +130,7 @@ class CreatePlansViewModel @Inject constructor(
         val endDateResult = createPlanValidation.endDateValidator(state.endDate, state.startDate)
         val planNameResult = createPlanValidation.planNameValidator(state.plan)
         val dayOfWeekResult = createPlanValidation.dayOfWeekValidator(state.weekdays)
-        val planPriceResult = createPlanValidation.planPriceValidator(state.price)
+        val planPriceResult = createPlanValidation.planPriceValidator(state.price.toIntOrNull())
 
         val hasError = listOf(
             usernameResult, kidNameResult, startDateResult, endDateResult, planNameResult, dayOfWeekResult, planPriceResult
@@ -155,7 +154,7 @@ class CreatePlansViewModel @Inject constructor(
                 endDate = state.endDate,
                 planName = state.plan,
                 daysOfWeek = state.weekdays.filter { it.value }.keys.toList().sortedBy { it.value },
-                planPrice = state.price.toLong()
+                planPrice = state.price!!.toLong()
             )
 
             val result = monthlyPlansRepository.addMonthlyPlanToDatabase(monthlyPlan)
@@ -190,7 +189,7 @@ class CreatePlansViewModel @Inject constructor(
 
         val adjustedPrice = price / (classesChosen / classesInMonth)
         state = state.copy(
-            price = adjustedPrice.roundToInt()
+            price = adjustedPrice.roundToInt().toString()
         )
     }
 
@@ -216,7 +215,7 @@ class CreatePlansViewModel @Inject constructor(
                     val endDate = startDate.plusMonths(1).minusDays(1)
                     val multipleEndDate = multipleStartDate.plusMonths(1).minusDays(1)
 
-                    val baseMonthlyPlans = it.filter { x -> x.startDate > LocalDate.now().minusMonths(3) }
+                    val baseMonthlyPlans = it.filter { !it.cancelled && it.startDate > LocalDate.now().minusMonths(2)}
                         .groupBy { x -> x.kidName }
                         .map { x -> x.value.maxByOrNull { y -> y.startDate }!! }
 

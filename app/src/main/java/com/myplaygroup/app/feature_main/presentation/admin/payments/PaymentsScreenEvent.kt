@@ -9,6 +9,6 @@ sealed class PaymentsScreenEvent {
     class CreatePayment(
         val username: String,
         val date: LocalDate,
-        val amount: Int
+        val amount: String
     ) : PaymentsScreenEvent()
 }
