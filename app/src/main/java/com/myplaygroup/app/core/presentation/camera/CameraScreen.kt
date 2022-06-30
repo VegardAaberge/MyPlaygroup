@@ -1,5 +1,7 @@
 package com.myplaygroup.app.core.presentation.camera
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.compose.foundation.Canvas
@@ -22,11 +24,13 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.myplaygroup.app.core.presentation.camera.components.CameraFooter
 import com.myplaygroup.app.core.presentation.camera.components.CameraUIAction
 import com.myplaygroup.app.core.presentation.camera.components.CameraView
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
+import com.myplaygroup.app.findActivity
 
 @Composable
 fun CameraScreen(
@@ -36,6 +40,8 @@ fun CameraScreen(
     isBusy: Boolean = false,
     takePhotoCallback: (Bitmap) -> Unit,
 ) {
+    AllowScreenRotation()
+
     viewModel.takePhotoCallback = takePhotoCallback
     viewModel.setShouldCrop(shouldCrop)
 
@@ -167,6 +173,20 @@ fun CameraScreen(
 
         if(isBusy){
             CustomProgressIndicator()
+        }
+    }
+}
+
+@SuppressLint("SourceLockedOrientationActivity")
+@Composable
+fun AllowScreenRotation() {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        onDispose {
+            // lock orientation back to portrait when leaving
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
     }
 }
