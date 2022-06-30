@@ -12,7 +12,7 @@ class PhoneNumberValidatorTest {
 
     @Before
     fun setUp() {
-        phoneNumberValidator = PhoneNumberValidator()
+        phoneNumberValidator = PhoneNumberValidator(context)
     }
 
     @Test

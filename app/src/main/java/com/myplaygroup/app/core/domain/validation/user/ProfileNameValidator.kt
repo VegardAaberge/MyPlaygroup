@@ -1,13 +1,14 @@
 package com.myplaygroup.app.core.domain.validation.user
 
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.domain.validation.ValidationResult
 
-class ProfileNameValidator {
+class ProfileNameValidator(val context: android.content.Context) {
     operator fun invoke(profileName: String) : ValidationResult {
         if(profileName.isBlank()){
             return ValidationResult(
                 successful = false,
-                errorMessage = "Profile name cannot be blank"
+                errorMessage = context.getString(R.string.validation_profile_name_cannot_be_blank)
             )
         }
 

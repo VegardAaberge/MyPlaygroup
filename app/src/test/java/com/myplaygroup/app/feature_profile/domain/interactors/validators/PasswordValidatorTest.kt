@@ -11,7 +11,7 @@ class PasswordValidatorTest {
 
     @Before
     fun setUp() {
-        passwordValidator = PasswordValidator()
+        passwordValidator = PasswordValidator(context)
     }
 
     @Test

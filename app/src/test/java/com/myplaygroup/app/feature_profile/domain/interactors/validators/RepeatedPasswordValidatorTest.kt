@@ -12,7 +12,7 @@ class RepeatedPasswordValidatorTest {
 
     @Before
     fun setUp() {
-        repeatedPasswordValidator = RepeatedPasswordValidator()
+        repeatedPasswordValidator = RepeatedPasswordValidator(context)
     }
 
     @Test

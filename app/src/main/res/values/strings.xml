@@ -38,4 +38,12 @@
     <string name="settings_change_password">Change Password</string>
     <string name="settings_profile_name">Profile Name</string>
     <string name="settings_balance">Balance</string>
+    <string name="validation_profile_name_cannot_be_blank">Profile name cannot be blank</string>
+    <string name="validation_phone_number_canot_be_blank">The phone number cannot be blank</string>
+    <string name="validation_phone_number_contain_digits">The phone should only consist of digits</string>
+    <string name="validation_phone_number_contain_11_digits">The phone number need to contain 11 digits</string>
+    <string name="validation_password_at_least_8_characters">The password needs to consist of at least 8 characters</string>
+    <string name="validation_password_correct_format">The password need to contain one letter, one digit and one upper and lower case letter</string>
+    <string name="validation_password_does_not_match">The password don\'t match</string>
+    <string name="validation_profile_picture_not_set">Profile picture need to be set</string>
 </resources>

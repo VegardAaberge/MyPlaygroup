@@ -12,7 +12,7 @@ class ProfileNameValidatorTest {
 
     @Before
     fun setUp() {
-        profileNameValidator = ProfileNameValidator()
+        profileNameValidator = ProfileNameValidator(context)
     }
 
     @Test

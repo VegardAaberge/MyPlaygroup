@@ -14,7 +14,7 @@ class ProfileBitmapValidatorTest {
 
     @Before
     fun setUp() {
-        profileBitmapValidator = ProfileBitmapValidator()
+        profileBitmapValidator = ProfileBitmapValidator(context)
     }
 
     @Test

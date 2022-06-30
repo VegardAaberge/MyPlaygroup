@@ -1,5 +1,6 @@
 package com.myplaygroup.app.feature_main.domain.interactors.impl
 
+import android.content.Context
 import com.myplaygroup.app.core.data.mapper.*
 import com.myplaygroup.app.core.domain.validation.ValidationResult
 import com.myplaygroup.app.core.domain.validation.daily_class.DateValidator
@@ -18,13 +19,15 @@ import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.*
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.domain.interactors.EditParametersInteractor
 import com.myplaygroup.app.feature_main.domain.model.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
 class EditParametersInteractorImpl @Inject constructor(
-    private val dao: MainDao
+    private val dao: MainDao,
+    @ApplicationContext private val context: Context
 ) : EditParametersInteractor {
 
     companion object{
@@ -41,8 +44,8 @@ class EditParametersInteractorImpl @Inject constructor(
     private val planPriceValidator = PlanPriceValidator()
 
     // Users
-    private val phoneNumberValidator = PhoneNumberValidator()
-    private val profileNameValidator = ProfileNameValidator()
+    private val phoneNumberValidator = PhoneNumberValidator(context)
+    private val profileNameValidator = ProfileNameValidator(context)
 
     // Payments
     private val amuntValidator = AmountValidator()
