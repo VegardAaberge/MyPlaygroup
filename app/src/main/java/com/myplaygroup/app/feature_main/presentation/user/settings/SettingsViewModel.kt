@@ -6,10 +6,7 @@ import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.domain.repository.ImageRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
 import com.myplaygroup.app.core.presentation.BaseViewModel
-import com.myplaygroup.app.destinations.EditProfileScreenDestination
-import com.myplaygroup.app.destinations.LoginScreenDestination
-import com.myplaygroup.app.destinations.MainScreenDestination
-import com.myplaygroup.app.destinations.ProfileSelectorScreenDestination
+import com.myplaygroup.app.destinations.*
 import com.myplaygroup.app.feature_main.domain.interactors.MainDaoInteractor
 import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,6 +37,11 @@ class SettingsViewModel @Inject constructor(
         when(event){
             is SettingsScreenEvent.LogoutButtonTapped -> {
                 logout()
+            }
+            is SettingsScreenEvent.NavigateToShowBalance -> {
+                mainViewModel.setUIEvent(
+                    BaseViewModel.UiEvent.NavigateTo(BalanceScreenDestination)
+                )
             }
             is SettingsScreenEvent.EditProfileTapped -> {
                 mainViewModel.setUIEvent(

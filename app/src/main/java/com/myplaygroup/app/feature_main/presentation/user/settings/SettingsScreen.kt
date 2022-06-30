@@ -23,6 +23,7 @@ fun SettingsScreen(
     val username = viewModel.mainViewModel.username.collectAsState("").value
     val profileName = viewModel.profileName.collectAsState("").value
     val phoneNumber = viewModel.phoneNumber.collectAsState("").value
+    val balance = viewModel.mainViewModel.balance.collectAsState(0L).value
 
     Column(modifier = Modifier
         .fillMaxSize()) {
@@ -42,8 +43,12 @@ fun SettingsScreen(
         EditProfileSection(
             profileName = profileName,
             phoneNumber = phoneNumber,
+            balance = balance,
             editProfileData = {
                 viewModel.onEvent(SettingsScreenEvent.EditProfileTapped(it))
+            },
+            seeBalance = {
+                viewModel.onEvent(SettingsScreenEvent.NavigateToShowBalance)
             }
         )
 

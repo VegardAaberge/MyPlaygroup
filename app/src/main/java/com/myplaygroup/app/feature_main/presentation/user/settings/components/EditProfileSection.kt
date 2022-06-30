@@ -14,11 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.myplaygroup.app.core.presentation.components.ReadonlyTextField
 import com.myplaygroup.app.feature_profile.domain.model.EditProfileType
+import kotlin.math.absoluteValue
 
 @Composable
 fun EditProfileSection(
     profileName: String,
     phoneNumber: String,
+    balance: Long,
     editProfileData: (EditProfileType) -> Unit,
     seeBalance: () -> Unit
 ) {
@@ -28,7 +30,7 @@ fun EditProfileSection(
 
     ReadonlyTextField(
         label = "Balance",
-        fieldValue = "¥755",
+        fieldValue = if(balance < 0) "-¥${balance.absoluteValue}" else "¥$balance",
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,

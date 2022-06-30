@@ -9,6 +9,7 @@ import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.core.util.checkForInternetConnection
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
+import com.myplaygroup.app.feature_main.data.mapper.toPayment
 import com.myplaygroup.app.feature_main.domain.model.UserSchedule
 import com.myplaygroup.app.feature_main.domain.repository.ScheduleRepository
 import kotlinx.coroutines.flow.Flow
@@ -32,10 +33,12 @@ class ScheduleRepositoryImpl @Inject constructor(
             query = {
                 val dailyClasses = dao.getDailyClasses().map { x -> x.toDailyClass() }
                 val monthlyPlans = dao.getMonthlyPlans().map { x -> x.toMonthlyPlan() }
+                val payments = dao.getPayments().map { x -> x.toPayment() }
 
                 UserSchedule(
                     dailyClasses = dailyClasses,
-                    monthlyPlans = monthlyPlans
+                    monthlyPlans = monthlyPlans,
+                    payments = payments
                 )
             },
             fetch = {
@@ -45,15 +48,21 @@ class ScheduleRepositoryImpl @Inject constructor(
                 dao.clearAllMonthlyPlans()
                 dao.insertMonthlyPlans(schedule.monthlyPlans)
 
+                dao.clearAllPayments()
+
+                dao.insertPayments(schedule.payments)
+
                 dao.clearAllDailyClasses()
                 dao.insertDailyClasses(schedule.dailyClasses)
 
                 val dailyClasses2 = dao.getDailyClasses().map { x -> x.toDailyClass() }
                 val monthlyPlans2 = dao.getMonthlyPlans().map { x -> x.toMonthlyPlan() }
+                val payments2 = dao.getPayments().map { x -> x.toPayment() }
 
                 UserSchedule(
                     dailyClasses = dailyClasses2,
-                    monthlyPlans = monthlyPlans2
+                    monthlyPlans = monthlyPlans2,
+                    payments = payments2
                 )
             },
             shouldFetch = {

@@ -43,3 +43,7 @@ class TextUtils {
         }
     }
 }
+
+fun String.display() : String {
+    return this.lowercase().replaceFirstChar { x -> x.uppercase() }.replace('_', ' ')
+}

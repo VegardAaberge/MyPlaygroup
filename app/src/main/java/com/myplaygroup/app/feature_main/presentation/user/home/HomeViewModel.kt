@@ -9,9 +9,9 @@ import com.myplaygroup.app.core.data.mapper.toDailyClass
 import com.myplaygroup.app.core.data.mapper.toDailyClassEntity
 import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
-import com.myplaygroup.app.feature_main.presentation.admin.classes.ClassesScreenEvent
 import com.myplaygroup.app.feature_main.domain.model.UserSchedule
 import com.myplaygroup.app.feature_main.domain.repository.ScheduleRepository
+import com.myplaygroup.app.feature_main.presentation.admin.classes.ClassesScreenEvent
 import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -48,8 +48,12 @@ class HomeViewModel @Inject constructor(
     private fun collectMonthlySchedule(result: Resource<UserSchedule>) = viewModelScope.launch(Dispatchers.Main) {
         when(result){
             is Resource.Success -> {
+                val data = result.data!!
                 state = state.copy(
-                    dailyClasses = result.data!!.dailyClasses.map { it.toDailyClassEntity().toDailyClass() }
+                    dailyClasses = data.dailyClasses.map { it.toDailyClassEntity().toDailyClass() }
+                )
+                mainViewModel.balance.emit(
+                    data.payments.sumOf { it.amount } - data.monthlyPlans.sumOf { it.planPrice }
                 )
             }
             is Resource.Error -> {
