@@ -6,8 +6,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.user_section.UserSection
 import com.myplaygroup.app.feature_main.presentation.user.MainViewModel
 import com.myplaygroup.app.feature_main.presentation.user.settings.components.EditProfileSection
@@ -60,7 +62,7 @@ fun SettingsScreen(
                 viewModel.onEvent(SettingsScreenEvent.LogoutButtonTapped)
             }
         ) {
-            Text(text = "Logout")
+            Text(text = stringResource(R.string.settings_logout))
         }
     }
 }

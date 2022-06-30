@@ -39,7 +39,7 @@ fun MainScreen(
     val navController = rememberNavController()
     val scaffoldState = collectEventFlow(viewModel, navigator)
 
-    val homeValue = stringResource(id = R.string.bar_home)
+    val homeValue = stringResource(id = R.string.main_bar_home)
     var title by remember{
         mutableStateOf(homeValue)
     }
@@ -60,13 +60,13 @@ fun MainScreen(
                         filledIcon = painterResource(id = R.drawable.ic_baseline_home_24),
                     ),
                     BottomNavItem(
-                        name = stringResource(R.string.bar_chat),
+                        name = stringResource(R.string.main_bar_chat),
                         route = Screen.ChatFragment.route,
                         outlinedIcon = painterResource(id = R.drawable.ic_baseline_chat_bubble_outline_24),
                         filledIcon = painterResource(id = R.drawable.ic_baseline_chat_bubble_24)
                     ),
                     BottomNavItem(
-                        name = stringResource(R.string.bar_settings),
+                        name = stringResource(R.string.main_bar_settings),
                         route = Screen.SettingsFragment.route,
                         outlinedIcon = painterResource(id = R.drawable.ic_outline_person_24),
                         filledIcon = painterResource(id = R.drawable.ic_baseline_person_24),

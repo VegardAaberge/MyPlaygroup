@@ -8,8 +8,10 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
@@ -33,7 +35,7 @@ fun BalanceScreen(
         modifier = Modifier.fillMaxWidth(),
         topBar = {
             DefaultTopAppBar(
-                title = "Balance",
+                title = stringResource(R.string.balance_balance),
                 navigationIcon = {
                     AppBarBackButton(navigator)
                 },
@@ -83,7 +85,7 @@ fun BalanceDataLazyColumn(
 
         item {
             BalanceHeader(
-                title = "SUM",
+                title = stringResource(R.string.balance_sum),
             )
         }
 

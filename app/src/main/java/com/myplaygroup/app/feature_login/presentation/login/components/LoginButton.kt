@@ -24,6 +24,6 @@ fun LoginButton(
             .height(btnHeight)
     )
     {
-        Text(text = stringResource(id = R.string.button_login))
+        Text(text = stringResource(id = R.string.login_button))
     }
 }

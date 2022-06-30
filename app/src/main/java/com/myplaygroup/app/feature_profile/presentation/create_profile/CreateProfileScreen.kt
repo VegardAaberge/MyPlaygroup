@@ -69,7 +69,7 @@ fun CreateProfileScreenBody(
         scaffoldState = scaffoldState,
         topBar = {
             DefaultTopAppBar(
-                title = stringResource(R.string.profile_screen_title),
+                title = stringResource(R.string.create_profile_title),
                 navigationIcon = {
                     AppBarBackButton(navigator!!)
                 }
@@ -80,7 +80,7 @@ fun CreateProfileScreenBody(
                     },
                     enabled = !isBusy,
                 ) {
-                    Text(text = "Save")
+                    Text(text = stringResource(R.string.create_profile_save))
                 }
             }
         }
@@ -128,8 +128,8 @@ fun ColumnScope.TextFields(
     ProfileField(
         value = state.profileName,
         enabled = !isBusy,
-        placeholder = stringResource(id = R.string.profile_name_placeholder),
-        label = stringResource(id = R.string.profile_name_label),
+        placeholder = stringResource(id = R.string.create_profile_name_placeholder),
+        label = stringResource(id = R.string.create_profile_name_label),
         onTextChange = {
             viewModel.onEvent(CreateProfileScreenEvent.EnteredProfileName(it))
         },
@@ -140,8 +140,8 @@ fun ColumnScope.TextFields(
     ProfileField(
         value = state.phoneNumber,
         enabled = !isBusy,
-        placeholder = stringResource(id = R.string.phone_number_placeholder),
-        label = stringResource(id = R.string.phone_number_label),
+        placeholder = stringResource(id = R.string.create_profile_phone_number_placeholder),
+        label = stringResource(id = R.string.create_profile_screen_phone_number_label),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
         onTextChange = {
             viewModel.onEvent(CreateProfileScreenEvent.EnteredPhoneNumber(it))
@@ -153,8 +153,8 @@ fun ColumnScope.TextFields(
     ProfileField(
         value = state.password,
         enabled = !isBusy,
-        placeholder = stringResource(id = R.string.password_placeholder),
-        label = stringResource(id = R.string.password_label),
+        placeholder = stringResource(id = R.string.login_create_profile_password_placeholder),
+        label = stringResource(id = R.string.login_create_profile_password_label),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         isPassword = true,
         onTextChange = {
@@ -167,8 +167,8 @@ fun ColumnScope.TextFields(
     ProfileField(
         value = state.repeatedPassword,
         enabled = !isBusy,
-        placeholder = stringResource(id = R.string.confirm_password_placeholder),
-        label = stringResource(id = R.string.confirm_password_label),
+        placeholder = stringResource(id = R.string.create_profile_confirm_password_placeholder),
+        label = stringResource(id = R.string.create_profile_confirm_password_label),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         isPassword = true,
         onTextChange = {

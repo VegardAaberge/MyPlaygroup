@@ -11,7 +11,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.ReadonlyTextField
 import com.myplaygroup.app.feature_profile.domain.model.EditProfileType
 import kotlin.math.absoluteValue
@@ -29,7 +31,7 @@ fun EditProfileSection(
     Divider(modifier = Modifier.fillMaxWidth())
 
     ReadonlyTextField(
-        label = "Balance",
+        label = stringResource(R.string.settings_balance),
         fieldValue = if(balance < 0) "-¥${balance.absoluteValue}" else "¥$balance",
         trailingIcon = {
             Icon(
@@ -48,7 +50,7 @@ fun EditProfileSection(
     }
 
     ReadonlyTextField(
-        label = "Profile Name",
+        label = stringResource(R.string.settings_profile_name),
         fieldValue = profileName,
         trailingIcon = {
             Icon(
@@ -67,7 +69,7 @@ fun EditProfileSection(
     }
 
     ReadonlyTextField(
-        label = "Phone Number",
+        label = stringResource(R.string.settings_phone_number),
         fieldValue = phoneNumber,
         trailingIcon = {
             Icon(
@@ -86,7 +88,7 @@ fun EditProfileSection(
     }
 
     ReadonlyTextField(
-        label = "Change Password",
+        label = stringResource(R.string.settings_change_password),
         fieldValue = "",
         trailingIcon = {
             Icon(

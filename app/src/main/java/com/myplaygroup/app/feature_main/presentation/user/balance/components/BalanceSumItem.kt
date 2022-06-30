@@ -7,9 +7,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import com.myplaygroup.app.R
 import kotlin.math.absoluteValue
 
 @Composable
@@ -23,7 +25,9 @@ fun BalanceSumItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = if(balance >= 0)"Credit:" else "To pay:",
+            text = if(balance >= 0){
+                stringResource(R.string.balance_credit)
+            } else stringResource(R.string.balance_to_pay),
             fontSize = 20.sp,
             color = MaterialTheme.colors.onBackground,
             overflow = TextOverflow.Ellipsis,

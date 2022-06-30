@@ -5,7 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -61,7 +64,7 @@ fun ProfileImage(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_person_100),
-                    contentDescription = "Missing Image",
+                    contentDescription = null,
                     tint = drawColor,
                     modifier = Modifier
                         .fillMaxSize()
@@ -81,7 +84,7 @@ fun ProfileImage(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_add_a_photo_24),
-                contentDescription = "Save Button",
+                contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier
                     .align(Alignment.Center)

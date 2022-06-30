@@ -8,7 +8,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
@@ -38,16 +40,16 @@ fun EditProfileScreen(
             DefaultTopAppBar(
                 title = when(viewModel.state.editProfileType){
                     EditProfileType.PROFILE_NAME -> {
-                        "Edit Profile Name"
+                        stringResource(R.string.edit_profile_edit_name)
                     }
                     EditProfileType.PHONE_NUMBER -> {
-                        "Edit Phone Number"
+                        stringResource(R.string.edit_profile_edit_number)
                     }
                     EditProfileType.PASSWORD -> {
-                        "Edit Password"
+                        stringResource(R.string.edit_profile_edit_password)
                     }
                     else -> {
-                        "Edit Profile"
+                        stringResource(R.string.edit_profile_edit_profile)
                     }
                 },
                 navigationIcon = {
@@ -61,7 +63,7 @@ fun EditProfileScreen(
                     },
                     enabled = !isBusy && isFilledIn,
                 ) {
-                    Text(text = "Save")
+                    Text(text = stringResource(R.string.edit_profile_save))
                 }
             }
         }

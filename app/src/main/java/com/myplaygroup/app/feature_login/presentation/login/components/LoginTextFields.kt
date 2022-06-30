@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_login.presentation.login.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -32,8 +33,8 @@ fun LoginTextFields(
 
     OutlinedTextField(
         value = user,
-        placeholder = { Text(text = stringResource(id = R.string.user_placeholder)) },
-        label = { Text(text = stringResource(id = R.string.user_label)) },
+        placeholder = { Text(text = stringResource(id = R.string.login_user_placeholder)) },
+        label = { Text(text = stringResource(id = R.string.login_user_label)) },
         singleLine = true,
         enabled = enabled,
         onValueChange = onUserChange,
@@ -45,8 +46,8 @@ fun LoginTextFields(
     Spacer(modifier = Modifier.height(10.dp))
     OutlinedTextField(
         value = password,
-        placeholder = { Text(text = stringResource(id = R.string.password_placeholder)) },
-        label = { Text(text = stringResource(id = R.string.password_label)) },
+        placeholder = { Text(text = stringResource(id = R.string.login_create_profile_password_placeholder)) },
+        label = { Text(text = stringResource(id = R.string.login_create_profile_password_label)) },
         enabled = enabled,
         singleLine = true,
         visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),

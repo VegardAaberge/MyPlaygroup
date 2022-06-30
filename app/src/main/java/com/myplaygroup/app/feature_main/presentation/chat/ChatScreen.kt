@@ -12,10 +12,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.app_bar.AppBarBackButton
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
 import com.myplaygroup.app.core.presentation.components.DefaultTopAppBar
@@ -107,7 +109,7 @@ fun ChatScreen(
                     TextField(
                         value = state.newMessage,
                         placeholder = {
-                            Text(text = "Enter Message")
+                            Text(text = stringResource(R.string.chat_enter_message))
                         },
                         onValueChange = {
                             viewModel.onEvent(ChatScreenEvent.EnteredNewMessage(it))
@@ -125,7 +127,7 @@ fun ChatScreen(
                     {
                         Icon(
                             imageVector = Icons.Filled.Send,
-                            contentDescription = "Send"
+                            contentDescription = stringResource(R.string.chat_send)
                         )
                     }
                 }
