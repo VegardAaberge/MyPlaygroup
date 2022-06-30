@@ -24,6 +24,7 @@
         <entry key="../../../../../layout/compose-model-1652763176148.xml" value="0.1" />
         <entry key="../../../../../layout/compose-model-1652769331746.xml" value="0.13333333333333333" />
         <entry key="../../../../../layout/compose-model-1653571159189.xml" value="0.1" />
+        <entry key="app/src/debug/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2105" />
         <entry key="app/src/main/java/com/myplaygroup/app/core/presentation/calendar_classes/CalendarClassesScreen.kt" value="0.19704641350210972" />
         <entry key="app/src/main/java/com/myplaygroup/app/core/presentation/calendar_classes/components/CalendarCard.kt" value="0.375" />
         <entry key="app/src/main/java/com/myplaygroup/app/core/presentation/components/CustomLoadingIndicator.kt" value="0.28055555555555556" />
@@ -64,6 +65,8 @@
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/edit_profile/EditProfileScreen.kt" value="0.5" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/edit_profile/components/EditTextFields.kt" value="0.45740740740740743" />
         <entry key="app/src/main/java/com/myplaygroup/app/feature_profile/presentation/edit_profile/components/ProfileField.kt" value="0.45740740740740743" />
+        <entry key="app/src/main/res/drawable-anydpi/ic_visibility.xml" value="0.2105" />
+        <entry key="app/src/main/res/drawable-anydpi/ic_visibility_off.xml" value="0.2105" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_chat_bubble_24.xml" value="0.1" />
@@ -73,6 +76,8 @@
         <entry key="app/src/main/res/drawable/ic_baseline_lens_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_person_100.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2105" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2105" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.21920289855072464" />
       </map>
     </option>
