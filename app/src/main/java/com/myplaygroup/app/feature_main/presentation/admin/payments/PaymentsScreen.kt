@@ -142,7 +142,9 @@ fun PaymentsLazyColumn(
                     )
 
                     Text(
-                        text = "¥" + paymentsGroup.value.sumOf { it.amount }.toString(),
+                        text = "¥" + paymentsGroup.value
+                            .filter { !it.cancelled }
+                            .sumOf { it.amount }.toString(),
                         style = MaterialTheme.typography.h6,
                         color = Color.White
                     )

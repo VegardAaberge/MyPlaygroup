@@ -121,7 +121,9 @@ fun MonthlyPlanLazyColumn(
                     )
 
                     Text(
-                        text = "¥" + monthGroup.value.sumOf { it.planPrice }.toString(),
+                        text = "¥" + monthGroup.value
+                            .filter { !it.cancelled }
+                            .sumOf { it.planPrice }.toString(),
                         style = MaterialTheme.typography.h6,
                         color = Color.White
                     )

@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.myplaygroup.app.core.presentation.components.ReadonlyTextField
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
+import com.myplaygroup.app.core.util.display
 import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType
 import com.myplaygroup.app.feature_main.domain.model.ParameterItem
 
@@ -19,8 +20,8 @@ fun InfoParamItem(
     item: ParameterItem
 ) {
     val value = if(item.value is List<*>){
-        item.value.map { x -> x.toString().lowercase().replaceFirstChar { y -> y.uppercase() } }.joinToString()
-    }else item.value.toString().lowercase().replaceFirstChar { y -> y.uppercase() }.replace('_', ' ')
+        item.value.map { x -> x.toString().display() }.joinToString()
+    }else item.value.toString().display()
 
     ReadonlyTextField(
         label = item.getTitle(),

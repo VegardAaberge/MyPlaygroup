@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
+import com.myplaygroup.app.core.util.display
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -26,8 +27,6 @@ fun MonthlyPlanItem(
     monthlyPlan: MonthlyPlan,
     modifier: Modifier = Modifier
 ) {
-    val month = monthlyPlan.startDate.month.name.lowercase().replaceFirstChar { x -> x.uppercase() }
-
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -39,7 +38,7 @@ fun MonthlyPlanItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = monthlyPlan.planName.lowercase().replaceFirstChar { x -> x.uppercase() }.replace('_', ' '),
+                    text = monthlyPlan.planName.display(),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     color = MaterialTheme.colors.onBackground,

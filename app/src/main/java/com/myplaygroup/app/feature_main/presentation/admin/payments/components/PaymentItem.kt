@@ -26,8 +26,6 @@ fun PaymentItem(
     payment: Payment,
     modifier: Modifier = Modifier
 ) {
-    val month = payment.date.month.name.lowercase().replaceFirstChar { x -> x.uppercase() }
-
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,

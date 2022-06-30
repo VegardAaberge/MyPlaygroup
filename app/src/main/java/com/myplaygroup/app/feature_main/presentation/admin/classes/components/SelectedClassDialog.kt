@@ -15,8 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.BasicTextField
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
-import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.core.util.display
 import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
+import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
@@ -57,9 +58,7 @@ fun SelectedClassDialog(
         BasicTextField(
             label = "Day of week",
             width = 180.dp,
-            fieldValue = selectedClass.dayOfWeek.name
-                .lowercase()
-                .replaceFirstChar { x -> x.uppercase() },
+            fieldValue = selectedClass.dayOfWeek.name.display(),
             modifier = Modifier
                 .padding(vertical = 5.dp)
                 .align(Alignment.Start)
