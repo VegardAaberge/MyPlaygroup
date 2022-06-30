@@ -107,7 +107,7 @@ interface MainDao {
         user: AppUserEntity
     )
 
-    @Query("SELECT * FROM appuserentity ORDER BY id")
+    @Query("SELECT * FROM appuserentity WHERE username != 'admin' ORDER BY username")
     suspend fun getAppUsers() : List<AppUserEntity>
 
     @Query("SELECT * FROM appuserentity WHERE clientId = :clientId")
