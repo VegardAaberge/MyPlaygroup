@@ -32,15 +32,19 @@ fun CustomDay(
 
     val isSelected = selectionState.isDateSelected(date)
 
-    val classColor = if(dailyClasses.any()){
+    val classColor = if(isSelected){
+        MaterialTheme.colors.primaryVariant
+    } else if(dailyClasses.any()){
         if(state.date.dayOfYear < LocalDateTime.now().dayOfYear){
             Color.LightGray
         } else if(dailyClasses.all { x -> x.cancelled }){
             Color.LightGray
         } else MaterialTheme.colors.primary
-    }else Color.Unspecified
+    }else {
+        Color.Unspecified
+    }
 
-    val textColor =  if(dailyClasses.any()){
+    val textColor =  if(dailyClasses.any() || isSelected){
         Color.White
     }
     else if(state.isCurrentDay){
