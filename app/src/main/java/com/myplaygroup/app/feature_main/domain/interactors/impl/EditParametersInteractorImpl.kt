@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_main.domain.interactors.impl
 
 import android.content.Context
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.mapper.*
 import com.myplaygroup.app.core.domain.validation.ValidationResult
 import com.myplaygroup.app.core.domain.validation.daily_class.DateValidator
@@ -224,7 +225,7 @@ class EditParametersInteractorImpl @Inject constructor(
 
         }catch (t : Throwable){
             t.printStackTrace()
-            Resource.Error(t.localizedMessage ?: "Unknown Error")
+            Resource.Error(t.localizedMessage ?: context.getString(R.string.error_unknown_error))
         }
     }
 

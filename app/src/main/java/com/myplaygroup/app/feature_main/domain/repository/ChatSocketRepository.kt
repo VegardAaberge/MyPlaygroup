@@ -26,5 +26,5 @@ interface ChatSocketRepository {
         username: String
     ): Flow<Resource<Message>>
 
-    suspend fun closeSession() : Resource<String>
+    suspend fun closeSession() : Resource<Unit>
 }

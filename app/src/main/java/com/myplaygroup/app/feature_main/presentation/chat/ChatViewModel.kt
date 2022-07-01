@@ -121,7 +121,7 @@ class ChatViewModel @Inject constructor(
                     is Resource.Error -> {
                         socketRepository.closeSession()
                         setUIEvent(
-                            UiEvent.ShowSnackbar(result.message ?: "Unknown error")
+                            UiEvent.ShowSnackbar(result.message!!)
                         )
                     }
                     else -> {}

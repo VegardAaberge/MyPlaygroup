@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_login.data.repository
 
 import android.content.Context
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
@@ -55,14 +56,18 @@ class LoginRepositoryImpl @Inject constructor(
             },
             onFetchError = { r ->
                 when(r.code){
-                    403 -> "Wrong username or password"
-                    else -> "Couldn't reach server: ${r.message}"
+                    403 -> context.getString(R.string.error_wrong_username_or_password)
+                    else -> context.getString(R.string.error_could_not_reach_server, r.message)
                 }
             },
             onFetchException = { t ->
                 when(t){
-                    is IOException -> "No Internet Connection"
-                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
+                    is IOException -> context.getString(R.string.error_no_internet_connection)
+                    else -> {
+                        t.localizedMessage?.let {
+                            context.getString(R.string.error_server_exception, t.localizedMessage)
+                        } ?: context.getString(R.string.error_unknown_error)
+                    }
                 }
             }
         )

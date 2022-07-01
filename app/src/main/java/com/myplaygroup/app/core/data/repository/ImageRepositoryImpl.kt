@@ -10,6 +10,7 @@ import com.myplaygroup.app.core.util.Constants
 import com.myplaygroup.app.core.util.Constants.DEBUG_KEY
 import com.myplaygroup.app.core.util.FileUtils
 import com.myplaygroup.app.core.util.Resource
+import com.myplaygroup.app.core.util.checkForInternetConnection
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -63,7 +64,7 @@ class ImageRepositoryImpl @Inject constructor(
         try {
             var profileFile = FileUtils.getProfileFile(user)
 
-            if(!profileFile.exists()){
+            if(!profileFile.exists() && checkForInternetConnection(context)){
                 val response = playgroupApi.getProfileImage(user)
                 val byteStream = response.byteStream()
                 val bytes = byteStream.readBytes()

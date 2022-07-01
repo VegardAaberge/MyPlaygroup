@@ -2,6 +2,7 @@ package com.myplaygroup.app.feature_main.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.remote.BasicAuthInterceptor
 import com.myplaygroup.app.core.domain.repository.TokenRepository
 import com.myplaygroup.app.core.domain.settings.UserSettingsManager
@@ -40,7 +41,6 @@ class ChatSocketRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ChatSocketRepository {
 
-    private var receivedMessages: HashSet<LocalDateTime> = hashSetOf()
     private val dao = mainDatabase.mainDao()
     private var socket: WebSocketSession? = null
     private val sentMessages: HashSet<String> = HashSet()
@@ -56,7 +56,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
     ): Resource<Flow<Message>> {
         return try {
             if(!checkForInternetConnection(context)){
-                return Resource.Error("No internet connection")
+                return Resource.Error(context.getString(R.string.error_no_internet_connection))
             }
             val url = CHAT_SOCKET_URL + receivers.joinToString(
                 prefix = "?&listen=",
@@ -80,12 +80,12 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 tryReconnect(username, receivers)
             }else{
                 Log.d(Constants.DEBUG_KEY, "Failed to connect to websocket")
-                Resource.Error("Failed to connect")
+                Resource.Error(context.getString(R.string.error_failed_to_connect))
             }
 
         }catch (e: Exception) {
             e.printStackTrace()
-            Resource.Error(e.localizedMessage ?: "Unknown error")
+            Resource.Error(e.localizedMessage ?: context.getString(R.string.error_unknown_error))
         }
     }
 
@@ -112,7 +112,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
 
         }catch (e: Exception){
             e.printStackTrace()
-            Resource.Error(e.localizedMessage ?: "Unknown error")
+            Resource.Error(e.localizedMessage ?: context.getString(R.string.error_unknown_error))
         }
     }
 
@@ -154,7 +154,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
                 emit(Resource.Success(messageEntity.toMessage(true)))
 
                 if(!checkForInternetConnection(context)){
-                    throw IOException("No internet connection")
+                    throw IOException(context.getString(R.string.error_no_internet_connection))
                 }
 
                 if(socket == null || !socket!!.isActive){
@@ -176,7 +176,7 @@ class ChatSocketRepositoryImpl @Inject constructor(
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                val errorMessage = e.localizedMessage ?: "Unknown error"
+                val errorMessage = e.localizedMessage ?: context.getString(R.string.error_unknown_error)
                 emit(Resource.Error(errorMessage, newMessage.toMessage()))
             } finally {
                 sentMessages.removeAll { sm -> sm == newMessage.clientId  }
@@ -185,13 +185,13 @@ class ChatSocketRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun closeSession(): Resource<String> {
+    override suspend fun closeSession(): Resource<Unit> {
         return try {
             socket?.close()
-            Resource.Success("Closed Session")
+            Resource.Success()
         }catch (e: Exception){
             e.printStackTrace()
-            Resource.Error(e.localizedMessage ?: "Unknown error")
+            Resource.Error(e.localizedMessage ?: context.getString(R.string.error_unknown_error))
         }
     }
 

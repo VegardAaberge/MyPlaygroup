@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_main.data.repository
 
-import android.app.Application
+import android.content.Context
+import com.myplaygroup.app.R
 import com.myplaygroup.app.core.data.mapper.toDailyClass
 import com.myplaygroup.app.core.data.mapper.toDailyClassEntity
 import com.myplaygroup.app.core.data.remote.PlaygroupApi
@@ -12,6 +13,7 @@ import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 import javax.inject.Inject
@@ -20,7 +22,7 @@ class DailyClassesRepositoryImpl @Inject constructor(
     private val mainDatabase: MainDatabase,
     private val tokenRepository: TokenRepository,
     private val api: PlaygroupApi,
-    private val app: Application
+    @ApplicationContext private val context: Context
 ) : DailyClassesRepository {
 
     val dao = mainDatabase.mainDao()
@@ -41,18 +43,22 @@ class DailyClassesRepositoryImpl @Inject constructor(
                 dao.getDailyClasses().map { it.toDailyClass() }
             },
             shouldFetch = {
-                fetchFromRemote && checkForInternetConnection(app)
+                fetchFromRemote && checkForInternetConnection(context)
             },
             onFetchError = { r ->
                 when(r.code){
                     403 -> tokenRepository.verifyRefreshTokenAndReturnMessage()
-                    else -> "Couldn't reach server: ${r.message}"
+                    else -> context.getString(R.string.error_could_not_reach_server, r.message)
                 }
             },
             onFetchException = { t ->
                 when(t){
-                    is IOException -> "No Internet Connection"
-                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
+                    is IOException -> context.getString(R.string.error_no_internet_connection)
+                    else -> {
+                        t.localizedMessage?.let {
+                            context.getString(R.string.error_could_not_reach_server, t.localizedMessage)
+                        } ?: context.getString(R.string.error_unknown_error)
+                    }
                 }
             }
         )
@@ -74,13 +80,17 @@ class DailyClassesRepositoryImpl @Inject constructor(
             onFetchError = { r ->
                 when(r.code){
                     403 -> tokenRepository.verifyRefreshTokenAndReturnMessage()
-                    else -> "Couldn't reach server: ${r.message}"
+                    else -> context.getString(R.string.error_could_not_reach_server, r.message)
                 }
             },
             onFetchException = { t ->
                 when(t){
-                    is IOException -> "No Internet Connection"
-                    else -> "Server Exception: " + (t.localizedMessage ?: "Unknown exception")
+                    is IOException -> context.getString(R.string.error_no_internet_connection)
+                    else -> {
+                        t.localizedMessage?.let {
+                            context.getString(R.string.error_could_not_reach_server, t.localizedMessage)
+                        } ?: context.getString(R.string.error_unknown_error)
+                    }
                 }
             }
         )
