@@ -215,11 +215,11 @@ class CreatePlansViewModel @Inject constructor(
                     val endDate = startDate.plusMonths(1).minusDays(1)
                     val multipleEndDate = multipleStartDate.plusMonths(1).minusDays(1)
 
-                    val baseMonthlyPlans = it.filter { !it.cancelled && it.startDate > LocalDate.now().minusMonths(2)}
+                    val baseMonthlyPlans = it.filter { it.startDate > LocalDate.now().minusMonths(2)}
                         .groupBy { x -> x.kidName }
                         .map { x -> x.value.maxByOrNull { y -> y.startDate }!! }
 
-                    val baseMonthlyPlansSelected = baseMonthlyPlans.map { it.kidName to true }.toMap()
+                    val baseMonthlyPlansSelected = baseMonthlyPlans.map { it.kidName to !it.cancelled }.toMap()
 
                     state = state.copy(
                         monthlyPlans = it,
