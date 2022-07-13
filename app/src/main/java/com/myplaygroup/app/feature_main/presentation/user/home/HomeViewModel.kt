@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
                     dailyClasses = data.dailyClasses.map { it.toDailyClassEntity().toDailyClass() }
                 )
                 mainViewModel.balance.emit(
-                    data.payments.sumOf { it.amount } - data.monthlyPlans.sumOf { it.planPrice }
+                    data.payments.sumOf { it.amount } - data.monthlyPlans.sumOf { it.getAdjustedPlanPrice() }
                 )
             }
             is Resource.Error -> {

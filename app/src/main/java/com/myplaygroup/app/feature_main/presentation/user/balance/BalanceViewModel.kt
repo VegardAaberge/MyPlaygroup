@@ -43,7 +43,7 @@ class BalanceViewModel @Inject constructor(
                     plans = plans.data!!,
                     payments = payments.data!!
                 )
-                val totalBalance = payments.data.sumOf { it.amount } -  plans.data.sumOf { it.planPrice }
+                val totalBalance = payments.data.sumOf { it.amount } -  plans.data.sumOf { it.getAdjustedPlanPrice() }
                 state = state.copy(
                     balanceData = balanceData,
                     totalBalance = totalBalance
@@ -64,14 +64,14 @@ class BalanceViewModel @Inject constructor(
     }
 
     fun getGroupedBalanceData(plans: List<MonthlyPlan>, payments: List<Payment>) : Map<String, List<BalanceDataItem>> {
-        val balandeData = plans.map { BalanceDataItem(
+        val balanceData = plans.map { BalanceDataItem(
                 title = it.planName.display(),
                 detail = it.kidName,
-                balance = -it.planPrice,
+                balance = -it.getAdjustedPlanPrice(),
                 date = it.startDate
             ) }.toMutableList()
 
-        balandeData.addAll(
+        balanceData.addAll(
             payments.map { BalanceDataItem(
                 title = "Payment from " + it.username.display(),
                 detail = it.date.format(DateTimeFormatter.ofPattern("EEEE dd")),
@@ -80,7 +80,7 @@ class BalanceViewModel @Inject constructor(
             ) }
         )
 
-        return balandeData
+        return balanceData
             .sortedBy { x -> x.date }
             .groupBy { x -> "${x.date.month} ${x.date.year}" }
     }
