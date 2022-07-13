@@ -162,26 +162,10 @@ class CreatePlansViewModel @Inject constructor(
             daysOfWeek = state.weekdays.filter { it.value }.keys.toList().sortedBy { it.value },
             planPrice = state.price.toLong(),
         )
-
-        val classesResult = dailyClassesRepository.getDailyClassesForPlan(
-            monthlyPlan = monthlyPlan,
-        )
-        if(classesResult is Resource.Error){
-            setUIEvent(
-                UiEvent.ShowSnackbar(classesResult.message!!)
-            )
-            return;
-        }
-
-        val classes = classesResult.data!!
-        monthlyPlan = monthlyPlan.copy(
-            availableClasses = classes.count(),
-            cancelledClasses = classes.count { it.cancelled }
-        )
-
         val result = monthlyPlansRepository.addMonthlyPlanToDatabase(monthlyPlan)
 
         if (result is Resource.Success) {
+            monthlyPlansRepository.updateClassInfo(monthlyPlan)
             setUIEvent(
                 UiEvent.PopPage
             )

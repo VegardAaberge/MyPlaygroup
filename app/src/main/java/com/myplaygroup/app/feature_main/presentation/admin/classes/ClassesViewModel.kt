@@ -8,7 +8,9 @@ import com.myplaygroup.app.core.presentation.BaseViewModel
 import com.myplaygroup.app.core.util.Resource
 import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 import com.myplaygroup.app.feature_main.domain.model.DailyClass
+import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.repository.DailyClassesRepository
+import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,15 +26,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClassesViewModel @Inject constructor(
-    private val repository: DailyClassesRepository
+    private val repository: DailyClassesRepository,
+    private val monthlyPlansRepository: MonthlyPlansRepository
 ) : BaseViewModel() {
 
     var state by mutableStateOf(ClassesState())
 
     lateinit var dailyClassFlow : MutableStateFlow<List<DailyClass>>
+    lateinit var monthlyPlansFlow : MutableStateFlow<List<MonthlyPlan>>
 
-    fun init(dailyClassFlow: MutableStateFlow<List<DailyClass>>) {
+    fun init(dailyClassFlow: MutableStateFlow<List<DailyClass>>, monthlyPlansFlow: MutableStateFlow<List<MonthlyPlan>>) {
         this.dailyClassFlow = dailyClassFlow
+        this.monthlyPlansFlow = monthlyPlansFlow
 
         dailyClassFlow.onEach { dailyClasses ->
             state = state.copy(
@@ -186,6 +191,7 @@ class ClassesViewModel @Inject constructor(
             is Resource.Success -> {
                 if(fetchFromRemote){
                     dailyClassFlow.emit(result.data!!)
+                    updateClassInfo()
                 }else{
                     state = state.copy(
                         dailyClasses = result.data!!
@@ -202,6 +208,22 @@ class ClassesViewModel @Inject constructor(
                     isBusy(result.isLoading)
                 }
             }
+        }
+    }
+
+    private fun updateClassInfo() = viewModelScope.launch(Dispatchers.IO) {
+        val result = monthlyPlansRepository.updateClassInfo()
+
+        when(result){
+            is Resource.Success -> {
+                monthlyPlansFlow.emit(result.data!!)
+            }
+            is Resource.Error -> {
+                setUIEvent(
+                    UiEvent.ShowSnackbar(result.message!!)
+                )
+            }
+            else -> {}
         }
     }
 }

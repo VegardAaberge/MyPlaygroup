@@ -132,7 +132,7 @@ fun DrawerNavigation(
 ) {
     LaunchedEffect(key1 = adminVM){
         chatViewModel.init(adminVM.userFlow)
-        classesViewModel.init(adminVM.dailyClassesFlow)
+        classesViewModel.init(adminVM.dailyClassesFlow, adminVM.monthlyPlansFlow)
         paymentsViewModel.init(adminVM.paymentFlow, adminVM.userFlow)
         usersViewModel.init(adminVM.userFlow, adminVM.paymentFlow, adminVM.monthlyPlansFlow)
         monthlyPlansViewModel.init(

@@ -20,7 +20,10 @@ import com.myplaygroup.app.feature_main.domain.enums.ParameterDisplayType.*
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.domain.interactors.EditParametersInteractor
 import com.myplaygroup.app.feature_main.domain.model.*
+import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -28,6 +31,7 @@ import javax.inject.Inject
 @Suppress("UNCHECKED_CAST")
 class EditParametersInteractorImpl @Inject constructor(
     private val dao: MainDao,
+    private val monthlyPlansRepository: MonthlyPlansRepository,
     @ApplicationContext private val context: Context
 ) : EditParametersInteractor {
 
@@ -86,7 +90,6 @@ class EditParametersInteractorImpl @Inject constructor(
                     ParameterItem(INFO, monthlyPlan::username.name, monthlyPlan.username),
                     ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
                     ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice.toString()),
-                    ParameterItem(INFO, "adjustedPlanPrice", monthlyPlan.getAdjustedPlanPrice().toString()),
                     ParameterItem(SWITCH, monthlyPlan::changeDays.name, monthlyPlan.changeDays),
                     ParameterItem(OPTIONS, monthlyPlan::planName.name, standardPlans, monthlyPlan.changeDays),
                     ParameterItem(DATE, monthlyPlan::startDate.name, monthlyPlan.startDate, monthlyPlan.changeDays),
@@ -297,6 +300,10 @@ class EditParametersInteractorImpl @Inject constructor(
                 }
 
                 dao.insertMonthlyPlan(monthlyPlanEntity)
+
+                withContext(Dispatchers.IO){
+                    monthlyPlansRepository.updateClassInfo(monthlyPlan)
+                }
                 Resource.Success()
             }
             ParametersType.USERS -> {

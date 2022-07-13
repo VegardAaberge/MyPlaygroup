@@ -12,6 +12,7 @@ import com.myplaygroup.app.core.util.fetchNetworkResource
 import com.myplaygroup.app.core.util.networkBoundResource
 import com.myplaygroup.app.feature_main.data.local.MainDatabase
 import com.myplaygroup.app.feature_main.data.mapper.toStandardPlan
+import com.myplaygroup.app.feature_main.data.model.MonthlyPlanEntity
 import com.myplaygroup.app.feature_main.domain.model.MonthlyPlan
 import com.myplaygroup.app.feature_main.domain.model.StandardPlan
 import com.myplaygroup.app.feature_main.domain.repository.MonthlyPlansRepository
@@ -147,5 +148,56 @@ class MonthlyPlansRepositoryImpl @Inject constructor(
                 }
             }
         )
+    }
+
+    override suspend fun updateClassInfo(): Resource<List<MonthlyPlan>> {
+        return try {
+            val monthlyPlans = dao.getMonthlyPlans()
+
+            return updateClassInfo(monthlyPlans)
+        }catch(t: Throwable) {
+            t.printStackTrace()
+            Resource.Error(t.localizedMessage ?: context.getString(R.string.error_unknown_error))
+        }
+    }
+
+    override suspend fun updateClassInfo(monthlyPlan: MonthlyPlan): Resource<List<MonthlyPlan>> {
+        return try {
+            val monthlyPlanEntity = dao.getMonthlyPlanById(monthlyPlan.clientId)
+
+            return updateClassInfo(listOf(monthlyPlanEntity))
+        }catch(t: Throwable) {
+            t.printStackTrace()
+            Resource.Error(t.localizedMessage ?: context.getString(R.string.error_unknown_error))
+        }
+    }
+
+    suspend fun updateClassInfo(monthlyPlans: List<MonthlyPlanEntity>) : Resource<List<MonthlyPlan>> {
+        val standardPlans = dao.getStandardPlans()
+
+        monthlyPlans.forEach { monthlyPlan ->
+            standardPlans.firstOrNull { it.name == monthlyPlan.planName }?.let { standardPlan ->
+                val classesEntities = dao.getDailyClassesForUser(
+                    startDate = monthlyPlan.startDate,
+                    endDate = monthlyPlan.endDate,
+                    classType = standardPlan.type,
+                    daysOfWeek = monthlyPlan.daysOfWeek
+                )
+
+                val newMonthlyPlan = monthlyPlan.copy(
+                    availableClasses = classesEntities.size,
+                    cancelledClasses = classesEntities.count { it.cancelled }
+                )
+
+                if(newMonthlyPlan.hashCode() != monthlyPlan.hashCode()){
+                    dao.insertMonthlyPlan(newMonthlyPlan)
+                }
+            }
+        }
+
+        val monthlyPlanEntities = dao.getMonthlyPlansByClientId(monthlyPlans.map { it.clientId })
+        val newMonthlyPlans = monthlyPlanEntities.map { it.toMonthlyPlan() }
+
+        return Resource.Success(newMonthlyPlans)
     }
 }
