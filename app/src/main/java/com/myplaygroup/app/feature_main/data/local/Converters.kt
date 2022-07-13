@@ -3,7 +3,8 @@ package com.myplaygroup.app.feature_main.data.local
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.*
+import java.sql.Date
+import java.time.LocalDate
 
 class Converters {
 
@@ -33,5 +34,10 @@ class Converters {
     @TypeConverter
     fun dateToTimestamp(date: Date?): Long? {
         return if (date == null) null else date.time
+    }
+
+    @TypeConverter
+    fun convertLocalDateToSqlDate(localDate: LocalDate): Date? {
+        return localDate.let { Date.valueOf(localDate.toString()) }
     }
 }

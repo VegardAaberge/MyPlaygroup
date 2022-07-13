@@ -93,7 +93,7 @@ class UsersViewModel @Inject constructor(
         return users.map { user ->
             val userPayments = payments.filter { !it.cancelled && it.username == user.username }
             val userPlans = monthlyPlans.filter { !it.cancelled && it.username == user.username }
-            val balance = userPayments.sumOf { it.amount } - userPlans.sumOf { it.planPrice }
+            val balance = userPayments.sumOf { it.amount } - userPlans.sumOf { it.getAdjustedPlanPrice() }
 
             user.copy(
                 balance = balance

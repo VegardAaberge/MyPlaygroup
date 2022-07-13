@@ -18,6 +18,8 @@ data class MonthlyPlanEntity(
     val planName: String,
     val daysOfWeek: List<String>,
     val planPrice: Long,
+    val availableClasses: Int,
+    val cancelledClasses: Int,
     val cancelled: Boolean,
     val changeDays: Boolean = false,
 

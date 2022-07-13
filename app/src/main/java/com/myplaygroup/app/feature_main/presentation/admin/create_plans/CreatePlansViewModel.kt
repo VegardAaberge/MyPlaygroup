@@ -147,27 +147,48 @@ class CreatePlansViewModel @Inject constructor(
         )
 
         if(!hasError){
-            val monthlyPlan = MonthlyPlan(
-                username = state.user,
-                kidName = state.kid,
-                startDate = state.startDate,
-                endDate = state.endDate,
-                planName = state.plan,
-                daysOfWeek = state.weekdays.filter { it.value }.keys.toList().sortedBy { it.value },
-                planPrice = state.price!!.toLong()
+            addMonthlyPlanToDatabaseBody()
+        }
+    }
+
+    private suspend fun addMonthlyPlanToDatabaseBody(){
+
+        var monthlyPlan = MonthlyPlan(
+            username = state.user,
+            kidName = state.kid,
+            startDate = state.startDate,
+            endDate = state.endDate,
+            planName = state.plan,
+            daysOfWeek = state.weekdays.filter { it.value }.keys.toList().sortedBy { it.value },
+            planPrice = state.price.toLong(),
+        )
+
+        val classesResult = dailyClassesRepository.getDailyClassesForPlan(
+            monthlyPlan = monthlyPlan,
+        )
+        if(classesResult is Resource.Error){
+            setUIEvent(
+                UiEvent.ShowSnackbar(classesResult.message!!)
             )
+            return;
+        }
 
-            val result = monthlyPlansRepository.addMonthlyPlanToDatabase(monthlyPlan)
+        val classes = classesResult.data!!
+        monthlyPlan = monthlyPlan.copy(
+            availableClasses = classes.count(),
+            cancelledClasses = classes.count { it.cancelled }
+        )
 
-            if (result is Resource.Success) {
-                setUIEvent(
-                    UiEvent.PopPage
-                )
-            } else if (result is Resource.Error) {
-                setUIEvent(
-                    UiEvent.ShowSnackbar(result.message!!)
-                )
-            }
+        val result = monthlyPlansRepository.addMonthlyPlanToDatabase(monthlyPlan)
+
+        if (result is Resource.Success) {
+            setUIEvent(
+                UiEvent.PopPage
+            )
+        } else if (result is Resource.Error) {
+            setUIEvent(
+                UiEvent.ShowSnackbar(result.message!!)
+            )
         }
     }
 

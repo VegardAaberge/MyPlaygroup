@@ -103,7 +103,8 @@ fun MonthlyPlanItemPreview() {
                 ),
                 planName = "EVENING_2",
                 cancelled = false,
-                planPrice = 790
+                planPrice = 790,
+                availableClasses = 1
             ),
         )
     }

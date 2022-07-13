@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.myplaygroup.app.feature_main.data.model.*
+import com.myplaygroup.app.feature_main.domain.enums.DailyClassType
 
 @Dao
 interface MainDao {
@@ -56,6 +57,17 @@ interface MainDao {
 
     @Query("SELECT * FROM dailyclassentity ORDER BY date")
     suspend fun getDailyClasses() : List<DailyClassEntity>
+
+    @Query("SELECT * FROM dailyclassentity" +
+            " WHERE dailyclassentity.date BETWEEN Date(:startDate) AND Date(:endDate)" +
+            " AND dailyclassentity.classType = :classType" +
+            " AND dailyclassentity.dayOfWeek IN (:daysOfWeek)")
+    suspend fun getDailyClassesForUser(
+        startDate: String,
+        endDate: String,
+        classType: DailyClassType,
+        daysOfWeek: List<String>
+    ) : List<DailyClassEntity>
 
     @Query("DELETE FROM dailyclassentity")
     suspend fun clearAllDailyClasses()

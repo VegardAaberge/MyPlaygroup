@@ -206,7 +206,8 @@ fun MonthlyPlanLazyColumnPreview() {
                         planName = "Moring v2",
                         cancelled = true,
                         modified = false,
-                        planPrice = 490
+                        planPrice = 490,
+                        availableClasses = 1
                     ),
                     MonthlyPlan(
                         id = -1,
@@ -222,7 +223,8 @@ fun MonthlyPlanLazyColumnPreview() {
                         planName = "Evening v2",
                         cancelled = false,
                         modified = true,
-                        planPrice = 590
+                        planPrice = 590,
+                        availableClasses = 1
                     )
                 ),
                 "2022 July" to listOf(
@@ -240,7 +242,8 @@ fun MonthlyPlanLazyColumnPreview() {
                         planName = "Moring v2",
                         cancelled = false,
                         modified = false,
-                        planPrice = 490
+                        planPrice = 490,
+                        availableClasses = 1
                     ),
                     MonthlyPlan(
                         id = 2,
@@ -256,7 +259,8 @@ fun MonthlyPlanLazyColumnPreview() {
                         planName = "Evening v2",
                         cancelled = false,
                         modified = false,
-                        planPrice = 590
+                        planPrice = 590,
+                        availableClasses = 1
                     )
                 ),
             )

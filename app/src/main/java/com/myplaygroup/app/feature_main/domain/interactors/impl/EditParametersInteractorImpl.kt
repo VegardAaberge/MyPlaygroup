@@ -86,6 +86,7 @@ class EditParametersInteractorImpl @Inject constructor(
                     ParameterItem(INFO, monthlyPlan::username.name, monthlyPlan.username),
                     ParameterItem(STRING, monthlyPlan::kidName.name, monthlyPlan.kidName),
                     ParameterItem(NUMBER, monthlyPlan::planPrice.name, monthlyPlan.planPrice.toString()),
+                    ParameterItem(INFO, "adjustedPlanPrice", monthlyPlan.getAdjustedPlanPrice().toString()),
                     ParameterItem(SWITCH, monthlyPlan::changeDays.name, monthlyPlan.changeDays),
                     ParameterItem(OPTIONS, monthlyPlan::planName.name, standardPlans, monthlyPlan.changeDays),
                     ParameterItem(DATE, monthlyPlan::startDate.name, monthlyPlan.startDate, monthlyPlan.changeDays),

@@ -8,5 +8,6 @@ fun StandardPlanEntity.toStandardPlan() : StandardPlan {
     return StandardPlan(
         name = name,
         price = price,
+        type = type
     )
 }
