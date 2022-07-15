@@ -6,6 +6,7 @@ import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.core.net.toFile
 import java.io.File
+import java.nio.file.Files
 
 class FileUtils {
     companion object{
@@ -30,6 +31,18 @@ class FileUtils {
             verifyThatDirectoryExist(userDirectory)
 
             return File(userDirectory, username + JPG_EXT)
+        }
+
+        fun clearProfileImages() {
+            val userDirectory = "$outputDirectory/$USER_DIR"
+            verifyThatDirectoryExist(userDirectory)
+
+            val userDirectoryPath = File(userDirectory).toPath()
+
+            Files.walk(userDirectoryPath)
+                .sorted(Comparator.reverseOrder())
+                .map { it.toFile() }
+                .forEach { it.delete() }
         }
 
         fun makeUriVisible(context: Context, newUri: Uri){

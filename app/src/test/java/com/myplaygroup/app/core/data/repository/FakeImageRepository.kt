@@ -15,7 +15,7 @@ class FakeImageRepository : ImageRepository {
         return Resource.Success()
     }
 
-    override suspend fun getProfileImage(user: String): Resource<Uri?> {
+    override suspend fun getProfileImage(user: String, fetchFromRemote: Boolean): Resource<Uri?> {
         return Resource.Success(profileBitmaps[user])
     }
 }

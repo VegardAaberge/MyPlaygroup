@@ -181,6 +181,7 @@ class AdminViewModel @Inject constructor(
         basicAuthInterceptor.accessToken = null
         userSettingsManager.clearData()
         daoInteractor.clearAllTables()
+        imageRepository.clearProfileImages()
 
         setUIEvent(
             UiEvent.PopAndNavigateTo(

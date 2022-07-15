@@ -60,6 +60,7 @@ class SettingsViewModel @Inject constructor(
         basicAuthInterceptor.accessToken = null
         userSettingsManager.clearData()
         daoUseCases.clearAllTables()
+        imageRepository.clearProfileImages()
 
         mainViewModel.setUIEvent(
             BaseViewModel.UiEvent.PopAndNavigateTo(

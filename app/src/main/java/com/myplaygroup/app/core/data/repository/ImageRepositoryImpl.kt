@@ -59,12 +59,14 @@ class ImageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProfileImage(
-        user: String
+        user: String,
+        fetchFromRemote: Boolean
     ): Resource<Uri?> {
         try {
             var profileFile = FileUtils.getProfileFile(user)
+            val shouldFetch = !profileFile.exists() || fetchFromRemote
 
-            if(!profileFile.exists() && checkForInternetConnection(context)){
+            if(shouldFetch && checkForInternetConnection(context)){
                 val response = playgroupApi.getProfileImage(user)
                 val byteStream = response.byteStream()
                 val bytes = byteStream.readBytes()
@@ -80,6 +82,14 @@ class ImageRepositoryImpl @Inject constructor(
         }catch (e: Exception){
             Log.e(DEBUG_KEY, e.stackTraceToString())
             return Resource.Error("ERROR: " + e.message)
+        }
+    }
+
+    override suspend fun clearProfileImages() {
+        try {
+            FileUtils.clearProfileImages()
+        }catch (e: Exception){
+            Log.e(DEBUG_KEY, e.stackTraceToString())
         }
     }
 }

@@ -45,7 +45,7 @@ class MainViewModel @Inject constructor(
                 )
             }
 
-            loadProfileImage(state.receiver){
+            loadProfileImage(state.receiver, true){
                 state = state.copy(
                     receiverUri = it.data!!
                 )
@@ -55,11 +55,13 @@ class MainViewModel @Inject constructor(
 
     private fun loadProfileImage(
         user: String,
+        fetchFromRemote: Boolean = false,
         setState: (Resource<Uri?>) -> Unit
     ) = viewModelScope.launch(Dispatchers.IO) {
 
         val result = imageRepository.getProfileImage(
-            user = user
+            user = user,
+            fetchFromRemote = fetchFromRemote
         )
 
         if (result is Resource.Success) {
