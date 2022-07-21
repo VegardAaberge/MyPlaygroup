@@ -20,7 +20,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 @HiltViewModel
 class CreatePlansViewModel @Inject constructor(
@@ -99,7 +99,7 @@ class CreatePlansViewModel @Inject constructor(
 
     private fun addMultiplePlansToDatabase() = viewModelScope.launch(Dispatchers.IO) {
         state.baseMonthlyPlans.filter { x -> state.basePlansSelected[x.kidName] ?: false }.forEach { monthlyPlan ->
-            val newMonthlyPlan = monthlyPlan.copy(
+            var newMonthlyPlan = monthlyPlan.copy(
                 clientId = UUID.randomUUID().toString(),
                 id = -1,
                 startDate = state.multipleStartDate,
@@ -107,6 +107,28 @@ class CreatePlansViewModel @Inject constructor(
                 cancelled = false,
                 modified = true
             )
+
+            if(newMonthlyPlan.planPrice > 0){
+                try {
+                    val newPrice = calculatePrice(
+                        newMonthlyPlan.daysOfWeek,
+                        newMonthlyPlan.startDate,
+                        newMonthlyPlan.endDate,
+                        newMonthlyPlan.planName
+                    )
+                    newPrice?.let {
+                        newMonthlyPlan = newMonthlyPlan.copy(
+                            planPrice = newPrice
+                        )
+                    }
+                }catch (e: java.lang.IllegalStateException) {
+                    setUIEvent(
+                        UiEvent.ShowSnackbar(e.localizedMessage!!)
+                    )
+                    return@launch
+                }
+            }
+
 
             val result = monthlyPlansRepository.addMonthlyPlanToDatabase(newMonthlyPlan)
             if(result is Resource.Error){
@@ -177,25 +199,45 @@ class CreatePlansViewModel @Inject constructor(
     }
 
     private fun calculatePrice() {
-        val daysOfWeek = state.weekdays.filter { x -> x.value }
+        val daysOfWeek = state.weekdays.filter { x -> x.value }.keys.toList()
 
+        val newPrice = calculatePrice(
+            daysOfWeek,
+            state.startDate,
+            state.endDate,
+            state.plan
+        )
+        newPrice?.let {
+            state = state.copy(
+                price = newPrice.toString()
+            )
+        }
+    }
+
+    private fun calculatePrice(
+        daysOfWeek: List<DayOfWeek>,
+        startDate: LocalDate,
+        endDate: LocalDate,
+        plan: String
+    ) : Long? {
         val relevantClasses = dailyClasses
-            .filter { x -> daysOfWeek.containsKey(x.dayOfWeek) }
+            .filter { x -> daysOfWeek.any { it == x.dayOfWeek } }
 
-        if(relevantClasses.size == 0 || state.plan.isEmpty())
-            return
+        if(relevantClasses.size == 0 || plan.isEmpty())
+            return null
 
-        val firstDay = LocalDate.of(state.startDate.year, state.startDate.month, 1)
+        val firstDay = LocalDate.of(startDate.year, endDate.month, 1)
         val lastDay = firstDay.plusMonths(1).minusDays(1);
 
-        val classesInMonth = relevantClasses.filter { x -> x.date >= state.startDate && x.date <= state.endDate }.size.toFloat()
-        val classesChosen = relevantClasses.filter { x -> x.date >= firstDay && x.date <= lastDay }.size.toFloat()
-        val price = state.standardPlans.first { x -> x.name == state.plan }.price
+        val classesChosen = relevantClasses.filter { x -> x.date >= startDate && x.date <= endDate }.size
+        val classesInMonth = relevantClasses.filter { x -> x.date >= firstDay && x.date <= lastDay }.size
+        if(classesInMonth == 0)
+            throw java.lang.IllegalStateException("No classes found")
 
-        val adjustedPrice = price / (classesChosen / classesInMonth)
-        state = state.copy(
-            price = adjustedPrice.roundToInt().toString()
-        )
+        val price = state.standardPlans.first { x -> x.name == plan }.price
+
+        val adjustedPrice = price.toFloat() * classesChosen / classesInMonth
+        return adjustedPrice.roundToLong()
     }
 
     private fun setWeekdays(dayOfWeek: DayOfWeek){
