@@ -64,7 +64,11 @@ class MonthlyPlansViewModel @Inject constructor(
             }
             is MonthlyPlansScreenEvent.TriggerSearch -> {
                 state = state.copy(
+                    searchValue = "",
                     isSearching = !state.isSearching
+                )
+                state = state.copy(
+                    monthlyPlans = getGroupedData(monthlyPlans)
                 )
             }
             is MonthlyPlansScreenEvent.OnSearchChanged -> {

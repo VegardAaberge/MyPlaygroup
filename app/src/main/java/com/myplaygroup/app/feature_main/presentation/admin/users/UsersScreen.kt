@@ -130,9 +130,9 @@ private fun CreateToolbarActionItems(
     adminViewModel: AdminViewModel
 ){
     val icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
-    LaunchedEffect(key1 = viewModel.getUnsyncedUsers()){
+    LaunchedEffect(key1 = viewModel.getUnsyncedUsers(), key2 = viewModel.state.searchValue.isBlank()){
         val actionButtons = mutableListOf<AdminState.ActionButton>()
-        if(viewModel.getUnsyncedUsers().any()){
+        if(viewModel.state.searchValue.isBlank() && viewModel.getUnsyncedUsers().any()){
             actionButtons.add(
                 AdminState.ActionButton(
                     action = {
@@ -142,20 +142,22 @@ private fun CreateToolbarActionItems(
                 ),
             )
         }
+        if(viewModel.state.searchValue.isBlank()){
+            actionButtons.add(
+                AdminState.ActionButton(
+                    action = {
+                        viewModel.onEvent(UsersScreenEvent.CreateUserDialog(true))
+                    },
+                    icon = Icons.Default.Add
+                )
+            )
+        }
         actionButtons.add(
             AdminState.ActionButton(
                 action = {
                     viewModel.onEvent(UsersScreenEvent.TriggerSearch)
                 },
                 icon = Icons.Default.Search
-            )
-        )
-        actionButtons.add(
-            AdminState.ActionButton(
-                action = {
-                    viewModel.onEvent(UsersScreenEvent.CreateUserDialog(true))
-                },
-                icon = Icons.Default.Add
             )
         )
 

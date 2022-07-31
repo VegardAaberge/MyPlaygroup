@@ -187,10 +187,10 @@ private fun CreateToolbarActionItems(
     adminViewModel: AdminViewModel
 ){
     val icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
-    LaunchedEffect(key1 = viewModel.getUnsyncedPayments()){
+    LaunchedEffect(key1 = viewModel.getUnsyncedPayments(), key2 = viewModel.state.searchValue.isBlank()){
 
         val actionButtons = mutableListOf<AdminState.ActionButton>()
-        if(viewModel.getUnsyncedPayments().any()){
+        if(viewModel.state.searchValue.isBlank() && viewModel.getUnsyncedPayments().any()){
             actionButtons.add(
                 AdminState.ActionButton(
                     action = {
@@ -200,20 +200,22 @@ private fun CreateToolbarActionItems(
                 ),
             )
         }
+        if(viewModel.state.searchValue.isBlank()){
+            actionButtons.add(
+                AdminState.ActionButton(
+                    action = {
+                        viewModel.onEvent(PaymentsScreenEvent.CreatePaymentDialog(true))
+                    },
+                    icon = Icons.Default.Add
+                )
+            )
+        }
         actionButtons.add(
             AdminState.ActionButton(
                 action = {
                     viewModel.onEvent(PaymentsScreenEvent.TriggerSearch)
                 },
                 icon = Icons.Default.Search
-            )
-        )
-        actionButtons.add(
-            AdminState.ActionButton(
-                action = {
-                    viewModel.onEvent(PaymentsScreenEvent.CreatePaymentDialog(true))
-                },
-                icon = Icons.Default.Add
             )
         )
 

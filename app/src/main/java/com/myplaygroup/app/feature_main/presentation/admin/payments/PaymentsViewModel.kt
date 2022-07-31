@@ -85,7 +85,11 @@ class PaymentsViewModel @Inject constructor(
             }
             is PaymentsScreenEvent.TriggerSearch -> {
                 state = state.copy(
+                    searchValue = "",
                     isSearching = !state.isSearching
+                )
+                state = state.copy(
+                    payments = getGroupedData(_payments)
                 )
             }
             is PaymentsScreenEvent.OnSearchChanged -> {

@@ -153,10 +153,10 @@ private fun CreateToolbarActionItems(
     adminViewModel: AdminViewModel
 ){
     val icon = ImageVector.vectorResource(id = R.drawable.ic_baseline_cloud_upload_24)
-    LaunchedEffect(key1 = viewModel.getUnsyncedMonthlyPlans()){
+    LaunchedEffect(key1 = viewModel.getUnsyncedMonthlyPlans(), key2 = viewModel.state.searchValue.isBlank()){
 
         val actionButtons = mutableListOf<AdminState.ActionButton>()
-        if(viewModel.getUnsyncedMonthlyPlans().any()){
+        if(viewModel.state.searchValue.isBlank() && viewModel.getUnsyncedMonthlyPlans().any()){
             actionButtons.add(
                 AdminState.ActionButton(
                     action = {
@@ -166,20 +166,22 @@ private fun CreateToolbarActionItems(
                 ),
             )
         }
+        if(viewModel.state.searchValue.isBlank()){
+            actionButtons.add(
+                AdminState.ActionButton(
+                    action = {
+                        adminViewModel.onEvent(AdminScreenEvent.NavigateToCreateMonthlyPlan)
+                    },
+                    icon = Icons.Default.Add
+                )
+            )
+        }
         actionButtons.add(
             AdminState.ActionButton(
                 action = {
                     viewModel.onEvent(MonthlyPlansScreenEvent.TriggerSearch)
                 },
                 icon = Icons.Default.Search
-            )
-        )
-        actionButtons.add(
-            AdminState.ActionButton(
-                action = {
-                    adminViewModel.onEvent(AdminScreenEvent.NavigateToCreateMonthlyPlan)
-                },
-                icon = Icons.Default.Add
             )
         )
 

@@ -86,7 +86,11 @@ class UsersViewModel @Inject constructor(
             }
             is UsersScreenEvent.TriggerSearch -> {
                 state = state.copy(
+                    searchValue = "",
                     isSearching = !state.isSearching
+                )
+                state = state.copy(
+                    appUsers = _appUsers.filter { state.searchValue.isBlank() || it.username.startsWith(state.searchValue) }
                 )
             }
             is UsersScreenEvent.OnSearchChanged -> {
