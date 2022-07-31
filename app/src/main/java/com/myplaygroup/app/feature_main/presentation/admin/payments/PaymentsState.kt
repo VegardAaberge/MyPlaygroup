@@ -9,4 +9,6 @@ data class PaymentsState (
     val usernameError: String? = null,
     val amountError: String? = null,
     val dateError: String? = null,
+    val isSearching: Boolean = false,
+    val searchValue: String = ""
 )

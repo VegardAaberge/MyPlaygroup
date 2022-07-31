@@ -29,6 +29,8 @@ class PaymentsViewModel @Inject constructor(
 
     lateinit var paymentFlow : MutableStateFlow<List<Payment>>
 
+    var _payments = emptyList<Payment>()
+
     fun init(
         paymentFlow: MutableStateFlow<List<Payment>>,
         usersFlow: MutableStateFlow<List<AppUser>>,
@@ -79,6 +81,19 @@ class PaymentsViewModel @Inject constructor(
                     username = event.username,
                     amount = event.amount.toIntOrNull(),
                     date = event.date
+                )
+            }
+            is PaymentsScreenEvent.TriggerSearch -> {
+                state = state.copy(
+                    isSearching = !state.isSearching
+                )
+            }
+            is PaymentsScreenEvent.OnSearchChanged -> {
+                state = state.copy(
+                    searchValue = event.searchValue
+                )
+                state = state.copy(
+                    payments = getGroupedData(_payments)
                 )
             }
         }
@@ -153,7 +168,9 @@ class PaymentsViewModel @Inject constructor(
     }
 
     fun getGroupedData(data: List<Payment>) : Map<String, List<Payment>> {
+        _payments = data
         return data
+            .filter { state.searchValue.isBlank() || it.username.startsWith(state.searchValue.lowercase()) }
             .sortedByDescending { x -> x.date }
             .groupBy { x -> "${x.date.month} ${x.date.year}" }
     }

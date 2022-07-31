@@ -31,7 +31,7 @@ class UsersViewModel @Inject constructor(
     lateinit var userFlow: MutableStateFlow<List<AppUser>>
     var payments: List<Payment> = emptyList()
     var monthlyPlans: List<MonthlyPlan> = emptyList()
-
+    var _appUsers = emptyList<AppUser>()
 
     fun init(
         userFlow: MutableStateFlow<List<AppUser>>,
@@ -46,6 +46,8 @@ class UsersViewModel @Inject constructor(
             state = state.copy(
                 appUsers = calculateAndModifyBalance(users)
             )
+            _appUsers = state.appUsers
+
         }.launchIn(viewModelScope)
     }
 
@@ -81,6 +83,19 @@ class UsersViewModel @Inject constructor(
                         .registerUsers(unsyncedUsers)
                         .collect{ collectAppUsers(it, true) }
                 }
+            }
+            is UsersScreenEvent.TriggerSearch -> {
+                state = state.copy(
+                    isSearching = !state.isSearching
+                )
+            }
+            is UsersScreenEvent.OnSearchChanged -> {
+                state = state.copy(
+                    searchValue = event.searchValue
+                )
+                state = state.copy(
+                    appUsers = _appUsers.filter { state.searchValue.isBlank() || it.username.startsWith(state.searchValue) }
+                )
             }
         }
     }

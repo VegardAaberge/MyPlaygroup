@@ -1,6 +1,7 @@
 package com.myplaygroup.app.feature_main.presentation.admin.users
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,6 +10,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +25,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
+import com.myplaygroup.app.core.presentation.components.SearchTextField
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
 import com.myplaygroup.app.feature_main.presentation.admin.AdminScreenEvent
@@ -50,31 +53,20 @@ fun UsersScreen(
         scaffoldState = scaffoldState,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ){
-            items(state.appUsers.size){ i ->
-                val appUser = state.appUsers[i]
-                UserItem(
-                    appUser = appUser,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            adminViewModel.onEvent(
-                                AdminScreenEvent.NavigateToEditScreen(
-                                    type = ParametersType.USERS,
-                                    clientId = appUser.clientId
-                                )
-                            )
-                        }
-                        .padding(16.dp)
+        Column {
+            if(state.isSearching){
+                SearchTextField(
+                    searchValue = state.searchValue,
+                    onSearchChanged = {
+                        viewModel.onEvent(UsersScreenEvent.OnSearchChanged(it))
+                    }
                 )
-                if(i < state.appUsers.size){
-                    Divider(modifier = Modifier.padding(
-                        horizontal = 16.dp
-                    ))
-                }
             }
+
+            UsersLazyColumn(
+                adminViewModel = adminViewModel,
+                state = state
+            )
         }
 
         if(state.showCreateUser){
@@ -100,6 +92,39 @@ fun UsersScreen(
 }
 
 @Composable
+private fun UsersLazyColumn(
+    adminViewModel: AdminViewModel,
+    state: UsersState
+){
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ){
+        items(state.appUsers.size){ i ->
+            val appUser = state.appUsers[i]
+            UserItem(
+                appUser = appUser,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        adminViewModel.onEvent(
+                            AdminScreenEvent.NavigateToEditScreen(
+                                type = ParametersType.USERS,
+                                clientId = appUser.clientId
+                            )
+                        )
+                    }
+                    .padding(16.dp)
+            )
+            if(i < state.appUsers.size){
+                Divider(modifier = Modifier.padding(
+                    horizontal = 16.dp
+                ))
+            }
+        }
+    }
+}
+
+@Composable
 private fun CreateToolbarActionItems(
     viewModel: UsersViewModel,
     adminViewModel: AdminViewModel
@@ -117,6 +142,14 @@ private fun CreateToolbarActionItems(
                 ),
             )
         }
+        actionButtons.add(
+            AdminState.ActionButton(
+                action = {
+                    viewModel.onEvent(UsersScreenEvent.TriggerSearch)
+                },
+                icon = Icons.Default.Search
+            )
+        )
         actionButtons.add(
             AdminState.ActionButton(
                 action = {

@@ -11,4 +11,6 @@ sealed class PaymentsScreenEvent {
         val date: LocalDate,
         val amount: String
     ) : PaymentsScreenEvent()
+    data class OnSearchChanged(val searchValue: String) : PaymentsScreenEvent()
+    object TriggerSearch : PaymentsScreenEvent()
 }

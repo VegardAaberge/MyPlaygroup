@@ -11,6 +11,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +29,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.myplaygroup.app.R
 import com.myplaygroup.app.core.presentation.components.CustomProgressIndicator
+import com.myplaygroup.app.core.presentation.components.SearchTextField
 import com.myplaygroup.app.core.presentation.components.collectEventFlow
 import com.myplaygroup.app.core.presentation.theme.MyPlaygroupTheme
 import com.myplaygroup.app.feature_main.domain.enums.ParametersType
@@ -58,17 +60,28 @@ fun PaymentScreen(
         scaffoldState = scaffoldState,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        PaymentsLazyColumn(
-            payments = state.payments,
-            navigateToEditScreen = { clientId ->
-                adminViewModel.onEvent(
-                    AdminScreenEvent.NavigateToEditScreen(
-                        type = ParametersType.PAYMENTS,
-                        clientId = clientId
-                    )
+        Column {
+            if(state.isSearching){
+                SearchTextField(
+                    searchValue = state.searchValue,
+                    onSearchChanged = {
+                        viewModel.onEvent(PaymentsScreenEvent.OnSearchChanged(it))
+                    }
                 )
             }
-        )
+
+            PaymentsLazyColumn(
+                payments = state.payments,
+                navigateToEditScreen = { clientId ->
+                    adminViewModel.onEvent(
+                        AdminScreenEvent.NavigateToEditScreen(
+                            type = ParametersType.PAYMENTS,
+                            clientId = clientId
+                        )
+                    )
+                }
+            )
+        }
 
         if(state.showCreatePayment){
             Dialog(
@@ -187,6 +200,14 @@ private fun CreateToolbarActionItems(
                 ),
             )
         }
+        actionButtons.add(
+            AdminState.ActionButton(
+                action = {
+                    viewModel.onEvent(PaymentsScreenEvent.TriggerSearch)
+                },
+                icon = Icons.Default.Search
+            )
+        )
         actionButtons.add(
             AdminState.ActionButton(
                 action = {
