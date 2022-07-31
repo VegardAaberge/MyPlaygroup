@@ -26,6 +26,8 @@ class MonthlyPlansViewModel @Inject constructor(
     lateinit var monthlyPlanFlow : MutableStateFlow<List<MonthlyPlan>>
     lateinit var monthlyPlanAdded: () -> Unit
 
+    var monthlyPlans = emptyList<MonthlyPlan>()
+
     fun init(
         monthlyPlanFlow: MutableStateFlow<List<MonthlyPlan>>,
         monthlyPlanAdded: () -> Unit
@@ -60,6 +62,19 @@ class MonthlyPlansViewModel @Inject constructor(
                         }
                 }
             }
+            is MonthlyPlansScreenEvent.TriggerSearch -> {
+                state = state.copy(
+                    isSearching = !state.isSearching
+                )
+            }
+            is MonthlyPlansScreenEvent.OnSearchChanged -> {
+                state = state.copy(
+                    searchValue = event.searchValue
+                )
+                state = state.copy(
+                    monthlyPlans = getGroupedData(monthlyPlans)
+                )
+            }
         }
     }
 
@@ -91,7 +106,9 @@ class MonthlyPlansViewModel @Inject constructor(
     }
 
     fun getGroupedData(data: List<MonthlyPlan>) : Map<String, List<MonthlyPlan>> {
+        monthlyPlans = data
         return data
+            .filter { state.searchValue.isBlank() || it.kidName.lowercase().startsWith(state.searchValue.lowercase()) || it.username.startsWith(state.searchValue.lowercase()) }
             .sortedByDescending { x -> x.startDate }
             .groupBy { x -> "${x.startDate.month} ${x.startDate.year}" }
     }
