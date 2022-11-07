@@ -35,7 +35,7 @@ class ChatViewModel @Inject constructor(
         it.map { u -> u.username }
     }
 
-    var receivers : List<String> = emptyList()
+    var receivers : List<String> = listOf()
     var isAdmin : Boolean = false
 
     fun init(receiver: List<String>, isAdmin: Boolean) {

@@ -50,7 +50,7 @@ fun String.display() : String {
 
 fun String.isEmptyOrInt() : Boolean {
     try {
-        if (this.isEmpty())
+        if (this.isEmpty() || this.equals("-"))
             return true
         this.toInt()
         return true

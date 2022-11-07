@@ -83,7 +83,7 @@ fun ShowCreatePaymentDialog(
             OutlinedTextField(
                 value = amount,
                 onValueChange = {
-                    if(amount.isEmptyOrInt()) {
+                    if(it.isEmptyOrInt()) {
                         amount = it
                     }
                 },
